@@ -2,22 +2,61 @@
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <script src="assets/js/pgb.js"></script>
     <script src="cordova.js"></script>
     <link rel="stylesheet" href="core/css/onsenui.css">
     <link rel="stylesheet" href="core/css/onsen-css-components.min.css">
     <script src="core/js/onsenui.min.js"></script>
     <script src="core/js/jquery/jquery.min.js"></script>
+    <script src="assets/js/pgb.js"></script>
 </head>
 <body onload="init()">
-<script>
-    $(function () {
-        // Initialization code
-        $('ons-button').on('click', function (e) {
-            ons.notification.alert('Button is tapped!');
-        })
-    });
-</script>
-<ons-button>Click me!</ons-button>
+<ons-page>
+    <ons-toolbar>
+        <div class="center">Houselock</div>
+    </ons-toolbar>
+
+    <ons-tabbar swipeable position="auto">
+        <ons-tab page="dashboard.html" label="Dashboard" icon="ion-home, material:md-home" badge="7" active>
+        </ons-tab>
+        <ons-tab page="flat_list.html" label="Lista mieszkań" icon="md-settings" active-icon="md-face">
+        </ons-tab>
+        <ons-tab page="bill_list.html" label="Lista rachunków" icon="md-settings" active-icon="md-face">
+        </ons-tab>
+        <ons-tab page="settings.html" label="Ustawienia" icon="md-settings" active-icon="md-face">
+        </ons-tab>
+    </ons-tabbar>
+</ons-page>
+
+<template id="dashboard.html">
+    <ons-page id="Dashboard">
+        <p style="text-align: center;">
+            Dashboard
+        </p>
+    </ons-page>
+</template>
+
+<template id="flat_list.html">
+    <ons-page id="flat_list">
+        <p style="text-align: center;">
+            Lista mieszkań
+        </p>
+    </ons-page>
+</template>
+
+<template id="bill_list.html">
+    <ons-page id="bill_list">
+        <p style="text-align: center;">
+            Lista rachunków
+        </p>
+    </ons-page>
+</template>
+
+<template id="settings.html">
+    <ons-page id="settings">
+        <p style="text-align: center;">
+            Ustawienia użytkownika
+        </p>
+    </ons-page>
+</template>
 </body>
 </html>
