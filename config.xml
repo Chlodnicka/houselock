@@ -4,7 +4,7 @@
 		id          = "Houselock"
         version     = "1.0.0" >
 
-    <name>Houselock App - Onset UI</name>
+    <name>Houselock App</name>
     <description>App to manage flat bills</description>
     <author href="" email="maja.chlodnicka@gmail.com">
 		Maja Chłodnicka, Filip Tańcula
