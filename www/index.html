@@ -8,55 +8,70 @@
     <script src="core/js/onsenui.min.js"></script>
     <script src="core/js/jquery/jquery.min.js"></script>
     <script src="assets/js/pgb.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/user.js"></script>
+    <script src="assets/js/services.js"></script>
+    <script src="assets/js/controllers.js"></script>
 </head>
-<body onload="init()">
-<ons-page>
-    <ons-toolbar>
-        <div class="center">Houselock</div>
-    </ons-toolbar>
 
-    <ons-tabbar swipeable position="auto">
-        <ons-tab page="dashboard.html" label="Dashboard" icon="ion-home, material:md-home" badge="7" active>
-        </ons-tab>
-        <ons-tab page="flat_list.html" label="Lista mieszkań" icon="md-settings" active-icon="md-face">
-        </ons-tab>
-        <ons-tab page="bill_list.html" label="Lista rachunków" icon="md-settings" active-icon="md-face">
-        </ons-tab>
-        <ons-tab page="settings.html" label="Ustawienia" icon="md-settings" active-icon="md-face">
-        </ons-tab>
-    </ons-tabbar>
-</ons-page>
 
-<template id="dashboard.html">
-    <ons-page id="Dashboard">
-        <p style="text-align: center;">
-            Dashboard
-        </p>
+<body>
+
+<ons-navigator id="myNavigator" page="loader.html">
+</ons-navigator>
+
+<ons-template id="loader.html">
+    <ons-page id="loaderPage">
+        <div class="center">
+            <ons-icon icon="ion-load-c" spin="true" size="72px"></ons-icon>
+            <br><br>
+            ładuję dane...
+        </div>
+    </ons-page>
+</ons-template>
+
+<template id="splitter.html">
+    <ons-page>
+        <ons-splitter id="mySplitter">
+            <ons-splitter-side page="html/menu.html" swipeable width="250px" collapse swipe-target-width="50px">
+            </ons-splitter-side>
+            <ons-splitter-content page="tabbar.html">
+            </ons-splitter-content>
+        </ons-splitter>
     </ons-page>
 </template>
 
-<template id="flat_list.html">
-    <ons-page id="flat_list">
-        <p style="text-align: center;">
-            Lista mieszkań
-        </p>
+<template id="tabbar.html">
+    <ons-page id="tabbarPage">
+        <ons-toolbar>
+            <div class="left">
+                <!-- Toolbar-button with different icons depending on the platform. -->
+                <ons-toolbar-button component="button/menu">
+                    <ons-icon icon="ion-navicon, material:md-menu" size="32px, material:24px"></ons-icon>
+                </ons-toolbar-button>
+            </div>
+            <div class="center">Houselock</div>
+        </ons-toolbar>
+
+
+        <ons-fab position="top right" component="button/new-flat">
+            <ons-icon icon="md-edit"></ons-icon>
+        </ons-fab>
+
+        <!-- Auto-positioned Tabbar: top on Android, bottom on iOS/other. -->
+        <ons-tabbar id="myTabbar" swipeable position="bottom">
+            <ons-tab page="html/dashboard.html" label="Dashboard" active icon="fa-globe">
+            </ons-tab>
+            <ons-tab page="html/flat/flat_info.html" label="Mieszkanie" icon="fa-home">
+            </ons-tab>
+            <ons-tab page="html/bill/bill_list.html" label="Rachunki" icon="fa-file">
+            </ons-tab>
+            <ons-tab page="html/user/user_list.html" label="Lokatorzy" icon="fa-users">
+            </ons-tab>
+        </ons-tabbar>
     </ons-page>
 </template>
 
-<template id="bill_list.html">
-    <ons-page id="bill_list">
-        <p style="text-align: center;">
-            Lista rachunków
-        </p>
-    </ons-page>
-</template>
-
-<template id="settings.html">
-    <ons-page id="settings">
-        <p style="text-align: center;">
-            Ustawienia użytkownika
-        </p>
-    </ons-page>
-</template>
 </body>
+
 </html>
