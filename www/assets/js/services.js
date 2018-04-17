@@ -4,6 +4,68 @@
 
 myApp.services = {
 
+    token: {
+        get: function () {
+            if (localStorage.getItem('token')) {
+                myApp.services.token.check();
+            } else {
+                myApp.services.common.clearAll();
+            }
+        },
+        check: function () {
+            ajax.send('get', '/api/flats', function (response) {
+                console.log(response)
+            }, function (response) {
+                console.log(response)
+            })
+        }
+    },
+
+    common: {
+        clearAll: function () {
+            localStorage.clear();
+            myNavigator.pushPage('html/auth/login.html');
+        }
+    },
+
+    /////////////////////
+    // User Service //
+    ////////////////////
+    user: {
+        authorizeSuccess: function (response, page) {
+            var form = page.querySelector('form');
+            myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
+            myApp.user.setToken(response.token);
+            myApp.services.token.get();
+            myNavigator.pushPage('splitter.html');
+        },
+
+        authorizeFail: function () {
+            console.log('porażka!');
+        },
+
+        getInfo: function () {
+
+        },
+
+        // Update user
+        update: function (user, data) {
+
+        },
+
+
+        // Add user to flat
+        add: function (flat, data) {
+
+        },
+
+        //Remove user from flat
+        remove: function (flat, user) {
+
+        }
+
+    },
+
     /////////////////
     // Flat Service //
     /////////////////
@@ -43,29 +105,6 @@ myApp.services = {
 
         //Mark bill as paid
         markAsPaid: function (bill) {
-
-        }
-
-    },
-
-    /////////////////////
-    // User Service //
-    ////////////////////
-    user: {
-
-        // Update user
-        update: function (user, data) {
-
-        },
-
-
-        // Add user to flat
-        add: function (flat, data) {
-
-        },
-
-        //Remove user from flat
-        remove: function (flat, user) {
 
         }
 

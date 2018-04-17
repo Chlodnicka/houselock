@@ -7,15 +7,19 @@ myApp.controllers = {
     // Loader Page Controller //
     //////////////////////////
     loaderPage: function (page) {
-        // if (myApp.user.check()) {
+        if (myApp.user.check()) {
             myNavigator.pushPage('splitter.html');
-        // } else {
-        //     myNavigator.pushPage('html/auth/login.html');
-        // }
+        } else {
+            myNavigator.pushPage('html/auth/login.html');
+        }
     },
 
     loginPage: function (page) {
-
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.user.authorizeSuccess, myApp.services.user.authorizeFail);
+            };
+        });
     },
     //////////////////////////
     // Tabbar Page Controller //

@@ -1,6 +1,7 @@
 // App logic.
 window.myApp = {};
 
+
 ons.ready(function () {
 
 });
