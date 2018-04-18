@@ -5,18 +5,18 @@
 myApp.services = {
 
     token: {
-        get: function () {
+        get: function (nextPage) {
             if (localStorage.getItem('token')) {
-                myApp.services.token.check();
+                return myApp.services.token.check(nextPage);
             } else {
                 myApp.services.common.clearAll();
             }
         },
-        check: function () {
-            ajax.send('get', '/api/flats', function (response) {
-                console.log(response)
-            }, function (response) {
-                console.log(response)
+        check: function (nextPage) {
+            ajax.send('get', '/api/all', function () {
+                myNavigator.pushPage(nextPage);
+            }, function () {
+                myNavigator.pushPage('html/auth/login.html');
             })
         }
     },
@@ -36,8 +36,7 @@ myApp.services = {
             var form = page.querySelector('form');
             myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
             myApp.user.setToken(response.token);
-            myApp.services.token.get();
-            myNavigator.pushPage('splitter.html');
+            myApp.services.token.get('splitter.html');
         },
 
         authorizeFail: function () {
