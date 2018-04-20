@@ -7,11 +7,11 @@ myApp.controllers = {
     // Loader Page Controller //
     //////////////////////////
     loaderPage: function (page) {
-        if (myApp.user.check()) {
+        //if (myApp.user.check()) {
             myNavigator.pushPage('splitter.html');
-        } else {
-            myNavigator.pushPage('html/auth/login.html');
-        }
+        // } else {
+        //     myNavigator.pushPage('html/auth/login.html');
+        // }
     },
 
     loginPage: function (page) {
