@@ -95,7 +95,7 @@ myApp.controllers = {
     ///////////////////////////////
     flatPage: function (page) {
         // Get the element passed as argument to pushPage.
-        var element = page.data.element;
+        /*var element = page.data.element;
 
         // Fill the view with the stored data.
         page.querySelector('#title-input').value = element.data.title;
@@ -140,6 +140,6 @@ myApp.controllers = {
                 // Show alert if the input title is empty.
                 ons.notification.alert('You must provide a task title.');
             }
-        };
+        };*/
     }
 };
