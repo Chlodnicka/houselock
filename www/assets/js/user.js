@@ -35,9 +35,22 @@ myApp.user = {
 
     check: function () {
         return this.email() && this.password();
+    },
+
+    data: function () {
+        let data = JSON.parse(localStorage.getItem('userData')).data;
+        return data.user_info;
+    },
+
+    flats: function () {
+        let data = JSON.parse(localStorage.getItem('userData')).data;
+        return data.user_flats;
+    },
+
+    currentFlat: function () {
+        let id = localStorage.getItem('currentFlat');
+        return myApp.user.flats()[id];
     }
-
-
 
 
 };
