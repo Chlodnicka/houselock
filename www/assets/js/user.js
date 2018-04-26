@@ -21,20 +21,24 @@ myApp.user = {
         localStorage.setItem('password', password);
     },
 
-    setToken: function (token) {
-        localStorage.setItem('token', token);
-    },
-
     get: function () {
         return {
-            email: this.email,
-            password: this.password,
-            role: this.role
+            email: this.email(),
+            password: this.password(),
+            role: this.role()
         };
     },
 
     check: function () {
         return this.email() && this.password();
+    },
+
+    isLandlord: function () {
+        return this.role() === 'ROLE_LANDLORD';
+    },
+
+    isTenant: function () {
+        return this.role() === 'ROLE_TENANT';
     },
 
     data: function () {

@@ -4,26 +4,52 @@
 
 myApp.services = {
 
-    token: {
-        get: function (nextPage) {
-            if (localStorage.getItem('token')) {
-                return myApp.services.token.check(nextPage);
-            } else {
-                myApp.services.common.clearAll();
+    common: {
+
+        token: {
+            get: function () {
+                return localStorage.getItem('token');
+            },
+
+            set: function (token) {
+                localStorage.setItem('token', token);
+            },
+
+            check: function () {
+                ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.authorize);
             }
         },
-        check: function () {
-            ajax.send('get', '/api/check', function (response) {
-                sessionStorage.setItem('isLoggedIn', true);
-                localStorage.setItem('role', response.data[0]);
-            }, function () {
-                sessionStorage.setItem('isLoggedIn', false);
-                myNavigator.pushPage('html/auth/login.html');
-            });
-        }
-    },
 
-    common: {
+        checkCredentials: function () {
+            return myApp.user.email() && myApp.user.password();
+        },
+
+        authorize: function () {
+            let data = '_username=' + myApp.user.email() + '&_password=' + myApp.user.password();
+            ajax.send('post', '/api/login_check', data, myApp.services.common.setTokenAndGetInfo, myApp.services.common.redirectToLogin);
+        },
+
+        authorizeSuccess: function (response, page) {
+            let form = page.querySelector('form');
+            myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
+            myApp.services.common.setTokenAndGetInfo(response);
+        },
+
+        authorizeFail: function () {
+            console.log('porażka!');
+        },
+
+        redirectToLogin: function () {
+            myNavigator.pushPage('html/auth/login.html');
+            sessionStorage.setItem('isLoggedIn', false);
+            myApp.services.common.clearAll();
+        },
+
+        setTokenAndGetInfo: function (response) {
+            myApp.services.common.token.set(response.token);
+            ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.redirectToLogin);
+        },
+
         edit: function (page) {
             Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function (element) {
                 element.onclick = function () {
@@ -42,55 +68,52 @@ myApp.services = {
         clearAll: function () {
             localStorage.clear();
             sessionStorage.clear();
-            myNavigator.pushPage('html/auth/login.html');
-        },
-
-        setAppForUser: function () {
-            var role = myApp.user.role();
-            if (role === 'ROLE_LANDLORD') {
-                console.log('config for landlord');
-                //fillFlatList
-            } else if (role === 'ROLE_TENANT') {
-                console.log('config for tenant')
-                //removeUnnecesaryElements
-                //fillUserInfo
-                //fillFlatInfo
-            } else {
-                myApp.services.common.clearAll();
-            }
         }
+
     },
 
     /////////////////////
     // User Service //
     ////////////////////
     user: {
-
-        authorizeSuccess: function (response, page) {
-            var form = page.querySelector('form');
-            myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
-            myApp.user.setToken(response.token);
-
-            ajax.send('get', '/api/check', function (response) {
-                sessionStorage.setItem('isLoggedIn', true);
-                localStorage.setItem('role', response.data[0]);
-                ajax.send('get', '/api/all', function (response) {
-                    localStorage.setItem('userData', JSON.stringify(response));
-                    myNavigator.pushPage('splitter.html');
-                    myApp.services.common.setAppForUser();
-                }, function () {
-                    myNavigator.pushPage('html/auth/login.html');
-                });
-            }, function () {
-                sessionStorage.setItem('isLoggedIn', false);
-                myNavigator.pushPage('html/auth/login.html');
-            });
-
-
+        getInfo: function (response) {
+            sessionStorage.setItem('isLoggedIn', true);
+            localStorage.setItem('role', response.data[0]);
+            ajax.send('get', '/api/all', '{}', myApp.services.user.setData, myApp.services.common.redirectToLogin);
         },
 
-        authorizeFail: function () {
-            console.log('porażka!');
+        setData: function (response) {
+            localStorage.setItem('userData', JSON.stringify(response));
+            myApp.services.user.setAppForUser();
+        },
+
+        setAppForUser: function () {
+            if (myApp.user.isLandlord()) {
+                if (myApp.user.flats()) {
+                    if (myApp.user.currentFlat()) {
+                        myNavigator.pushPage('splitter.html');
+                    } else {
+                        myNavigator.pushPage('html/flat/flat_info.html');
+                    }
+                } else {
+                    myNavigator.pushPage('html/flat/flat_info.html');
+                }
+                console.log('config for landlord');
+            } else if (myApp.user.isTenant()) {
+                if (myApp.user.currentFlat()) {
+                    myNavigator.pushPage('userSplitter.html');
+                } else {
+                    if (myApp.user.hasInvitation()) {
+                        myNavigator.pushPage('html/dashboard.html');
+                    } else {
+                        myNavigator.pushPage('html/dashboard.html');
+                    }
+                }
+                console.log('config for tenant')
+            } else {
+                myApp.services.common.clearAll();
+                myApp.services.common.redirectToLogin();
+            }
         },
 
         fill: function (page) {
@@ -150,12 +173,16 @@ myApp.services = {
     /////////////////
     flat:
         {
-            list: function (page) {
-                let flatsData = myApp.user.flats();
-                for (let id in flatsData) {
-                    let flat = flatsData[id];
+            list: function (page, flats) {
+                for (let id in flats) {
+                    let flat = flats[id];
                     myApp.services.flat.item(page, flat);
                 }
+            },
+
+            emptyList: function (page) {
+                let info = ons.createElement('<div>Brak dodanych mieszkań - użyj przycisku by dodać mieszkanie.</div>');
+                page.querySelector('.content').appendChild(info);
             },
 
             item: function (page, flat) {
@@ -178,6 +205,12 @@ myApp.services = {
                 };
 
                 page.querySelector('.content').insertBefore(flatItem);
+            },
+
+            emptyFlatLandlord: function (page) {
+                let info = ons.createElement('<div>Wybierz lub dodaj mieszkanie.</div>');
+                page.querySelector('.content').appendChild(info);
+                myApp.services.flat.list(page);
             },
 
             // Creates a new flat

@@ -6,10 +6,14 @@ myApp.controllers = {
 
     //Loader page
     loaderPage: function (page) {
-        if (myApp.user.check()) {
-            myNavigator.pushPage('splitter.html');
+        if (myApp.services.common.token.get()) {
+            myApp.services.common.token.check();
         } else {
-            myNavigator.pushPage('html/auth/login.html');
+            if (myApp.services.common.checkCredentials()) {
+                myApp.services.common.authorize();
+            } else {
+                myApp.services.common.redirectToLogin();
+            }
         }
     },
 
@@ -17,7 +21,7 @@ myApp.controllers = {
     loginPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.user.authorizeSuccess, myApp.services.user.authorizeFail);
+                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
             };
         });
     },
@@ -52,17 +56,26 @@ myApp.controllers = {
 
     //Flat list page
     flatListPage: function (page) {
-        myApp.services.flat.list(page);
+        let flats = myApp.user.flats();
+        if (Object.keys(flats).length === 0) {
+            myApp.services.flat.emptyList(page);
+        } else {
+            myApp.services.flat.list(page, flats);
+        }
     },
 
     //Single flat page
     flatPage: function (page) {
-        if (page.data === undefined && !myApp.user.currentFlat()) {
-            //do sth if there is no flat chosen
-        } else {
-            let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
-            let flat = ons.createElement('<div>' + info.name + '</div>');
-            page.querySelector('.content').appendChild(flat);
+        if (myApp.user.isLandlord()) {
+            if (Object.keys(page.data).length !== 0 || myApp.user.currentFlat() !== undefined) {
+                let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
+                let flat = ons.createElement('<div>' + info.name + '</div>');
+                page.querySelector('.content').appendChild(flat);
+            } else {
+                let flats = myApp.user.flats();
+                myApp.services.flat.emptyFlatLandlord(page);
+                myApp.services.flat.list(page, flats);
+            }
         }
     },
 

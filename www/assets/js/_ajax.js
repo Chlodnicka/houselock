@@ -41,7 +41,6 @@ window.ajax = {
         this.setForm(page.querySelector('form'));
         $.ajax(this.options)
             .done(function (response) {
-                console.log(response);
                 onSuccess ? onSuccess(response, page) : this.onSuccess();
             })
             .fail(function (response) {
@@ -52,10 +51,11 @@ window.ajax = {
             });
     },
 
-    send: function (method, action, onSuccess, onFail) {
+    send: function (method, action, data, onSuccess, onFail) {
         $.ajax({
             method: method,
             url: this.options.domain + action,
+            data: data,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
             }
