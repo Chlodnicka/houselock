@@ -1,0 +1,35 @@
+<ons-page id="newBillPage">
+    <ons-toolbar>
+    <div class="left">
+        <ons-back-button></ons-back-button>
+    </div>
+    <div class="center">Nowy Rachunek</div>
+</ons-toolbar>
+
+    <ons-list-title>Adres</ons-list-title>
+    <ons-list>
+        <ons-list-item modifier="nodivider">
+            <div class="center">
+                <ons-input id="description-input" type="text" placeholder="Opis" float></ons-input>
+            </div>
+        </ons-list-item>
+        <ons-list-item modifier="nodivider">
+            <div class="center">
+                <ons-select id="flat-input" type="text" placeholder="Mieszkanie: " float>
+                    <option></option> <!-- muszą być ładowane możliwe mieszkania! -->
+                </ons-select>
+            </div>
+        </ons-list-item>
+        <ons-list-item modifier="nodivider">
+            <div class="center">
+                <ons-input id="amount-input" type="number" placeholder="Kwota" float></ons-input>
+            </div>
+        </ons-list-item>
+        <ons-list-item modifier="nodivider">
+            <div class="center">
+                <ons-input id="deadline-input" type="text" placeholder="Termin płatności" float></ons-input>
+            </div>
+        </ons-list-item>
+    </ons-list>
+
+</ons-page>
