@@ -2,7 +2,7 @@ window.ajax = {
 
     options: {
         method: 'POST',
-        domain: 'http://houselock.local',
+        domain: 'http://api.houselock.com.pl',
         data: '',
         onSuccess: function () {
             ons.notification.alert('Sukces!');
