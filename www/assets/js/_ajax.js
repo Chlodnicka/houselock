@@ -52,6 +52,7 @@ window.ajax = {
     },
 
     send: function (method, action, data, onSuccess, onFail) {
+        //todo: show loader
         $.ajax({
             method: method,
             url: this.options.domain + action,

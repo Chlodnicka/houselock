@@ -6,6 +6,68 @@ myApp.services = {
 
     common: {
 
+        parseMonth: function (month) {
+            switch (month) {
+                case 'January':
+                    return 'styczeń';
+                    break;
+                case 'February':
+                    return 'luty';
+                    break;
+                case 'March':
+                    return 'marzec';
+                    break;
+                case 'April':
+                    return 'kwiecień';
+                    break;
+                case 'May':
+                    return 'maj';
+                    break;
+                case 'June':
+                    return 'czerwiec';
+                    break;
+                case 'July':
+                    return 'lipiec';
+                    break;
+                case 'August':
+                    return 'sierpień';
+                    break;
+                case 'September':
+                    return 'wrzesień';
+                    break;
+                case 'October':
+                    return 'październik';
+                    break;
+                case 'November':
+                    return 'listopad';
+                    break;
+                case 'December':
+                    return 'grudzień';
+                    break;
+                default:
+                    return 'Błąd'
+            }
+        },
+
+        parsePaymentStatus: function (status) {
+            switch (status) {
+                case 'NEW':
+                    return 'nowy';
+                    break;
+                case 'PAID':
+                    return 'opłacony';
+                    break;
+                case 'PARTIALLY PAID':
+                    return 'częściowo opłacony';
+                    break;
+                case 'UNPAID':
+                    return 'nieopłacony';
+                    break;
+                default:
+                    return 'Błąd'
+            }
+        },
+
         token: {
             get: function () {
                 return localStorage.getItem('token');
@@ -68,6 +130,11 @@ myApp.services = {
         clearAll: function () {
             localStorage.clear();
             sessionStorage.clear();
+        },
+
+        setCurrentFlat: function (id) {
+            localStorage.setItem('currentFlat', id);
+            ajax.send('get', '/api/flat/' + id, '{}', myApp.services.flat.fill);
         }
 
     },
@@ -84,6 +151,13 @@ myApp.services = {
 
         setData: function (response) {
             localStorage.setItem('userData', JSON.stringify(response));
+            if (myApp.user.isTenant()) {
+                let flats = myApp.user.flats();
+                let id = Object.keys(flats)[0];
+                if (id) {
+                    myApp.services.common.setCurrentFlat(id);
+                }
+            }
             myApp.services.user.setAppForUser();
         },
 
@@ -91,34 +165,32 @@ myApp.services = {
             if (myApp.user.isLandlord()) {
                 if (myApp.user.flats()) {
                     if (myApp.user.currentFlat()) {
-                        myNavigator.pushPage('splitter.html');
+                        myNavigator.pushPage('landlordSplitter.html');
                     } else {
                         myNavigator.pushPage('html/flat/flat_info.html');
                     }
                 } else {
                     myNavigator.pushPage('html/flat/flat_info.html');
                 }
-                console.log('config for landlord');
             } else if (myApp.user.isTenant()) {
                 if (myApp.user.currentFlat()) {
-                    myNavigator.pushPage('userSplitter.html');
+                    myNavigator.pushPage('tenantSplitter.html');
                 } else {
                     if (myApp.user.hasInvitation()) {
-                        myNavigator.pushPage('html/dashboard.html');
+                        myNavigator.pushPage('html/user/user_accept_invitation.html');
                     } else {
-                        myNavigator.pushPage('html/dashboard.html');
+                        myNavigator.pushPage('html/user/dashboard.html');
                     }
                 }
-                console.log('config for tenant')
             } else {
                 myApp.services.common.clearAll();
                 myApp.services.common.redirectToLogin();
             }
         },
 
-        fill: function (page) {
+        fill: function (page, data) {
             let card = page.querySelector('form'),
-                userData = myApp.user.data(),
+                userData = data ? data : myApp.user.data(),
                 phone = userData.phone ? userData.phone : 'Telefon',
                 account = userData.account_number ? userData.account_number : 'Numer konta bankowago';
 
@@ -154,6 +226,41 @@ myApp.services = {
 
         save: function (form) {
             console.log(form);
+        },
+
+        list: function (page, users) {
+            for (let id in users) {
+                let user = users[id];
+                myApp.services.user.item(page, user);
+            }
+        },
+
+        emptyList: function (page) {
+            let info = ons.createElement('<div>Brak lokatorów. Dodaj ich do mieszkania.</div>');
+            page.querySelector('.content').appendChild(info);
+        },
+
+        item: function (page, user) {
+            let name = user.firstname + ' ' + user.lastname;
+
+            let userItem = ons.createElement(
+                '<div>' +
+                '<ons-list-item modifier="chevron" tappable>' + name + '</ons-list-item>' +
+                '</div>'
+            );
+
+
+            userItem.querySelector('.center').onclick = function () {
+                myNavigator.pushPage('html/user/tenant_info.html',
+                    {
+                        animation: 'lift',
+                        data: {
+                            element: user
+                        }
+                    });
+            };
+
+            page.querySelector('.content').insertBefore(userItem);
         },
 
         // Add user to flat
@@ -193,15 +300,16 @@ myApp.services = {
                     '</div>'
                 );
 
+
                 flatItem.querySelector('.center').onclick = function () {
-                    myNavigator.pushPage('html/flat/flat_info.html',
-                        {
-                            animation: 'lift',
-                            data: {
-                                element: flat
-                            }
-                        });
-                    localStorage.setItem('currentFlat', flat.id);
+                    // myNavigator.pushPage(myApp.user.splitter() + 'Splitter.html',
+                    //     {
+                    //         animation: 'lift',
+                    //         data: {
+                    //             element: flat
+                    //         }
+                    //     });
+                    myApp.services.common.setCurrentFlat(flat.id);
                 };
 
                 page.querySelector('.content').insertBefore(flatItem);
@@ -213,17 +321,21 @@ myApp.services = {
                 myApp.services.flat.list(page);
             },
 
+            fill: function (response) {
+                let data = JSON.stringify(response);
+                localStorage.setItem('flatData', data);
+                myNavigator.pushPage(myApp.user.splitter() + 'Splitter.html');
+            },
+
             // Creates a new flat
             create: function (data) {
 
-            }
-            ,
+            },
 
             // Modifies the inner data and current view of an existing flat.
             update: function (flat, data) {
 
-            }
-            ,
+            },
 
             // Deletes a flat
             remove: function (taskItem) {
@@ -232,29 +344,98 @@ myApp.services = {
         }
     ,
 
-/////////////////////
-// Bill Service //
-////////////////////
+    /////////////////////
+    // Bill Service //
+    ////////////////////
     bill: {
+        list: function (page, bills) {
+            for (let id in bills) {
+                let bill = bills[id];
+                myApp.services.bill.item(page, bill);
+            }
+        },
+
+        emptyList: function (page) {
+            let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
+            page.querySelector('.content').appendChild(info);
+        },
+
+        item: function (page, bill) {
+            let name = myApp.services.common.parseMonth(bill.month) + ' ' + bill.year + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.payment_status);
+
+            let billItem = ons.createElement(
+                '<div>' +
+                '<ons-list-item modifier="chevron" tappable>' + name + '</ons-list-item>' +
+                '</div>'
+            );
+
+
+            billItem.querySelector('.center').onclick = function () {
+                myNavigator.pushPage('html/bill/bill_info.html',
+                    {
+                        animation: 'lift',
+                        data: {
+                            element: bill
+                        }
+                    });
+            };
+
+            page.querySelector('.content').insertBefore(billItem);
+        },
+
+        fill: function (page, info) {
+            let bill = ons.createElement('<div>' + myApp.services.common.parseMonth(info.month) + ' ' + info.year + ' - ' + info.sum + '</div>');
+            page.querySelector('.content').appendChild(bill);
+
+            //todo fill bill info
+            if (myApp.user.isLandlord()) {
+                if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
+                    let markAsPaid = ons.createElement(
+                        '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
+                    );
+                    page.querySelector('.content').appendChild(markAsPaid);
+                    if (info.payment_status === 'NEW') {
+                        let edit = ons.createElement(
+                            '<ons-button component="button/edit-info">Edytuj rachunek</ons-button>'
+                        );
+                        page.querySelector('.content').appendChild(edit);
+                    }
+                } else if (info.payment_status === 'UNPAID') {
+                    let resendAlert = ons.createElement(
+                        '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
+                    );
+                    page.querySelector('.content').appendChild(resendAlert);
+                }
+            }
+        },
 
         // Update bill
         update: function (bill, data) {
 
-        }
-        ,
+        },
 
 
         // Pay bill
         pay: function (bill) {
 
-        }
-        ,
+        },
 
         //Mark bill as paid
         markAsPaid: function (bill) {
 
         }
 
+    },
+
+    dashboard: {
+        noLastBill: function (page) {
+            let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
+            page.querySelector('.content').appendChild(info);
+        },
+
+        lastBill: function () {
+
+        }
     }
 
 }

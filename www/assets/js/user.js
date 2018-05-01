@@ -54,6 +54,19 @@ myApp.user = {
     currentFlat: function () {
         let id = localStorage.getItem('currentFlat');
         return myApp.user.flats()[id];
+    },
+
+    splitter: function () {
+        if (this.isLandlord()) {
+            return 'landlord';
+        } else {
+            return 'tenant';
+        }
+    },
+
+    hasInvitation: function () {
+        let info = myApp.user.data();
+        return info.status && info.status === 'TEMP';
     }
 
 
