@@ -46,11 +46,11 @@ Proponuję rozwązać wszelkie formularze edycji czegokolwiek jak w przypadku fo
  - Pod koniec renderowania szablonu wrzucamy akcję: <pre>myApp.services.common.edit(page);</pre> - jest odpowidzialna za włączanie trybu edycji
 
 
-##Wysyłanie danych
+## Wysyłanie danych
 
 Są dwie metody:
 
-###ajax.send()
+### ajax.send()
 <pre>
 ajax.send(method, action, data, onSuccess, onFail);
 </pre>
@@ -63,7 +63,7 @@ argumenty:
  - onFail - jw. tylko w przypadku niepowodzenia
  
  
-###ajax.sendForm()
+### ajax.sendForm()
 
 <pre>
 ajax.sendForm(page, onSuccess, onFail);
