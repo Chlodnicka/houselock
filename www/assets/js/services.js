@@ -384,10 +384,26 @@ myApp.services = {
         },
 
         fill: function (page, info) {
+            //todo: wyświetlić wszystkie dane aktualnego rachunku
+            //todo: przykładowe dostępne dane w zmiennej 'info' np. console.log(info)
+
+
             let bill = ons.createElement('<div>' + myApp.services.common.parseMonth(info.month) + ' ' + info.year + ' - ' + info.sum + '</div>');
             page.querySelector('.content').appendChild(bill);
 
-            //todo fill bill info
+            //todo: zrobione wyświetlanie odpowiednich guzików - trzeba zdefiniować na nich akcje na onClick
+            //todo: przykład poniżej:
+            // billItem = ons.createElement(<button></button>)
+            // billItem.querySelector('.center').onclick = function () {
+            //     myNavigator.pushPage('html/bill/bill_info.html',
+            //         {
+            //             animation: 'lift',
+            //             data: {
+            //                 element: bill
+            //             }
+            //         });
+            // };
+
             if (myApp.user.isLandlord()) {
                 if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
                     let markAsPaid = ons.createElement(
@@ -431,10 +447,6 @@ myApp.services = {
         noLastBill: function (page) {
             let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
             page.querySelector('.content').appendChild(info);
-        },
-
-        lastBill: function () {
-
         }
     }
 

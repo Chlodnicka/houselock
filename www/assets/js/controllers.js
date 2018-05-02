@@ -62,6 +62,8 @@ myApp.controllers = {
         if (myApp.user.isLandlord()) {
             if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
+                //todo: #display_flat
+                //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
                 let flat = ons.createElement('<div>' + info.name + '</div>');
                 page.querySelector('.content').appendChild(flat);
             } else {
@@ -71,6 +73,12 @@ myApp.controllers = {
             }
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
+            //todo: #display_flat
+            //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
+
+            //todo: #edit_flat
+            //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
+            //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
             let flat = ons.createElement('<div>' + info.name + '</div>');
             page.querySelector('.content').appendChild(flat);
         }
@@ -78,7 +86,13 @@ myApp.controllers = {
 
     //New flat page
     newFlatPage: function (page) {
-
+        //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
+        //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
+        //todo: wysłać formularz za pomocą funkcji ajax.sendForm
+        //todo: jak w przypadku logowania np: ajax.sendForm(page, onSuccess, onFail);
+        //todo: argumenty: page - aktualna strona
+        //todo: onSucces: funkcja, która ma się wywołać jeśli endpoint odpowie 200
+        //todo: onFail: funkcja, któa się wywoła w przypadku błędu
     },
 
     billListPage: function (page) {
@@ -91,6 +105,8 @@ myApp.controllers = {
     },
 
     billPage: function (page) {
+        //todo: display_bill
+        //todo: edit_bill
         myApp.services.bill.fill(page, page.data.element);
     },
 
@@ -135,6 +151,7 @@ myApp.controllers = {
     },
 
     dashboardPage: function (page) {
+        //todo: #dashboard
         let lastBill = myApp.flat.bill();
         if (Object.keys(lastBill).length === 0) {
             myApp.services.dashboard.noLastBill(page);
