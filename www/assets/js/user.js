@@ -21,23 +21,53 @@ myApp.user = {
         localStorage.setItem('password', password);
     },
 
-    setToken: function (token) {
-        localStorage.setItem('token', token);
-    },
-
     get: function () {
         return {
-            email: this.email,
-            password: this.password,
-            role: this.role
+            email: this.email(),
+            password: this.password(),
+            role: this.role()
         };
     },
 
     check: function () {
         return this.email() && this.password();
+    },
+
+    isLandlord: function () {
+        return this.role() === 'ROLE_LANDLORD';
+    },
+
+    isTenant: function () {
+        return this.role() === 'ROLE_TENANT';
+    },
+
+    data: function () {
+        let data = JSON.parse(localStorage.getItem('userData')).data;
+        return data.user_info;
+    },
+
+    flats: function () {
+        let data = JSON.parse(localStorage.getItem('userData')).data;
+        return data.user_flats;
+    },
+
+    currentFlat: function () {
+        let id = localStorage.getItem('currentFlat');
+        return myApp.user.flats()[id];
+    },
+
+    splitter: function () {
+        if (this.isLandlord()) {
+            return 'landlord';
+        } else {
+            return 'tenant';
+        }
+    },
+
+    hasInvitation: function () {
+        let info = myApp.user.data();
+        return info.status && info.status === 'TEMP';
     }
-
-
 
 
 };

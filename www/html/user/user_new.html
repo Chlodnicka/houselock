@@ -1,0 +1,16 @@
+<ons-page id="userNewPage">
+    <ons-toolbar>
+        <div class="left">
+            <ons-back-button></ons-back-button>
+        </div>
+        <div class="center">Zaproś lokatora</div>
+    </ons-toolbar>
+    <ons-card>
+        <div class="content">
+            <form data-ajax="/user/add" method="post" id="user_add">
+                <ons-input placeholder="Email" type="text" float></ons-input>
+                <ons-button modifier="large" component="button/save">Zapisz</ons-button>
+            </form>
+        </div>
+    </ons-card>
+</ons-page>

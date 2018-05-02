@@ -3,175 +3,160 @@
  ***********************************************************************/
 
 myApp.controllers = {
-    //////////////////////////
-    // Loader Page Controller //
-    //////////////////////////
+
+    //Loader page
     loaderPage: function (page) {
-        //if (myApp.user.check()) {
-            myNavigator.pushPage('splitter.html');
-        // } else {
-        //     myNavigator.pushPage('html/auth/login.html');
-        // }
+        if (myApp.services.common.token.get()) {
+            myApp.services.common.token.check();
+        } else {
+            if (myApp.services.common.checkCredentials()) {
+                myApp.services.common.authorize();
+            } else {
+                myApp.services.common.redirectToLogin();
+            }
+        }
     },
 
+    //Login page
     loginPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.user.authorizeSuccess, myApp.services.user.authorizeFail);
+                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
             };
         });
     },
-    //////////////////////////
-    // Tabbar Page Controller //
-    //////////////////////////
-    tabbarPage: function (page) {
-        // Set button functionality to open/close the menu.
+
+    //Tabbar page
+    landlordTabbarPage: function (page) {
         page.querySelector('[component="button/menu"]').onclick = function () {
-            document.querySelector('#mySplitter').left.toggle();
+            document.querySelector('#landlordSplitter').left.toggle();
         };
-
-        // Set button functionality to push 'new_flat.html' page.
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
-            element.onclick = function () {
-                document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
-            };
-            element.show && element.show(); // Fix ons-fab in Safari.
-        });
-
-        // Change tabbar animation depending on platform.
-        page.querySelector('#myTabbar').setAttribute('animation', ons.platform.isAndroid() ? 'slide' : 'none');
     },
 
-    ////////////////////////
-    // Menu Page Controller //
-    ////////////////////////
+    //Menu page
     menuPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/menu-item"]'), function (element) {
             element.onclick = function () {
                 document.querySelector('#myNavigator').pushPage('html/' + element.getAttribute('data-url'));
             };
-            element.show && element.show(); // Fix ons-fab in Safari.
         });
-        // Change splitter animation depending on platform.
-        document.querySelector('#mySplitter').left.setAttribute('animation', ons.platform.isAndroid() ? 'overlay' : 'reveal');
     },
 
-    ////////////////////////////
-    // New Flat Page Controller //
-    ////////////////////////////
-    newFlatPage: function (page) {
-        // Set button functionality to save a new flat.
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/save-flat"]'), function (element) {
+    //Flat list page
+    flatListPage: function (page) {
+        let flats = myApp.user.flats();
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
             element.onclick = function () {
-                var newTitle = page.querySelector('#name-input').value;
-
-                if (newTitle) {
-                    // If input title is not empty, create a new task.
-                    myApp.services.tasks.create(
-                        {
-                            title: newTitle,
-                            category: page.querySelector('#category-input').value,
-                            description: page.querySelector('#description-input').value,
-                            highlight: page.querySelector('#highlight-input').checked,
-                            urgent: page.querySelector('#urgent-input').checked
-                        }
-                    );
-
-                    // Set selected category to 'All', refresh and pop page.
-                    document.querySelector('#settings-list ons-list-item ons-radio').checked = true;
-                    document.querySelector('#settings-list ons-list-item').updateCategoryView();
-                    document.querySelector('#myNavigator').popPage();
-
-                } else {
-                    // Show alert if the input title is empty.
-                    ons.notification.alert('You must provide a task title.');
-                }
+                document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
             };
         });
+        if (Object.keys(flats).length === 0) {
+            myApp.services.flat.emptyList(page);
+        } else {
+            myApp.services.flat.list(page, flats);
+        }
     },
-    ////////////////////////////
-    // Register new Owner Page Controller //
-    ////////////////////////////
-    registerPage: function (page) {
-        // Set button functionality to save a new flat.
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
-            element.onclick = function () {
-                var newTitle = page.querySelector('#name-input').value;
 
-                if (newTitle) {
-                    // If input title is not empty, create a new task.
-                    myApp.services.tasks.create(
-                        {
-                            title: newTitle,
-                            category: page.querySelector('#category-input').value,
-                            description: page.querySelector('#description-input').value,
-                            highlight: page.querySelector('#highlight-input').checked,
-                            urgent: page.querySelector('#urgent-input').checked
-                        }
-                    );
-
-                    // Set selected category to 'All', refresh and pop page.
-                    document.querySelector('#settings-list ons-list-item ons-radio').checked = true;
-                    document.querySelector('#settings-list ons-list-item').updateCategoryView();
-                    document.querySelector('#myNavigator').popPage();
-
-                } else {
-                    // Show alert if the input title is empty.
-                    ons.notification.alert('You must provide a task title.');
-                }
-            };
-        });
-    },
-    ////////////////////////////////
-    // Details Task Page Controller //
-    ///////////////////////////////
+    //Single flat page
     flatPage: function (page) {
-        // Get the element passed as argument to pushPage.
-        /*var element = page.data.element;
-
-        // Fill the view with the stored data.
-        page.querySelector('#title-input').value = element.data.title;
-        page.querySelector('#category-input').value = element.data.category;
-        page.querySelector('#description-input').value = element.data.description;
-        page.querySelector('#highlight-input').checked = element.data.highlight;
-        page.querySelector('#urgent-input').checked = element.data.urgent;
-
-        // Set button functionality to save an existing task.
-        page.querySelector('[component="button/save-task"]').onclick = function () {
-            var newTitle = page.querySelector('#title-input').value;
-
-            if (newTitle) {
-                // If input title is not empty, ask for confirmation before saving.
-                ons.notification.confirm(
-                    {
-                        title: 'Save changes?',
-                        message: 'Previous data will be overwritten.',
-                        buttonLabels: ['Discard', 'Save']
-                    }
-                ).then(function (buttonIndex) {
-                    if (buttonIndex === 1) {
-                        // If 'Save' button was pressed, overwrite the task.
-                        myApp.services.tasks.update(element,
-                            {
-                                title: newTitle,
-                                category: page.querySelector('#category-input').value,
-                                description: page.querySelector('#description-input').value,
-                                ugent: element.data.urgent,
-                                highlight: page.querySelector('#highlight-input').checked
-                            }
-                        );
-
-                        // Set selected category to 'All', refresh and pop page.
-                        document.querySelector('#settings-list ons-list-item ons-radio').checked = true;
-                        document.querySelector('#settings-list ons-list-item').updateCategoryView();
-                        document.querySelector('#myNavigator').popPage();
-                    }
-                });
-
+        if (myApp.user.isLandlord()) {
+            if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
+                let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
+                //todo: #display_flat
+                //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
+                let flat = ons.createElement('<div>' + info.name + '</div>');
+                page.querySelector('.content').appendChild(flat);
             } else {
-                // Show alert if the input title is empty.
-                ons.notification.alert('You must provide a task title.');
+                let flats = myApp.user.flats();
+                myApp.services.flat.emptyFlatLandlord(page);
+                myApp.services.flat.list(page, flats);
             }
-        };*/
+        } else if (myApp.user.currentFlat() !== undefined) {
+            let info = myApp.user.currentFlat();
+            //todo: #display_flat
+            //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
+
+            //todo: #edit_flat
+            //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
+            //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
+            let flat = ons.createElement('<div>' + info.name + '</div>');
+            page.querySelector('.content').appendChild(flat);
+        }
+    },
+
+    //New flat page
+    newFlatPage: function (page) {
+        //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
+        //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
+        //todo: wysłać formularz za pomocą funkcji ajax.sendForm
+        //todo: jak w przypadku logowania np: ajax.sendForm(page, onSuccess, onFail);
+        //todo: argumenty: page - aktualna strona
+        //todo: onSucces: funkcja, która ma się wywołać jeśli endpoint odpowie 200
+        //todo: onFail: funkcja, któa się wywoła w przypadku błędu
+    },
+
+    billListPage: function (page) {
+        let bills = myApp.flat.bills();
+        if (Object.keys(bills).length === 0) {
+            myApp.services.bill.emptyList(page);
+        } else {
+            myApp.services.bill.list(page, bills);
+        }
+    },
+
+    billPage: function (page) {
+        //todo: display_bill
+        //todo: edit_bill
+        myApp.services.bill.fill(page, page.data.element);
+    },
+
+    usersPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-tenant"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/user/user_new.html');
+            };
+        });
+        let tenants = myApp.flat.tenants();
+        if (Object.keys(tenants).length === 0) {
+            myApp.services.user.emptyList(page);
+        } else {
+            myApp.services.user.list(page, tenants);
+        }
+    },
+
+    //User info page
+    userPage: function (page) {
+        myApp.services.user.fill(page);
+    },
+
+    tenantPage: function (page) {
+        let info = page.data.element;
+        myApp.services.user.fill(page, info);
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
+            element.onclick = function () {
+                document.getElementById('removeTenant').show();
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/delete-tenant"]'), function (element) {
+            element.onclick = function () {
+                console.log('remove');
+                document.getElementById('removeTenant').hide();
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
+            element.onclick = function () {
+                document.getElementById('removeTenant').hide();
+            };
+        });
+    },
+
+    dashboardPage: function (page) {
+        //todo: #dashboard
+        let lastBill = myApp.flat.bill();
+        if (Object.keys(lastBill).length === 0) {
+            myApp.services.dashboard.noLastBill(page);
+        } else {
+            myApp.services.bill.fill(page, lastBill);
+        }
     }
 };

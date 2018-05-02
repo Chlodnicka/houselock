@@ -11,6 +11,7 @@
     <script src="assets/js/_ajax.js"></script>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/user.js"></script>
+    <script src="assets/js/flat.js"></script>
     <script src="assets/js/services.js"></script>
     <script src="assets/js/controllers.js"></script>
 </head>
@@ -31,19 +32,29 @@
     </ons-page>
 </ons-template>
 
-<template id="splitter.html">
+<template id="landlordSplitter.html">
     <ons-page>
-        <ons-splitter id="mySplitter">
+        <ons-splitter id="landlordSplitter">
             <ons-splitter-side page="html/menu.html" swipeable width="250px" collapse swipe-target-width="50px">
             </ons-splitter-side>
-            <ons-splitter-content page="tabbar.html">
+            <ons-splitter-content page="landlordTabbar.html">
             </ons-splitter-content>
         </ons-splitter>
     </ons-page>
 </template>
 
-<template id="tabbar.html">
-    <ons-page id="tabbarPage">
+
+<template id="tenantSplitter.html">
+    <ons-page>
+        <ons-splitter id="tenantSplitter">
+            <ons-splitter-content page="tenantTabbar.html">
+            </ons-splitter-content>
+        </ons-splitter>
+    </ons-page>
+</template>
+
+<template id="landlordTabbar.html">
+    <ons-page id="landlordTabbarPage">
         <ons-toolbar>
             <div class="left">
                 <!-- Toolbar-button with different icons depending on the platform. -->
@@ -55,12 +66,8 @@
         </ons-toolbar>
 
 
-        <ons-fab position="top right" component="button/new-flat">
-            <ons-icon icon="md-edit"></ons-icon>
-        </ons-fab>
-
         <!-- Auto-positioned Tabbar: top on Android, bottom on iOS/other. -->
-        <ons-tabbar id="myTabbar" swipeable position="bottom">
+        <ons-tabbar id="landlordTabbar" swipeable position="bottom">
             <ons-tab page="html/dashboard.html" label="Dashboard" active icon="fa-globe">
             </ons-tab>
             <ons-tab page="html/flat/flat_info.html" label="Mieszkanie" icon="fa-home">
@@ -68,6 +75,27 @@
             <ons-tab page="html/bill/bill_list.html" label="Rachunki" icon="fa-file">
             </ons-tab>
             <ons-tab page="html/user/user_list.html" label="Lokatorzy" icon="fa-users">
+            </ons-tab>
+        </ons-tabbar>
+    </ons-page>
+</template>
+
+
+<template id="tenantTabbar.html">
+    <ons-page id="tenantTabbarPage">
+        <ons-toolbar>
+            <div class="center">Houselock</div>
+        </ons-toolbar>
+
+        <!-- Auto-positioned Tabbar: top on Android, bottom on iOS/other. -->
+        <ons-tabbar id="tenantTabbar" swipeable position="bottom">
+            <ons-tab page="html/dashboard.html" label="Dashboard" active icon="fa-globe">
+            </ons-tab>
+            <ons-tab page="html/flat/flat_info.html" label="Mieszkanie" icon="fa-home">
+            </ons-tab>
+            <ons-tab page="html/bill/bill_list.html" label="Rachunki" icon="fa-file">
+            </ons-tab>
+            <ons-tab page="html/user/user_info.html" label="Ustawienia" icon="fa-users">
             </ons-tab>
         </ons-tabbar>
     </ons-page>

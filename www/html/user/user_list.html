@@ -1,9 +1,16 @@
 <ons-page id="usersPage">
     <ons-toolbar>
+        <div class="left">
+            <ons-back-button></ons-back-button>
+        </div>
         <div class="center">Lokatorzy</div>
     </ons-toolbar>
-    <ons-lis>
-        <ons-list-header>Lokatorzy przypisani do mieszkania</ons-list-header>
-        <ons-list-item>Filip Tańcula</ons-list-item>
-    </ons-lis>
+    <ons-card>
+        <div class="content">
+            <ons-fab position="bottom right" component="button/new-tenant">
+                <ons-icon icon="md-plus"></ons-icon>
+            </ons-fab>
+
+        </div>
+    </ons-card>
 </ons-page>

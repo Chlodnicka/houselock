@@ -1,0 +1,32 @@
+<ons-page id="tenantPage">
+    <ons-toolbar>
+        <div class="left">
+            <ons-back-button></ons-back-button>
+        </div>
+        <div class="center">Dane lokatora</div>
+    </ons-toolbar>
+    <ons-card>
+        <div class="content">
+            <ons-fab position="bottom right" component="button/remove-tenant">
+                <ons-icon icon="md-delete"></ons-icon>
+            </ons-fab>
+
+            <ons-list-header>Dane</ons-list-header>
+
+            <form data-ajax="/user/save" method="post" id="user_info_save">
+            </form>
+
+            <ons-alert-dialog id="removeTenant">
+                <div class="alert-dialog-title">Uwaga!</div>
+                <div class="alert-dialog-content">
+                    Akcja usunięcia lokatora z mieszkania jest nieodwracalna.<br/>
+                    Czy napewno chcesz to zrobić?
+                </div>
+                <div class="alert-dialog-footer">
+                    <ons-alert-dialog-button component="button/cancel">Anuluj</ons-alert-dialog-button>
+                    <ons-alert-dialog-button component="button/delete-tenant">Usuń</ons-alert-dialog-button>
+                </div>
+            </ons-alert-dialog>
+        </div>
+    </ons-card>
+</ons-page>

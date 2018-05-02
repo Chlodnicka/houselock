@@ -7,10 +7,13 @@
     </ons-toolbar>
     <ons-card>
         <div class="content">
-            <ons-list-header>Dane użytkownika</ons-list-header>
-            <ons-list-item tappable><div>Filip Tańcula</div></ons-list-item>
-            <ons-list-item>Jakaś ulica</ons-list-item>
-            <ons-list-item>Numer telefonu</ons-list-item>
+            <ons-fab position="bottom right" component="button/edit">
+                <ons-icon icon="md-edit"></ons-icon>
+            </ons-fab>
+            <ons-list-header>Dane</ons-list-header>
+
+            <form data-ajax="/user/save" method="post" id="user_info_save">
+            </form>
         </div>
     </ons-card>
 </ons-page>

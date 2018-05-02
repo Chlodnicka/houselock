@@ -5,10 +5,12 @@
         </div>
         <div class="center">Lista mieszkań</div>
     </ons-toolbar>
-    <ons-list>
-        <ons-list-item modifier="chevron" tappable>Mieszkanie 1</ons-list-item>
-        <ons-list-item modifier="chevron" tappable>Mieszkanie 2</ons-list-item>
-        <ons-list-item modifier="chevron" tappable>Mieszkanie 3</ons-list-item>
-        <ons-button>Dodaj mieszkanie</ons-button>
-    </ons-list>
+    <ons-card>
+        <div class="content">
+            <ons-fab position="bottom right" component="button/new-flat">
+                <ons-icon icon="md-plus"></ons-icon>
+            </ons-fab>
+
+        </div>
+    </ons-card>
 </ons-page>
