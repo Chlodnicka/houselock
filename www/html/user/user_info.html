@@ -10,10 +10,18 @@
             <ons-fab position="bottom right" component="button/edit">
                 <ons-icon icon="md-edit"></ons-icon>
             </ons-fab>
-            <ons-list-header>Dane</ons-list-header>
+            <ons-list>
+                <ons-list-header>Dane</ons-list-header>
 
-            <form data-ajax="/user/save" method="post" id="user_info_save">
-            </form>
+                <form data-ajax="/user/save" method="post" id="user_info_save">
+                </form>
+            </ons-list>
         </div>
+    </ons-card>
+
+    <ons-card>
+        <ons-list>
+            <ons-list-item modifier="longdivider" tappable component="button/logout">Wyloguj się</ons-list-item>
+        </ons-list>
     </ons-card>
 </ons-page>

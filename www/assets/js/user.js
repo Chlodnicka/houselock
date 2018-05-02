@@ -56,6 +56,10 @@ myApp.user = {
         return myApp.user.flats()[id];
     },
 
+    currentFlatId: function () {
+        return localStorage.getItem('currentFlat');
+    },
+
     splitter: function () {
         if (this.isLandlord()) {
             return 'landlord';

@@ -127,6 +127,10 @@ myApp.services = {
             });
         },
 
+        save: function (page) {
+            ajax.sendForm(page);
+        },
+
         clearAll: function () {
             localStorage.clear();
             sessionStorage.clear();
@@ -264,8 +268,8 @@ myApp.services = {
         },
 
         // Add user to flat
-        add: function (flat, data) {
-
+        addSuccess: function (response) {
+            console.log(response);
         },
 
         //Remove user from flat
