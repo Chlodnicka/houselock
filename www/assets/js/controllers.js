@@ -127,6 +127,12 @@ myApp.controllers = {
     //User info page
     userPage: function (page) {
         myApp.services.user.fill(page);
+
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.common.redirectToLogin();
+            };
+        });
     },
 
     tenantPage: function (page) {
@@ -146,6 +152,17 @@ myApp.controllers = {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
             element.onclick = function () {
                 document.getElementById('removeTenant').hide();
+            };
+        });
+    },
+
+    tenantNewPage: function (page) {
+        form = $(page.querySelector('form'));
+        let action = form.attr('data-ajax').replace('{id}', myApp.user.currentFlatId());
+        form.attr('data-ajax', action);
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.common.save(page);
             };
         });
     },

@@ -1,4 +1,4 @@
-<ons-page id="userNewPage">
+<ons-page id="tenantNewPage">
     <ons-toolbar>
         <div class="left">
             <ons-back-button></ons-back-button>
@@ -7,8 +7,8 @@
     </ons-toolbar>
     <ons-card>
         <div class="content">
-            <form data-ajax="/user/add" method="post" id="user_add">
-                <ons-input placeholder="Email" type="text" float></ons-input>
+            <form data-ajax="/api/flat/{id}/user/add" method="post" id="user_add">
+                <ons-input placeholder="Email" type="text" float id="email"></ons-input>
                 <ons-button modifier="large" component="button/save">Zapisz</ons-button>
             </form>
         </div>
