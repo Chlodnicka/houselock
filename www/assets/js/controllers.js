@@ -24,6 +24,19 @@ myApp.controllers = {
                 ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
             };
         });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/auth/register_owner.html');
+            };
+        });
+    },
+
+    registerPage: function (page) {
+        page.querySelectorAll('[component="button/register"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
+            };//TODO make it work and properly register new user
+        };
     },
 
     //Tabbar page
