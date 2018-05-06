@@ -99,6 +99,11 @@ myApp.controllers = {
 
     //New flat page
     newFlatPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#addFlat').pushPage('html/flat/flat_new.html');
+            };
+        });
         //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
         //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
         //todo: wysłać formularz za pomocą funkcji ajax.sendForm
