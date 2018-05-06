@@ -98,6 +98,7 @@ myApp.services = {
         },
 
         authorizeFail: function () {
+            ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
             console.log('porażka!');
         },
 
