@@ -104,6 +104,11 @@ myApp.controllers = {
                 document.querySelector('#addFlat').pushPage('html/flat/flat_new.html');
             };
         });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.common.redirectToCurrentFlat(), ons.notification.alert('Nie udalo sie dodac mieszkania!'));
+            };
+        });
         //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
         //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
         //todo: wysłać formularz za pomocą funkcji ajax.sendForm
