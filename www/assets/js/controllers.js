@@ -24,6 +24,19 @@ myApp.controllers = {
                 ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
             };
         });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/auth/register_owner.html');
+            };
+        });
+    },
+
+    registerPage: function (page) {
+        page.querySelectorAll('[component="button/register"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
+            };//TODO make it work and properly register new user
+        };
     },
 
     //Tabbar page
@@ -86,6 +99,16 @@ myApp.controllers = {
 
     //New flat page
     newFlatPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#addFlat').pushPage('html/flat/flat_new.html');
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.common.redirectToCurrentFlat(), ons.notification.alert('Nie udalo sie dodac mieszkania!'));
+            };
+        });
         //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
         //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
         //todo: wysłać formularz za pomocą funkcji ajax.sendForm
