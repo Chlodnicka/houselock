@@ -7,8 +7,8 @@ window.ajax = {
         onSuccess: function () {
             ons.notification.alert('Sukces!');
         },
-        onFail: function () {
-            ons.notification.alert('Błąd połączenia. Spróbuj jeszcze raz.');
+        onFail: function (response) {
+            ons.notification.alert(response.responseJSON.data);
         }
     },
 
@@ -44,7 +44,7 @@ window.ajax = {
                 onSuccess ? onSuccess(response, page) : this.onSuccess();
             })
             .fail(function (response) {
-                onFail ? onFail(response) : this.onFail();
+                onFail ? onFail(response) : this.onFail(response);
             })
             .always(function () {
 

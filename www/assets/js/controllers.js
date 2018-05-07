@@ -140,13 +140,14 @@ myApp.controllers = {
         myApp.services.user.fill(page, info);
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
             element.onclick = function () {
+                //todo: nie otwiera się po raz kolejny
                 document.getElementById('removeTenant').show();
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/delete-tenant"]'), function (element) {
             element.onclick = function () {
-                console.log('remove');
                 document.getElementById('removeTenant').hide();
+                ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
@@ -162,7 +163,7 @@ myApp.controllers = {
         form.attr('data-ajax', action);
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function (element) {
             element.onclick = function () {
-                myApp.services.common.save(page);
+                myApp.services.common.save(page, myApp.services.common.updateFlat);
             };
         });
     },

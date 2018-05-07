@@ -127,8 +127,8 @@ myApp.services = {
             });
         },
 
-        save: function (page) {
-            ajax.sendForm(page);
+        save: function (page, onSuccess) {
+            ajax.sendForm(page, onSuccess);
         },
 
         clearAll: function () {
@@ -138,9 +138,14 @@ myApp.services = {
 
         setCurrentFlat: function (id) {
             localStorage.setItem('currentFlat', id);
-            ajax.send('get', '/api/flat/' + id, '{}', myApp.services.flat.fill);
-        }
+            ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlat);
+        },
 
+        updateFlat: function (response) {
+            let data = JSON.stringify(response);
+            localStorage.setItem('flatData', data);
+            myNavigator.pushPage(myApp.user.splitter());
+        }
     },
 
     /////////////////////
@@ -245,7 +250,8 @@ myApp.services = {
         },
 
         item: function (page, user) {
-            let name = user.firstname + ' ' + user.lastname;
+
+            let name = user.lastname ?  user.firstname + ' ' + user.lastname : user.email;
 
             let userItem = ons.createElement(
                 '<div>' +
@@ -271,11 +277,6 @@ myApp.services = {
         addSuccess: function (response) {
             console.log(response);
         },
-
-        //Remove user from flat
-        remove: function (flat, user) {
-
-        }
 
     },
 
@@ -323,12 +324,6 @@ myApp.services = {
                 let info = ons.createElement('<div>Wybierz lub dodaj mieszkanie.</div>');
                 page.querySelector('.content').appendChild(info);
                 myApp.services.flat.list(page);
-            },
-
-            fill: function (response) {
-                let data = JSON.stringify(response);
-                localStorage.setItem('flatData', data);
-                myNavigator.pushPage(myApp.user.splitter() + 'Splitter.html');
             },
 
             // Creates a new flat

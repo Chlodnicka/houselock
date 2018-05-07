@@ -62,9 +62,9 @@ myApp.user = {
 
     splitter: function () {
         if (this.isLandlord()) {
-            return 'landlord';
+            return 'landlordSplitter.html';
         } else {
-            return 'tenant';
+            return 'tenantSplitter.html';
         }
     },
 
