@@ -68,6 +68,42 @@ myApp.services = {
             }
         },
 
+        parseConfig: function (config) {
+            if (config === 'METER') {
+                return 'Uzupełnij stan licznika';
+            } else if (config === 'BILL') {
+                return 'Uzupełnij kwotę rachunku'
+            }
+            return false;
+        },
+
+        fillConfig: function (name, index, value, config) {
+            let editGas = config ?
+                '<div class="edit" style="display: none;">' +
+                '<label for="' + index + '">' + name + ' (' + config + ')</label>' +
+                '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + config + '" value="' + value + '" float class="edit hidden">' +
+                '</ons-input>' +
+                '</div>' : '';
+
+            return ons.createElement(
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">' + name + ':</div>' +
+                '<div class="right" id="">' + value + '</div>' +
+                '</ons-list-item>' +
+                editGas +
+                '</div>'
+            );
+        },
+
+        fillConfigElement: function (page, info, config, name, index) {
+            let configMessage = myApp.services.common.parseConfig(config),
+                id = index + '_price',
+                bill = myApp.services.common.fillConfig(name, id, info[id], configMessage);
+
+            page.querySelector('.content').appendChild(bill);
+        },
+
         token: {
             get: function () {
                 return localStorage.getItem('token');
@@ -251,7 +287,7 @@ myApp.services = {
 
         item: function (page, user) {
 
-            let name = user.lastname ?  user.firstname + ' ' + user.lastname : user.email;
+            let name = user.lastname ? user.firstname + ' ' + user.lastname : user.email;
 
             let userItem = ons.createElement(
                 '<div>' +
@@ -360,7 +396,8 @@ myApp.services = {
         },
 
         item: function (page, bill) {
-            let name = myApp.services.common.parseMonth(bill.month) + ' ' + bill.year + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.payment_status);
+            let date = myApp.services.common.parseMonth(bill.month) + ' ' + bill.year,
+                name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.payment_status);
 
             let billItem = ons.createElement(
                 '<div>' +
@@ -383,25 +420,66 @@ myApp.services = {
         },
 
         fill: function (page, info) {
-            //todo: wyświetlić wszystkie dane aktualnego rachunku
-            //todo: przykładowe dostępne dane w zmiennej 'info' np. console.log(info)
 
+            let month = myApp.services.common.parseMonth(info.month);
 
-            let bill = ons.createElement('<div>' + myApp.services.common.parseMonth(info.month) + ' ' + info.year + ' - ' + info.sum + '</div>');
-            page.querySelector('.content').appendChild(bill);
+            if (page.getAttribute('id') !== 'dashboardPage') {
+                let date = month + ' ' + info.year;
 
-            //todo: zrobione wyświetlanie odpowiednich guzików - trzeba zdefiniować na nich akcje na onClick
-            //todo: przykład poniżej:
-            // billItem = ons.createElement(<button></button>)
-            // billItem.querySelector('.center').onclick = function () {
-            //     myNavigator.pushPage('html/bill/bill_info.html',
-            //         {
-            //             animation: 'lift',
-            //             data: {
-            //                 element: bill
-            //             }
-            //         });
-            // };
+                page.querySelector('.bill_name').appendChild(document.createTextNode(date));
+            }
+
+            let flat = myApp.user.currentFlat(),
+                payDay = flat.pay_day + ' ' + month + ' ' + info.year;
+
+            console.log(info);
+
+            let billMainInfo = ons.createElement(
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do kiedy płatny:</div>' +
+                '<div class="right" id="">' + payDay + '</div>' +
+                '</ons-list-item>' +
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do zapłaty:</div>' +
+                '<div class="right" id="">' + info.sum + ' zł</div>' +
+                '</ons-list-item>' +
+                '</div>'
+            );
+            page.querySelector('.content').appendChild(billMainInfo);
+
+            if (info.gas_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.gas.config_type, 'Gaz', 'gas');
+            }
+
+            if (info.power_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.power.config_type, 'Prąd', 'power');
+            }
+
+            if (info.water_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.water.config_type, 'Woda', 'water');
+            }
+
+            if (info.waste_water_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.waste_water.config_type, 'Ścieki', 'waste_water');
+            }
+
+            if (info.rent_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.rent.config_type, 'Czynsz', 'rent');
+            }
+
+            if (info.tv_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.tv.config_type, 'Telewizja', 'tv');
+            }
+
+            if (info.internet_price !== null) {
+                myApp.services.common.fillConfigElement(page, info, flat.flat_config.internet.config_type, 'Internet', 'internet');
+            }
+
+            let saveBtn = ons.createElement('<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>');
+
+            page.querySelector('.content').appendChild(saveBtn);
 
             if (myApp.user.isLandlord()) {
                 if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
@@ -411,9 +489,12 @@ myApp.services = {
                     page.querySelector('.content').appendChild(markAsPaid);
                     if (info.payment_status === 'NEW') {
                         let edit = ons.createElement(
-                            '<ons-button component="button/edit-info">Edytuj rachunek</ons-button>'
+                            '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
                         );
+
                         page.querySelector('.content').appendChild(edit);
+
+                        myApp.services.common.edit(page);
                     }
                 } else if (info.payment_status === 'UNPAID') {
                     let resendAlert = ons.createElement(
