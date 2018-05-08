@@ -101,7 +101,12 @@ myApp.services = {
                 id = index + '_price',
                 bill = myApp.services.common.fillConfig(name, id, info[id], configMessage);
 
-            page.querySelector('.content').appendChild(bill);
+            page.querySelector('form').appendChild(bill);
+        },
+
+        parseAction: function (form, id) {
+            let ajax = $(form).attr('data-ajax').replace('{id}', id);
+            $(form).attr('data-ajax', ajax);
         },
 
         token: {
@@ -432,8 +437,6 @@ myApp.services = {
             let flat = myApp.user.currentFlat(),
                 payDay = flat.pay_day + ' ' + month + ' ' + info.year;
 
-            console.log(info);
-
             let billMainInfo = ons.createElement(
                 '<div>' +
                 '<ons-list-item>' +
@@ -447,7 +450,7 @@ myApp.services = {
                 '</ons-list-item>' +
                 '</div>'
             );
-            page.querySelector('.content').appendChild(billMainInfo);
+            page.querySelector('form').appendChild(billMainInfo);
 
             if (info.gas_price !== null) {
                 myApp.services.common.fillConfigElement(page, info, flat.flat_config.gas.config_type, 'Gaz', 'gas');
@@ -479,23 +482,32 @@ myApp.services = {
 
             let saveBtn = ons.createElement('<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>');
 
-            page.querySelector('.content').appendChild(saveBtn);
+            saveBtn.onclick = function () {
+                myApp.services.bill.update(page)
+            };
+
+            let form = page.querySelector('form');
+            form.appendChild(saveBtn);
+
+            myApp.services.common.parseAction(form, info.id);
 
             if (myApp.user.isLandlord()) {
                 if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
-                    let markAsPaid = ons.createElement(
-                        '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
-                    );
-                    page.querySelector('.content').appendChild(markAsPaid);
                     if (info.payment_status === 'NEW') {
                         let edit = ons.createElement(
                             '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
                         );
 
-                        page.querySelector('.content').appendChild(edit);
+                        page.querySelector('form').appendChild(edit);
 
                         myApp.services.common.edit(page);
                     }
+
+                    let markAsPaid = ons.createElement(
+                        '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
+                    );
+                    page.querySelector('.content').appendChild(markAsPaid);
+
                 } else if (info.payment_status === 'UNPAID') {
                     let resendAlert = ons.createElement(
                         '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
@@ -506,8 +518,8 @@ myApp.services = {
         },
 
         // Update bill
-        update: function (bill, data) {
-
+        update: function (page) {
+            ajax.sendForm(page);
         },
 
 
