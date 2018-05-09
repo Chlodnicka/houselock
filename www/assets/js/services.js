@@ -78,7 +78,9 @@ myApp.services = {
         },
 
         fillConfig: function (name, index, value, config) {
-            let editGas = config ?
+
+            //jakoś tu trzeba wpierdzielić gas_meter jeśli to licznik, a nie cenę w formularzu
+            let edit = config ?
                 '<div class="edit" style="display: none;">' +
                 '<label for="' + index + '">' + name + ' (' + config + ')</label>' +
                 '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + config + '" value="' + value + '" float class="edit hidden">' +
@@ -91,7 +93,7 @@ myApp.services = {
                 '<div class="left">' + name + ':</div>' +
                 '<div class="right" id="">' + value + '</div>' +
                 '</ons-list-item>' +
-                editGas +
+                edit +
                 '</div>'
             );
         },
@@ -519,7 +521,7 @@ myApp.services = {
 
         // Update bill
         update: function (page) {
-            ajax.sendForm(page);
+            ajax.sendForm(page, myApp.services.common.updateFlat);
         },
 
 
