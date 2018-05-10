@@ -77,35 +77,6 @@ myApp.services = {
             return false;
         },
 
-        fillConfig: function (name, index, value, config) {
-
-            //jakoś tu trzeba wpierdzielić gas_meter jeśli to licznik, a nie cenę w formularzu
-            let edit = config ?
-                '<div class="edit" style="display: none;">' +
-                '<label for="' + index + '">' + name + ' (' + config + ')</label>' +
-                '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + config + '" value="' + value + '" float class="edit hidden">' +
-                '</ons-input>' +
-                '</div>' : '';
-
-            return ons.createElement(
-                '<div>' +
-                '<ons-list-item>' +
-                '<div class="left">' + name + ':</div>' +
-                '<div class="right" id="">' + value + '</div>' +
-                '</ons-list-item>' +
-                edit +
-                '</div>'
-            );
-        },
-
-        fillConfigElement: function (page, info, config, name, index) {
-            let configMessage = myApp.services.common.parseConfig(config),
-                id = index + '_price',
-                bill = myApp.services.common.fillConfig(name, id, info[id], configMessage);
-
-            page.querySelector('form').appendChild(bill);
-        },
-
         parseAction: function (form, id) {
             let ajax = $(form).attr('data-ajax').replace('{id}', id);
             $(form).attr('data-ajax', ajax);
@@ -160,11 +131,28 @@ myApp.services = {
                 element.onclick = function () {
                     element.style.display = 'none';
                     page.querySelector('[component="button/save"]').style.display = 'block';
+                    page.querySelector('[component="button/cancel"]').style.display = 'block';
                     Array.prototype.forEach.call(page.querySelectorAll('ons-list-item'), function (listitem) {
                         listitem.style.display = 'none';
                     });
                     Array.prototype.forEach.call(page.querySelectorAll('.edit'), function (edititem) {
                         edititem.style.display = 'block';
+                    });
+                };
+            });
+        },
+
+        cancel: function (page) {
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
+                element.onclick = function () {
+                    element.style.display = 'none';
+                    page.querySelector('[component="button/save"]').style.display = 'none';
+                    page.querySelector('[component="button/edit"]').style.display = 'block';
+                    Array.prototype.forEach.call(page.querySelectorAll('ons-list-item'), function (listitem) {
+                        listitem.style.display = 'flex';
+                    });
+                    Array.prototype.forEach.call(page.querySelectorAll('.edit'), function (edititem) {
+                        edititem.style.display = 'none';
                     });
                 };
             });
@@ -266,7 +254,7 @@ myApp.services = {
                 )
             ;
 
-            userInfo.querySelector('ons-button').onclick = function () {
+            userInfo.querySelector('').onclick = function () {
                 myApp.services.user.save(page.querySelector('form'))
             };
 
@@ -448,48 +436,29 @@ myApp.services = {
                 '<div>' +
                 '<ons-list-item>' +
                 '<div class="left">Do zapłaty:</div>' +
-                '<div class="right" id="">' + info.sum + ' zł</div>' +
+                '<div class="right" id="">' + parseFloat(info.sum).toFixed(2) + ' zł</div>' +
                 '</ons-list-item>' +
                 '</div>'
             );
             page.querySelector('form').appendChild(billMainInfo);
 
-            if (info.gas_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.gas.config_type, 'Gaz', 'gas');
-            }
+            myApp.services.bill.fillConfig(page, info, flat.flat_config);
 
-            if (info.power_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.power.config_type, 'Prąd', 'power');
-            }
-
-            if (info.water_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.water.config_type, 'Woda', 'water');
-            }
-
-            if (info.waste_water_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.waste_water.config_type, 'Ścieki', 'waste_water');
-            }
-
-            if (info.rent_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.rent.config_type, 'Czynsz', 'rent');
-            }
-
-            if (info.tv_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.tv.config_type, 'Telewizja', 'tv');
-            }
-
-            if (info.internet_price !== null) {
-                myApp.services.common.fillConfigElement(page, info, flat.flat_config.internet.config_type, 'Internet', 'internet');
-            }
-
-            let saveBtn = ons.createElement('<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>');
+            let saveBtn = ons.createElement('<ons-button style="display:none;" component="button/save">Zapisz</ons-button>');
 
             saveBtn.onclick = function () {
                 myApp.services.bill.update(page)
             };
 
+            let cancelBtn = ons.createElement('<ons-button style="display:none;" component="button/cancel">Anuluj</ons-button>');
+
+            cancelBtn.onclick = function () {
+                myApp.services.common.cancel(page)
+            };
+
             let form = page.querySelector('form');
             form.appendChild(saveBtn);
+            form.appendChild(cancelBtn);
 
             myApp.services.common.parseAction(form, info.id);
 
@@ -517,6 +486,80 @@ myApp.services = {
                     page.querySelector('.content').appendChild(resendAlert);
                 }
             }
+
+            if (myApp.user.isTenant()) {
+                if (info.payment_status !== 'PAID') {
+                    let pay = ons.createElement(
+                        '<ons-button component="button/pay">Zapłać</ons-button>'
+                    );
+                    page.querySelector('.content').appendChild(pay);
+                }
+            }
+        },
+
+        fillConfig: function (page, info, config) {
+            if (info.gas_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.gas.config_type, 'Gaz', 'gas');
+            }
+
+            if (info.power_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.power.config_type, 'Prąd', 'power');
+            }
+
+            if (info.water_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.water.config_type, 'Woda', 'water');
+            }
+
+            if (info.waste_water_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.waste_water.config_type, 'Ścieki', 'waste_water');
+            }
+
+            if (info.rent_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.rent.config_type, 'Czynsz', 'rent');
+            }
+
+            if (info.tv_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.tv.config_type, 'Telewizja', 'tv');
+            }
+
+            if (info.internet_price !== null) {
+                myApp.services.bill.fillConfigElement(page, info, config.internet.config_type, 'Internet', 'internet');
+            }
+        },
+
+        fillConfigElement: function (page, info, config, name, index) {
+            let configMessage = myApp.services.common.parseConfig(config);
+            let edit = configMessage ?
+                myApp.services.bill.configEdit(name, index, info[index + '_price'], configMessage, config)
+                : '';
+
+            bill = ons.createElement(
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">' + name + ':</div>' +
+                '<div class="right" id="">' + parseFloat(info[index + '_price']).toFixed(2) + '</div>' +
+                '</ons-list-item>' +
+                edit +
+                '</div>'
+            );
+
+            page.querySelector('form').appendChild(bill);
+        },
+
+        configEdit: function (name, index, value, configMessage, config) {
+            let edit = '<div class="edit" style="display: none;">' +
+                '<label for="' + index + '_price">' + name + ' (' + configMessage + ')</label>' +
+                '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
+
+            if (config === 'METER') {
+                edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
+            } else {
+                edit += parseFloat(value).toFixed(2);
+            }
+
+            edit += '" float class="edit hidden">';
+            edit += '</ons-input></div>';
+            return edit;
         },
 
         // Update bill
