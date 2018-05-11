@@ -254,7 +254,7 @@ myApp.services = {
                 )
             ;
 
-            userInfo.querySelector('').onclick = function () {
+            userInfo.querySelector('[component="button/save"]').onclick = function () {
                 myApp.services.user.save(page.querySelector('form'))
             };
 
@@ -477,6 +477,12 @@ myApp.services = {
                     let markAsPaid = ons.createElement(
                         '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
                     );
+
+                    markAsPaid.onclick = function () {
+                        myApp.services.bill.markAsPaid(info.id);
+                    };
+
+
                     page.querySelector('.content').appendChild(markAsPaid);
 
                 } else if (info.payment_status === 'UNPAID') {
@@ -574,8 +580,9 @@ myApp.services = {
         },
 
         //Mark bill as paid
-        markAsPaid: function (bill) {
-
+        markAsPaid: function (id) {
+            console.log(id);
+            ajax.send('post', '/api/bill/' + id + '/markAsPaid', {}, myApp.services.common.updateFlat);
         }
 
     },
