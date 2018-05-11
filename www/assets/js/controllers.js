@@ -106,16 +106,10 @@ myApp.controllers = {
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.redirectToCurrentFlat(), ons.notification.alert('Nie udalo sie dodac mieszkania!'));
+                //TODO check if the name isn't empty string
+                myApp.services.flat.create(page);
             };
         });
-        //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
-        //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
-        //todo: wysłać formularz za pomocą funkcji ajax.sendForm
-        //todo: jak w przypadku logowania np: ajax.sendForm(page, onSuccess, onFail);
-        //todo: argumenty: page - aktualna strona
-        //todo: onSucces: funkcja, która ma się wywołać jeśli endpoint odpowie 200
-        //todo: onFail: funkcja, któa się wywoła w przypadku błędu
     },
 
     billListPage: function (page) {

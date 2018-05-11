@@ -176,7 +176,7 @@ myApp.services = {
             let data = JSON.stringify(response);
             localStorage.setItem('flatData', data);
             myNavigator.pushPage(myApp.user.splitter());
-        }
+        },
     },
 
     /////////////////////
@@ -356,10 +356,17 @@ myApp.services = {
                 page.querySelector('.content').appendChild(info);
                 myApp.services.flat.list(page);
             },
+            create: function(page){
+                ajax.sendForm(page, myApp.services.flat.onCreatedSuccess(), myApp.services.flat.onCreateFail());
+            },
 
-            // Creates a new flat
-            create: function (data) {
 
+            onCreatedSuccess: function () {
+                myNavigator.pushPage('html/flat/flat_info.html');
+            },
+
+            onCreateFail: function (){
+                ons.notification.alert('Nie udalo sie dodac mieszkania!');
             },
 
             // Modifies the inner data and current view of an existing flat.
@@ -592,7 +599,7 @@ myApp.services = {
             let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
             page.querySelector('.content').appendChild(info);
         }
-    }
+    },
 
 }
 ;

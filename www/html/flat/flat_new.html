@@ -14,11 +14,14 @@
     </ons-toolbar>
 
     <ons-list-title>Adres</ons-list-title>
+
     <ons-list>
         <ons-list-item modifier="nodivider">
+            <form data-ajax="/api/flat/create" method="post" id="create-flat">
             <div class="center">
                 <ons-input id="name-input" type="text" placeholder="Nazwa" float></ons-input>
             </div>
+            </form>
         </ons-list-item>
     </ons-list>
 
