@@ -60,10 +60,6 @@ myApp.user = {
         return localStorage.getItem('currentFlat');
     },
 
-    lastMeter: function () {
-
-    },
-
     splitter: function () {
         if (this.isLandlord()) {
             return 'landlordSplitter.html';

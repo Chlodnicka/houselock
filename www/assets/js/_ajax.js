@@ -16,9 +16,8 @@ window.ajax = {
         var formObject = $(form);
 
         this.options.method = formObject.attr('method') ? formObject.attr('method') : this.options.method;
-        console.log(this.options.method);
         this.options.url = this.options.domain + formObject.attr('data-ajax');
-        console.log(this.options.url);
+
         if (formObject.attr('id') != 'login') {
             this.options.beforeSend = function (xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
@@ -26,7 +25,6 @@ window.ajax = {
         }
 
         this.options.data = this.serializeData(formObject);
-        console.log(this.options.data);
     },
 
     serializeData: function (form) {
