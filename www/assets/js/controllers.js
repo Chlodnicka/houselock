@@ -215,11 +215,15 @@ myApp.controllers = {
 
         page.querySelector('.flat_info').appendChild(flat);
 
+        //todo: dopisać wysłanie requesta do api z zaakceptowaniem zaproszenia #accept (/api/accept)
+
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
             element.onclick = function () {
                 console.log('accept');
             };
         });
+
+        //todo: dopisać wysłanie requesta do api z odrzuceniem zaproszenia #ignore (/api/ignore)
 
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
             element.onclick = function () {
