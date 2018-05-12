@@ -58,6 +58,11 @@ myApp.controllers = {
     //Flat list page
     flatListPage: function (page) {
         let flats = myApp.user.flats();
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
+            };
+        });
         if (Object.keys(flats).length === 0) {
             myApp.services.flat.emptyList(page);
         } else {
@@ -87,14 +92,9 @@ myApp.controllers = {
             //todo: #edit_flat
             //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
             //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
-
             let flat = ons.createElement('<div>' + info.name + '</div>');
             page.querySelector('.content').appendChild(flat);
         }
-    },
-
-    currentflatPage: function (page) {
-        myApp.services.flat.fill(page, page.data.element);
     },
 
     //New flat page
@@ -106,16 +106,10 @@ myApp.controllers = {
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.redirectToCurrentFlat(), ons.notification.alert('Nie udalo sie dodac mieszkania!'));
+                //TODO check if the name isn't empty string
+                myApp.services.flat.create(page);
             };
         });
-        //todo: #add_flat - wyświetla widok: html/flat/flat_new.html
-        //todo: dodać zachowanie na buttonie do zapisu (component="button/add-flat")
-        //todo: wysłać formularz za pomocą funkcji ajax.sendForm
-        //todo: jak w przypadku logowania np: ajax.sendForm(page, onSuccess, onFail);
-        //todo: argumenty: page - aktualna strona
-        //todo: onSucces: funkcja, która ma się wywołać jeśli endpoint odpowie 200
-        //todo: onFail: funkcja, któa się wywoła w przypadku błędu
     },
 
     billListPage: function (page) {
