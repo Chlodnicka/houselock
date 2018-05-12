@@ -76,7 +76,7 @@ myApp.controllers = {
             if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
                 //todo: #display_flat
-                //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
+                //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
                 let flat = ons.createElement('<div>' + info.name + '</div>');
                 page.querySelector('.content').appendChild(flat);
             } else {
@@ -87,7 +87,7 @@ myApp.controllers = {
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
             //todo: #display_flat
-            //todo: najlepiej stworzyć funkcję w serwisach plik: services.js
+            //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
 
             //todo: #edit_flat
             //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
