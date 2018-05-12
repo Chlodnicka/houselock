@@ -52,7 +52,7 @@ myApp.services.flat = {
     },
 
     onCreateFail: function () {
-        ons.notification.alert('Nie udalo sie dodac mieszkania!');
+        ons.notification.alert({message: 'Nie udalo sie dodac mieszkania!'});
     },
 
     // Modifies the inner data and current view of an existing flat.
