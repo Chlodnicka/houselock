@@ -157,7 +157,7 @@ myApp.controllers = {
         myApp.services.user.fill(page, info);
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
             element.onclick = function () {
-                //todo: nie otwiera się po raz kolejny
+                //todo: nie pokazuje się po raz kolejny
                 document.getElementById('removeTenant').show();
             };
         });
@@ -186,12 +186,47 @@ myApp.controllers = {
     },
 
     dashboardPage: function (page) {
-        //todo: #dashboard
         let lastBill = myApp.flat.bill();
         if (Object.keys(lastBill).length === 0) {
             myApp.services.dashboard.noLastBill(page);
         } else {
             myApp.services.bill.fill(page, lastBill);
         }
+    },
+
+    userNoFlatPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.common.redirectToLogin();
+            };
+        });
+    },
+
+    userAcceptPage: function (page) {
+        let flatInfo = myApp.flat.currentFlat();
+        let flat_number = flatInfo.flat_number ? '/' + flatInfo.flat_number : '';
+        let flat = ons.createElement(
+            '<div>' +
+            '<ons-list-item>Ulica i numer: ' + flatInfo.street + ' ' + flatInfo.building_number + flat_number + '</ons-list-item>' +
+            '<ons-list-item>Miasto: ' + flatInfo.city + '</ons-list-item>' +
+            '</div>'
+            )
+        ;
+
+        page.querySelector('.flat_info').appendChild(flat);
+
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
+            element.onclick = function () {
+                console.log('accept');
+            };
+        });
+
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
+            element.onclick = function () {
+                console.log('no flat');
+                myNavigator.pushPage('html/user/user_no_flat.html');
+            };
+        });
+
     }
 };

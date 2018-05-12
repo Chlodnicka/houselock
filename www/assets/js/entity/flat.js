@@ -27,6 +27,16 @@ myApp.flat = {
     meter: function () {
         let info = JSON.parse(localStorage.getItem('flatData')).data;
         return info.last_meter;
+    },
+
+    userBill: function () {
+        let info = JSON.parse(localStorage.getItem('flatData')).data;
+        return info.user_bill;
+    },
+
+    userBills: function () {
+        let info = JSON.parse(localStorage.getItem('flatData')).data;
+        return info.user_bills;
     }
 
 };

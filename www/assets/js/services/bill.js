@@ -51,6 +51,15 @@ myApp.services.bill = {
         let flat = myApp.user.currentFlat(),
             payDay = flat.pay_day + ' ' + month + ' ' + info.year;
 
+        let sum = parseFloat(info.sum).toFixed(2);
+
+        if (myApp.user.isTenant()) {
+            let countTenant = Object.keys(myApp.flat.tenants()).length;
+            sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
+        } else {
+            sum += ' zł';
+        }
+
         let billMainInfo = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
@@ -60,7 +69,7 @@ myApp.services.bill = {
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">Do zapłaty:</div>' +
-            '<div class="right" id="">' + parseFloat(info.sum).toFixed(2) + ' zł</div>' +
+            '<div class="right" id="">' + sum + '</div>' +
             '</ons-list-item>' +
             '</div>'
         );
@@ -118,10 +127,15 @@ myApp.services.bill = {
         }
 
         if (myApp.user.isTenant()) {
-            if (info.payment_status !== 'PAID') {
+            if (myApp.flat.userBill().status !== 'PAID') {
                 let pay = ons.createElement(
                     '<ons-button component="button/pay">Zapłać</ons-button>'
                 );
+
+                pay.onclick = function () {
+                    myApp.services.bill.pay(info.id);
+                };
+
                 page.querySelector('.content').appendChild(pay);
             }
         }
@@ -199,8 +213,8 @@ myApp.services.bill = {
 
 
     // Pay bill
-    pay: function (bill) {
-
+    pay: function (id) {
+        ajax.send('post', '/api/bill/pay/' + id, {}, myApp.services.common.updateFlat)
     },
 
     //Mark bill as paid

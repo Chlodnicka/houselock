@@ -74,7 +74,12 @@ myApp.user = {
 
     hasInvitation: function () {
         let info = myApp.user.data();
-        return info.status && info.status === 'TEMP';
+        return info.status && info.status === 'TEMP' && Object.keys(myApp.user.flats()).length > 0;
+    },
+
+    status: function () {
+        let info = myApp.user.data();
+        return info.status;
     }
 
 

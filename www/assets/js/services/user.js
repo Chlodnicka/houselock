@@ -13,7 +13,7 @@ myApp.services.user = {
         if (myApp.user.isTenant()) {
             let flats = myApp.user.flats();
             let id = Object.keys(flats)[0];
-            if (id) {
+            if (id && myApp.user.status() === 'ACTIVE') {
                 myApp.services.common.setCurrentFlat(id);
             }
         }
@@ -32,14 +32,10 @@ myApp.services.user = {
                 myNavigator.pushPage('html/flat/flat_info.html');
             }
         } else if (myApp.user.isTenant()) {
-            if (myApp.user.currentFlat()) {
-                myNavigator.pushPage('tenantSplitter.html');
+            if (myApp.user.hasInvitation()) {
+                myNavigator.pushPage('html/user/user_accept_invitation.html');
             } else {
-                if (myApp.user.hasInvitation()) {
-                    myNavigator.pushPage('html/user/user_accept_invitation.html');
-                } else {
-                    myNavigator.pushPage('html/user/dashboard.html');
-                }
+                myNavigator.pushPage('html/user/user_no_flat.html');
             }
         } else {
             myApp.services.common.clearAll();

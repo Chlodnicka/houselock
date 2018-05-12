@@ -167,6 +167,7 @@ myApp.services.common = {
     },
 
     updateFlat: function (response) {
+        console.log(response);
         let data = JSON.stringify(response);
         localStorage.setItem('flatData', data);
         myNavigator.pushPage(myApp.user.splitter());
