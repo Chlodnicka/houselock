@@ -126,10 +126,10 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
-                Array.prototype.forEach.call(page.querySelectorAll('ons-list-item'), function (listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'none';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('.edit'), function (edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
                     edititem.style.display = 'block';
                 });
             };
@@ -142,10 +142,10 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'none';
                 page.querySelector('[component="button/edit"]').style.display = 'block';
-                Array.prototype.forEach.call(page.querySelectorAll('ons-list-item'), function (listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'flex';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('.edit'), function (edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
                     edititem.style.display = 'none';
                 });
             };
@@ -171,4 +171,10 @@ myApp.services.common = {
         localStorage.setItem('flatData', data);
         myNavigator.pushPage(myApp.user.splitter());
     },
+
+    updateUser: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('userData', data);
+        myNavigator.pushPage(myApp.user.splitter());
+    }
 };
