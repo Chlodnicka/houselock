@@ -76,10 +76,10 @@ myApp.controllers = {
         if (myApp.user.isLandlord()) {
             if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
+                myApp.services.dashboard.displayCurrentFlat(page, info);
                 //todo: #display_flat
                 //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
-                let flat = ons.createElement('<div>' + info.name + '</div>');
-                page.querySelector('.content').appendChild(flat);
+
             } else {
                 let flats = myApp.user.flats();
                 myApp.services.flat.emptyFlatLandlord(page);
@@ -87,10 +87,10 @@ myApp.controllers = {
             }
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
-            //todo: #display_flat
-            //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
 
-            myApp.dashboard.editFlat(page)
+            myApp.services.dashboard.displayCurrentFlat(info, page);
+
+            myApp.services.dashboard.editFlat(page, info)
                 //todo: #edit_flat
                 //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
                 //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
@@ -108,7 +108,6 @@ myApp.controllers = {
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function(element) {
             element.onclick = function() {
-                //TODO check if the name isn't empty string
                 myApp.services.flat.create(page);
             };
         });
