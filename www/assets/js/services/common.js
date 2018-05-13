@@ -172,6 +172,12 @@ myApp.services.common = {
         myNavigator.pushPage(myApp.user.splitter());
     },
 
+    updateFlatInvitation: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('flatData', data);
+        myNavigator.pushPage('html/user/user_accept_invitation.html');
+    },
+
     updateUser: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);

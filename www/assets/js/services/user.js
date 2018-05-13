@@ -30,7 +30,8 @@ myApp.services.user = {
             if (id && myApp.user.status() === 'ACTIVE') {
                 myApp.services.common.setCurrentFlat(id);
             } else if (myApp.user.hasInvitation()) {
-                myNavigator.pushPage('html/user/user_accept_invitation.html');
+                localStorage.setItem('currentFlat', id);
+                ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlatInvitation);
             } else {
                 myNavigator.pushPage('html/user/user_no_flat.html');
             }
@@ -75,13 +76,11 @@ myApp.services.user = {
             myApp.services.user.save(page)
         };
 
-        userInfo.querySelector('[component="button/cancel"]').onclick = function () {
-            myApp.services.common.cancel(page)
-        };
 
         card.appendChild(userInfo);
 
         myApp.services.common.edit(page);
+        myApp.services.common.cancel(page);
 
     },
 
