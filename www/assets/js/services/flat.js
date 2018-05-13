@@ -9,6 +9,10 @@ myApp.services.flat = {
         }
     },
 
+    fill: function (page) {
+        let
+    },
+
     emptyList: function (page) {
         let info = ons.createElement('<div>Brak dodanych mieszkań - użyj przycisku by dodać mieszkanie.</div>');
         page.querySelector('.content').appendChild(info);
