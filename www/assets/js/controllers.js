@@ -41,9 +41,14 @@ myApp.controllers = {
 
     //Tabbar page
     settingsPage: function (page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/menu-item"]'), function (element) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-list"]'), function (element) {
             element.onclick = function () {
-                document.querySelector('#myNavigator').pushPage('html/' + element.getAttribute('data-url'));
+                document.querySelector('#myNavigator').pushPage('html/flat/flat_list.html');
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/user-info"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/user/user_info.html');
             };
         });
     },

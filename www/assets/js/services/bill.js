@@ -189,7 +189,6 @@ myApp.services.bill = {
 
     configEdit: function (name, index, value, configMessage, config) {
         let edit = '<div class="edit" style="display: none;">' +
-            '<label for="' + index + '_price">' + name + ' (' + configMessage + ')</label>' +
             '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
 
         if (config === 'METER') {

@@ -51,19 +51,15 @@ myApp.services.user = {
             '<div>' +
             '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.fullname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
-            '<label for="firstname">Imię</label>' +
             '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + userData.firstname + '" float class="edit hidden"> </ons-input>' +
-            '<label for="lastname">Nazwisko</label>' +
             '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + userData.lastname + '" float class="edit hidden""></ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<label for="phone">Telefon</label>' +
             '<ons-input name="phone" id="phone" modifier="underbar" placeholder="" value="' + phone + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="account_number">Numer konta bankowego: ' + account + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<label for="account_number">Numer konta</label>' +
             '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="" value="' + account + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
