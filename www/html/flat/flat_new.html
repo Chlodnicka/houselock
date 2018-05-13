@@ -18,9 +18,16 @@
     <ons-list>
         <ons-list-item modifier="nodivider">
             <form data-ajax="/api/flat/add" method="post" id="create-flat">
-            <div class="center">
-                <ons-input id="name-input" type="text" placeholder="Nazwa" float></ons-input>
-            </div>
+                <div class="center">
+                    <ons-input id="name" type="text" placeholder="Nazwa" float></ons-input>
+                    <ons-input id="street" type="text" placeholder="Ulica" float></ons-input>
+                    <ons-input id="flat_number" type="number" placeholder="Numer mieszkania" float></ons-input>
+                    <ons-input id="building_number" type="number" placeholder="Numer domu" float></ons-input>
+                    <ons-input id="postal_code" type="text" placeholder="Kod pocztowy" float></ons-input>
+                    <ons-input id="city" type="text" placeholder="Miasto" float></ons-input>
+                    <ons-input id="mercenary" type="number" placeholder="Cena wynajmu" float></ons-input>
+                    <ons-input id="pay_day" type="number" min="1" max="31" placeholder="Dzień opłat"></ons-input>
+                </div>
             </form>
         </ons-list-item>
     </ons-list>
