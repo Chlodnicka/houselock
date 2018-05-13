@@ -40,14 +40,7 @@ myApp.controllers = {
     },
 
     //Tabbar page
-    landlordTabbarPage: function (page) {
-        page.querySelector('[component="button/menu"]').onclick = function () {
-            document.querySelector('#landlordSplitter').left.toggle();
-        };
-    },
-
-    //Menu page
-    menuPage: function (page) {
+    settingsPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/menu-item"]'), function (element) {
             element.onclick = function () {
                 document.querySelector('#myNavigator').pushPage('html/' + element.getAttribute('data-url'));
