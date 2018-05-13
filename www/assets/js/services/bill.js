@@ -127,7 +127,7 @@ myApp.services.bill = {
         }
 
         if (myApp.user.isTenant()) {
-            if (myApp.flat.userBill().status !== 'PAID') {
+            if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
                 let pay = ons.createElement(
                     '<ons-button component="button/pay">Zapłać</ons-button>'
                 );

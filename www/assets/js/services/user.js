@@ -10,13 +10,6 @@ myApp.services.user = {
 
     setData: function (response) {
         localStorage.setItem('userData', JSON.stringify(response));
-        if (myApp.user.isTenant()) {
-            let flats = myApp.user.flats();
-            let id = Object.keys(flats)[0];
-            if (id && myApp.user.status() === 'ACTIVE') {
-                myApp.services.common.setCurrentFlat(id);
-            }
-        }
         myApp.services.user.setAppForUser();
     },
 
@@ -32,7 +25,11 @@ myApp.services.user = {
                 myNavigator.pushPage('html/flat/flat_info.html');
             }
         } else if (myApp.user.isTenant()) {
-            if (myApp.user.hasInvitation()) {
+            let flats = myApp.user.flats();
+            let id = Object.keys(flats)[0];
+            if (id && myApp.user.status() === 'ACTIVE') {
+                myApp.services.common.setCurrentFlat(id);
+            } else if (myApp.user.hasInvitation()) {
                 myNavigator.pushPage('html/user/user_accept_invitation.html');
             } else {
                 myNavigator.pushPage('html/user/user_no_flat.html');
@@ -126,6 +123,22 @@ myApp.services.user = {
         };
 
         page.querySelector('.content').insertBefore(userItem);
+    },
+
+    accept: function () {
+        ajax.send('post', '/api/user/accept', {}, myApp.services.common.updateUser);
+    },
+
+    ignore: function () {
+        ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
+    },
+
+    ignoreUpdate: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('userData', data);
+        localStorage.removeItem('currentFlat');
+        localStorage.removeItem('flatData');
+        myNavigator.pushPage('html/user/user_no_flat.html');
     },
 
     // Add user to flat
