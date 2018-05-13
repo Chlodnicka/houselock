@@ -105,8 +105,10 @@ myApp.services.common = {
         myApp.services.common.setTokenAndGetInfo(response);
     },
 
-    authorizeFail: function () {
-        ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
+    authorizeFail: function (response) {
+        console.log(response.responseJSON.message);
+        // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
+        ons.notification.alert({message: response.responseJSON.message});
     },
 
     redirectToLogin: function () {
