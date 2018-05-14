@@ -174,17 +174,11 @@ myApp.services.bill = {
             myApp.services.bill.configEdit(name, index, info[index + '_price'], configMessage, config)
             : '';
 
-        let meter = '';
-
-        if (config === 'METER' && Object.keys(myApp.flat.meterByBill(info['id'])).length > 0) {
-            meter = '(stan licznika: ' + parseFloat(myApp.flat.meterByBill(info['id'])[index + '_meter']).toFixed(2) + ')';
-        }
-
         bill = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">' + name + ':</div>' +
-            '<div class="right" id="">' + parseFloat(info[index + '_price']).toFixed(2) + ' zł ' + meter + '</div>' +
+            '<div class="right" id="">' + parseFloat(info[index + '_price']).toFixed(2) + '</div>' +
             '</ons-list-item>' +
             edit +
             '</div>'

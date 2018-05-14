@@ -15,6 +15,7 @@ document.addEventListener('init', function (event) {
         myApp.controllers[page.id](page);
     }
 
+<<<<<<< HEAD
 
     document.addEventListener('deviceready', function () {
         // Enable to debug issues.
@@ -31,4 +32,7 @@ document.addEventListener('init', function (event) {
     }, false);
 })
 ;
+=======
+});
+>>>>>>> parent of c80898c... config
 

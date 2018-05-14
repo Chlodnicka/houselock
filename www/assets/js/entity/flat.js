@@ -41,14 +41,6 @@ myApp.flat = {
         return {};
     },
 
-    meterByBill: function (billId) {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.meters && info.meters[billId]) {
-            return info.meters[billId];
-        }
-        return {};
-    },
-
     userBill: function () {
         let info = JSON.parse(localStorage.getItem('flatData')).data;
         if (info.user_bill) {
