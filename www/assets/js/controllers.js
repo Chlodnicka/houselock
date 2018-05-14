@@ -5,7 +5,7 @@
 myApp.controllers = {
 
     //Loader page
-    loaderPage: function(page) {
+    loaderPage: function (page) {
         if (myApp.services.common.token.get()) {
             myApp.services.common.token.check();
         } else {
@@ -18,34 +18,26 @@ myApp.controllers = {
     },
 
     //Login page
-    loginPage: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function(element) {
-            element.onclick = function() {
+    loginPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
+            element.onclick = function () {
                 ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
             };
         });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
+            element.onclick = function () {
                 document.querySelector('#myNavigator').pushPage('html/auth/register_owner.html');
             };
         });
     },
 
-    registerPage: function(page) {
+    registerPage: function (page) {
         page.querySelectorAll('[component="button/register"]'),
-            function(element) {
-                element.onclick = function() {
+            function (element) {
+                element.onclick = function () {
                     ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
                 }; //TODO make it work and properly register new user
             };
-    },
-
-    //Tabbar page
-
-    landlordTabbarPage: function(page) {
-        page.querySelector('[component="button/menu"]').onclick = function() {
-            document.querySelector('#landlordSplitter').left.toggle();
-        };
     },
 
 
@@ -57,16 +49,16 @@ myApp.controllers = {
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/user-info"]'), function (element) {
             element.onclick = function () {
-                document.querySelector('#myNavigator').pushPage('html/user/user_info.html
+                document.querySelector('#myNavigator').pushPage('html/user/user_info.html');
             };
         });
     },
 
     //Flat list page
-    flatListPage: function(page) {
+    flatListPage: function (page) {
         let flats = myApp.user.flats();
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
+            element.onclick = function () {
                 document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
             };
         });
@@ -78,7 +70,7 @@ myApp.controllers = {
     },
 
     //Single flat page
-    flatPage: function(page) {
+    flatPage: function (page) {
         if (myApp.user.isLandlord()) {
             if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
@@ -97,29 +89,29 @@ myApp.controllers = {
             myApp.services.dashboard.displayCurrentFlat(info, page);
 
             myApp.services.dashboard.editFlat(page, info)
-                //todo: #edit_flat
-                //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
-                //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
+            //todo: #edit_flat
+            //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
+            //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
             let flat = ons.createElement('<div>' + info.name + '</div>');
             page.querySelector('.content').appendChild(flat);
         }
     },
 
     //New flat page
-    newFlatPage: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function(element) {
-            element.onclick = function() {
+    newFlatPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
+            element.onclick = function () {
                 document.querySelector('#addFlat').pushPage('html/flat/flat_new.html');
             };
         });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/add-flat"]'), function (element) {
+            element.onclick = function () {
                 myApp.services.flat.create(page);
             };
         });
     },
 
-    billListPage: function(page) {
+    billListPage: function (page) {
         let bills = myApp.flat.bills();
         if (Object.keys(bills).length === 0) {
             myApp.services.bill.emptyList(page);
@@ -128,15 +120,15 @@ myApp.controllers = {
         }
     },
 
-    billPage: function(page) {
+    billPage: function (page) {
         //todo: display_bill
         //todo: edit_bill
         myApp.services.bill.fill(page, page.data.element);
     },
 
-    usersPage: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-tenant"]'), function(element) {
-            element.onclick = function() {
+    usersPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-tenant"]'), function (element) {
+            element.onclick = function () {
                 document.querySelector('#myNavigator').pushPage('html/user/user_new.html');
             };
         });
@@ -149,50 +141,50 @@ myApp.controllers = {
     },
 
     //User info page
-    userPage: function(page) {
+    userPage: function (page) {
         myApp.services.user.fill(page);
 
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+            element.onclick = function () {
                 myApp.services.common.redirectToLogin();
             };
         });
     },
 
-    tenantPage: function(page) {
+    tenantPage: function (page) {
         let info = page.data.element;
         myApp.services.user.fill(page, info);
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
+            element.onclick = function () {
                 //todo: nie pokazuje się po raz kolejny
                 document.getElementById('removeTenant').show();
             };
         });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/delete-tenant"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/delete-tenant"]'), function (element) {
+            element.onclick = function () {
                 document.getElementById('removeTenant').hide();
                 ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
             };
         });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
+            element.onclick = function () {
                 document.getElementById('removeTenant').hide();
             };
         });
     },
 
-    tenantNewPage: function(page) {
+    tenantNewPage: function (page) {
         form = $(page.querySelector('form'));
         let action = form.attr('data-ajax').replace('{id}', myApp.user.currentFlatId());
         form.attr('data-ajax', action);
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function(element) {
-            element.onclick = function() {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function (element) {
+            element.onclick = function () {
                 myApp.services.common.save(page, myApp.services.common.updateFlat);
             };
         });
     },
 
-    dashboardPage: function(page) {
+    dashboardPage: function (page) {
         let lastBill = myApp.flat.bill();
         if (Object.keys(lastBill).length === 0) {
             myApp.services.dashboard.noLastBill(page);
@@ -201,15 +193,15 @@ myApp.controllers = {
         }
     },
 
-    userNoFlatPage: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function(element) {
-            element.onclick = function() {
+    userNoFlatPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+            element.onclick = function () {
                 myApp.services.common.redirectToLogin();
             };
         });
     },
 
-    userAcceptPage: function(page) {
+    userAcceptPage: function (page) {
         let flatInfo = myApp.flat.currentFlat();
         let flat_number = flatInfo.flat_number ? '/' + flatInfo.flat_number : '';
         let flat = ons.createElement(
@@ -220,7 +212,7 @@ myApp.controllers = {
         );
 
         page.querySelector('.flat_info').appendChild(flat);
-      
+
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
             element.onclick = function () {
                 myApp.services.user.accept();
