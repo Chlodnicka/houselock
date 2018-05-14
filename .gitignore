@@ -1,2 +1,5 @@
 /.idea
 /onsen
+/.vscode
+/typings
+jsconfig.json

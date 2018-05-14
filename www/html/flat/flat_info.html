@@ -5,6 +5,11 @@
     <ons-card>
         <div class="content">
 
+            <ons-fab position="bottom right" component="button/flat-edit">
+                <ons-icon icon="md-edit"></ons-icon>
+            </ons-fab>
+            <form data-ajax="/api/flat/{flat_id}/edit" method="post" id="flat_info_save">
+            </form>
         </div>
     </ons-card>
 </ons-page>
