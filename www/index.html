@@ -2,6 +2,9 @@
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Security-Policy"
+          content="img-src * 'self' data:; default-src * 'self' gap: wss: ws: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+
     <script src="cordova.js"></script>
     <link rel="stylesheet" href="core/css/onsenui.css">
     <link rel="stylesheet" href="core/css/onsen-css-components.min.css">
@@ -40,8 +43,6 @@
 <template id="landlordSplitter.html">
     <ons-page>
         <ons-splitter id="landlordSplitter">
-            <ons-splitter-side page="html/menu.html" swipeable width="250px" collapse swipe-target-width="50px">
-            </ons-splitter-side>
             <ons-splitter-content page="landlordTabbar.html">
             </ons-splitter-content>
         </ons-splitter>
@@ -61,12 +62,6 @@
 <template id="landlordTabbar.html">
     <ons-page id="landlordTabbarPage">
         <ons-toolbar>
-            <div class="left">
-                <!-- Toolbar-button with different icons depending on the platform. -->
-                <ons-toolbar-button component="button/menu">
-                    <ons-icon icon="ion-navicon, material:md-menu" size="32px, material:24px"></ons-icon>
-                </ons-toolbar-button>
-            </div>
             <div class="center">Houselock</div>
         </ons-toolbar>
 
@@ -80,6 +75,8 @@
             <ons-tab page="html/bill/bill_list.html" label="Rachunki" icon="fa-file">
             </ons-tab>
             <ons-tab page="html/user/user_list.html" label="Lokatorzy" icon="fa-users">
+            </ons-tab>
+            <ons-tab page="html/user/settings.html" label="Ustawienia" icon="fa-cog">
             </ons-tab>
         </ons-tabbar>
     </ons-page>

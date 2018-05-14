@@ -105,8 +105,10 @@ myApp.services.common = {
         myApp.services.common.setTokenAndGetInfo(response);
     },
 
-    authorizeFail: function () {
-        ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
+    authorizeFail: function (response) {
+        console.log(response.responseJSON.message);
+        // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
+        ons.notification.alert({message: response.responseJSON.message});
     },
 
     redirectToLogin: function () {
@@ -167,10 +169,15 @@ myApp.services.common = {
     },
 
     updateFlat: function (response) {
-        console.log(response);
         let data = JSON.stringify(response);
         localStorage.setItem('flatData', data);
         myNavigator.pushPage(myApp.user.splitter());
+    },
+
+    updateFlatInvitation: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('flatData', data);
+        myNavigator.pushPage('html/user/user_accept_invitation.html');
     },
 
     updateUser: function (response) {

@@ -4,7 +4,7 @@
         id="Houselock"
         version="1.0.0">
 
-    <name>Houselock App</name>
+    <name>Houselock</name>
     <description>App to manage flat bills</description>
     <author href="" email="maja.chlodnicka@gmail.com">
         Maja Chłodnicka, Filip Tańcula, Kamil Pietrucha
@@ -14,6 +14,14 @@
     <splash src="splashscreen.png"/>
 
     <plugin name="cordova-plugin-device" spec="~1.1.4"/>
+    <plugin name="cordova-plugin-whitelist"/>
     <plugin name="cordova-plugin-dialogs" spec="~1.3.1"/>
+
+    <access origin="http://*"/>
+    <access origin="https://*"/>
+    <access origin="*"/>
+
+    <allow-navigation href="*"/>
+    <allow-intent href="*"/>
 
 </widget>

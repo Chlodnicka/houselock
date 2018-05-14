@@ -10,13 +10,6 @@ myApp.services.user = {
 
     setData: function (response) {
         localStorage.setItem('userData', JSON.stringify(response));
-        if (myApp.user.isTenant()) {
-            let flats = myApp.user.flats();
-            let id = Object.keys(flats)[0];
-            if (id && myApp.user.status() === 'ACTIVE') {
-                myApp.services.common.setCurrentFlat(id);
-            }
-        }
         myApp.services.user.setAppForUser();
     },
 
@@ -32,8 +25,13 @@ myApp.services.user = {
                 myNavigator.pushPage('html/flat/flat_info.html');
             }
         } else if (myApp.user.isTenant()) {
-            if (myApp.user.hasInvitation()) {
-                myNavigator.pushPage('html/user/user_accept_invitation.html');
+            let flats = myApp.user.flats();
+            let id = Object.keys(flats)[0];
+            if (id && myApp.user.status() === 'ACTIVE') {
+                myApp.services.common.setCurrentFlat(id);
+            } else if (myApp.user.hasInvitation()) {
+                localStorage.setItem('currentFlat', id);
+                ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlatInvitation);
             } else {
                 myNavigator.pushPage('html/user/user_no_flat.html');
             }
@@ -53,19 +51,15 @@ myApp.services.user = {
             '<div>' +
             '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.fullname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
-            '<label for="firstname">Imię</label>' +
             '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + userData.firstname + '" float class="edit hidden"> </ons-input>' +
-            '<label for="lastname">Nazwisko</label>' +
             '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + userData.lastname + '" float class="edit hidden""></ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<label for="phone">Telefon</label>' +
             '<ons-input name="phone" id="phone" modifier="underbar" placeholder="" value="' + phone + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="account_number">Numer konta bankowego: ' + account + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<label for="account_number">Numer konta</label>' +
             '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="" value="' + account + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
@@ -78,13 +72,11 @@ myApp.services.user = {
             myApp.services.user.save(page)
         };
 
-        userInfo.querySelector('[component="button/cancel"]').onclick = function () {
-            myApp.services.common.cancel(page)
-        };
 
         card.appendChild(userInfo);
 
         myApp.services.common.edit(page);
+        myApp.services.common.cancel(page);
 
     },
 
@@ -126,6 +118,22 @@ myApp.services.user = {
         };
 
         page.querySelector('.content').insertBefore(userItem);
+    },
+
+    accept: function () {
+        ajax.send('post', '/api/user/accept', {}, myApp.services.common.updateUser);
+    },
+
+    ignore: function () {
+        ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
+    },
+
+    ignoreUpdate: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('userData', data);
+        localStorage.removeItem('currentFlat');
+        localStorage.removeItem('flatData');
+        myNavigator.pushPage('html/user/user_no_flat.html');
     },
 
     // Add user to flat

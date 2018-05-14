@@ -41,17 +41,23 @@ myApp.controllers = {
     },
 
     //Tabbar page
+
     landlordTabbarPage: function(page) {
         page.querySelector('[component="button/menu"]').onclick = function() {
             document.querySelector('#landlordSplitter').left.toggle();
         };
     },
 
-    //Menu page
-    menuPage: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/menu-item"]'), function(element) {
-            element.onclick = function() {
-                document.querySelector('#myNavigator').pushPage('html/' + element.getAttribute('data-url'));
+
+    settingsPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-list"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/flat/flat_list.html');
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/user-info"]'), function (element) {
+            element.onclick = function () {
+                document.querySelector('#myNavigator').pushPage('html/user/user_info.html
             };
         });
     },
@@ -214,21 +220,16 @@ myApp.controllers = {
         );
 
         page.querySelector('.flat_info').appendChild(flat);
-
-        //todo: dopisać wysłanie requesta do api z zaakceptowaniem zaproszenia #accept (/api/accept)
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function(element) {
-            element.onclick = function() {
-                console.log('accept');
+      
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.user.accept();
             };
         });
 
-        //todo: dopisać wysłanie requesta do api z odrzuceniem zaproszenia #ignore (/api/ignore)
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function(element) {
-            element.onclick = function() {
-                console.log('no flat');
-                myNavigator.pushPage('html/user/user_no_flat.html');
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.user.ignore();
             };
         });
 

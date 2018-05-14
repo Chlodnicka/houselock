@@ -85,15 +85,12 @@ myApp.services.bill = {
 
         let cancelBtn = ons.createElement('<ons-button style="display:none;" component="button/cancel">Anuluj</ons-button>');
 
-        cancelBtn.onclick = function () {
-            myApp.services.common.cancel(page)
-        };
-
         let form = page.querySelector('form');
         form.appendChild(saveBtn);
         form.appendChild(cancelBtn);
 
         myApp.services.common.parseAction(form, info.id);
+        myApp.services.common.cancel(page);
 
         if (myApp.user.isLandlord()) {
             if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
@@ -127,7 +124,7 @@ myApp.services.bill = {
         }
 
         if (myApp.user.isTenant()) {
-            if (myApp.flat.userBill().status !== 'PAID') {
+            if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
                 let pay = ons.createElement(
                     '<ons-button component="button/pay">Zapłać</ons-button>'
                 );
@@ -192,7 +189,6 @@ myApp.services.bill = {
 
     configEdit: function (name, index, value, configMessage, config) {
         let edit = '<div class="edit" style="display: none;">' +
-            '<label for="' + index + '_price">' + name + ' (' + configMessage + ')</label>' +
             '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
 
         if (config === 'METER') {
