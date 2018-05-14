@@ -17,16 +17,17 @@ document.addEventListener('init', function (event) {
 
 });
 
-document.addEventListener('deviceready', function () {
-    // Enable to debug issues.
-    window.plugins.OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
+document.addEventListener("deviceready", onDeviceReady, false);
 
-    var notificationOpenedCallback = function (jsonData) {
-        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-    };
+function onDeviceReady() {
+    navigator.notification.alert(
+        'You are the winner!',  // message
+        alertDismissed,         // callback
+        'Game Over',            // title
+        'Done'                  // buttonName
+    );
 
-    window.plugins.OneSignal
-        .startInit("da20d043-c374-4553-8fe4-32a95c7c7742")
-        .handleNotificationOpened(notificationOpenedCallback)
-        .endInit();
-}, false);
+    function alertDismissed() {
+        // do something
+    }
+}
