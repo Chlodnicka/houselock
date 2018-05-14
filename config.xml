@@ -24,7 +24,7 @@
     <allow-navigation href="*"/>
     <allow-intent href="*"/>
 
-    <gap:plugin name="onesignal-cordova-plugin" spec="^2.1.1" source="npm" />
+    <plugin name="onesignal-cordova-plugin" spec="^2.1.1" source="npm" />
 
     <!-- Requires cli-6.4.0 but we recommend using the latest version. -->
     <preference name="phonegap-version" value="cli-7.0.1" />
