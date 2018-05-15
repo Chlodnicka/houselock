@@ -56,8 +56,16 @@ myApp.services.flat = {
     },
 
     // Modifies the inner data and current view of an existing flat.
-    update: function(flat, data) {
+    update: function(page, info) {
+        ajax.sendForm(page, myApp.services.flat.updatedSuccess(), myApp.services.flat.updatedFailed());
+    },
 
+    updatedSuccess: function() {
+        console.log("Zapisano zmiany");
+    },
+
+    updatedFailed: function() {
+        console.log("Nie udalo sie zapisac zmian!");
     },
 
     // Deletes a flat

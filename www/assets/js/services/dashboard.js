@@ -15,7 +15,7 @@ myApp.services.dashboard = {
 
     displayCurrentFlat: function(page, info) {
         let flat = ons.createElement(
-            '<form data-ajax="/api/flat/{flat_id}/edit" method="post" id="flat_info_save">' +
+            '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-list-header>' + info.name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
             '<div class="edit" style="display: none">' +
@@ -43,7 +43,7 @@ myApp.services.dashboard = {
         page.querySelector('.content').appendChild(flat);
 
         page.querySelector('[component="button/save"]').onclick = function() {
-            myApp.services.flat.save(page)
+            myApp.services.flat.update(page, info)
         };
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
