@@ -1,5 +1,25 @@
 myApp.services.common = {
 
+    parseAlertMessage: function (message) {
+        switch (message) {
+            case 'bill_generated':
+                return 'Wygenerowano nowy rachunek. Uzupełnij informacje o płatnościach';
+                break;
+            case 'bill_may_be_paid':
+                return 'Rachunek może być opłacony';
+                break;
+            case 'bill_payment_reminder':
+                return 'Właściciel przypomina o płatności.';
+                break;
+            case 'bill_paid':
+                return 'Rachunek został opłacony';
+                break;
+            default:
+                return 'Błąd';
+        }
+    },
+
+
     parseMonth: function (month) {
         switch (month) {
             case 'January':

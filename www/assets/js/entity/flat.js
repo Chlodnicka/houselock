@@ -9,6 +9,20 @@ myApp.flat = {
         return myApp.user.flats()[id];
     },
 
+    getFlat: function (id) {
+        return myApp.user.flats()[id];
+    },
+
+    getAddress: function (id) {
+        let flat = this.getFlat(id);
+        let address = flat.street + ' ' + flat.building_number;
+        if (flat.flat_number) {
+            address += '/' + flat.flat_number;
+        }
+        address += ' ' + flat.city;
+        return address;
+    },
+
     bills: function () {
         let info = JSON.parse(localStorage.getItem('flatData')).data;
         if (info.bills) {

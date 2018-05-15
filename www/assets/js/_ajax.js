@@ -55,17 +55,18 @@ window.ajax = {
 
     send: function (method, action, data, onSuccess, onFail) {
         //todo: show loader
+        options = this.options;
         $.ajax({
             method: method,
-            url: this.options.domain + action,
+            url: options.domain + action,
             data: data,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
             }
         }).done(function (response) {
-            onSuccess(response);
+            onSuccess ? onSuccess(response) : options.onSuccess();
         }).fail(function (response) {
-            onFail(response);
+            onFail ? onFail(response) : options.onFail();
         });
     }
 

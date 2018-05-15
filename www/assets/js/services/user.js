@@ -2,6 +2,91 @@
 // User Service //
 ////////////////////
 myApp.services.user = {
+
+    userAlerts: function (page) {
+        let alerts = myApp.user.alerts();
+        if (Object.keys(alerts).length > 0) {
+            let alertButton = ons.createElement(
+                '<ons-button id="alert-button" component="button/show-alerts"  style="background: transparent;color: black;">' +
+                '<ons-icon icon="md-notifications-active"></ons-icon>' +
+                '</ons-button>'
+            );
+
+            myApp.services.user.fillAlerts(page, alerts);
+
+            alertButton.onclick = function (element) {
+                myApp.services.user.showAlerts(element);
+            };
+
+            page.querySelector('.alert-container').appendChild(alertButton);
+
+        } else {
+            let alertButton = ons.createElement(
+                '<ons-button id="alert-button" component="button/show-alerts" style="background: transparent;color: black;" disabled>' +
+                '<ons-icon icon="md-notifications-none"></ons-icon>' +
+                '</ons-button>'
+            );
+            page.querySelector('.alert-container').appendChild(alertButton);
+        }
+    },
+
+    fillAlerts: function (page, alerts) {
+
+        let alertsPopover = ons.createElement(
+            '<ons-popover direction="down" id="alert_popover">' +
+            '<ons-list class="alerts-list"></ons-list>' +
+            '<ons-button class="close-alerts"><ons-icon icon="md-close-circle"></ons-icon></ons-button>' +
+            '</ons-popover>'
+            )
+        ;
+
+        page.appendChild(alertsPopover);
+
+        page.querySelector('.close-alerts').onclick = function () {
+            document
+                .getElementById('alert_popover')
+                .hide();
+        };
+
+        for (let id in alerts) {
+            let message = myApp.services.common.parseAlertMessage(alerts[id].type);
+            let address = myApp.flat.getAddress(alerts[id].flat);
+            alert = ons.createElement(
+                '<ons-list-item tappable data-id="' + alerts[id].id + '" ' +
+                'data-flat-id="' + alerts[id].flat + '">' +
+                '<span>' + alerts[id].created_at + '</span>' +
+                '<span>Mieszkanie: ' + address + '</span>' +
+                message +
+                '</ons-list-item>'
+            );
+
+            alert.onclick = function () {
+                myApp.services.user.alertSeen($(this));
+            };
+
+            page.querySelector('.alerts-list').appendChild(alert);
+        }
+    },
+
+    alertSeen: function (element) {
+        let siblings = element.siblings();
+        element.remove();
+        ajax.send('post', '/api/alert/seen/' + element.attr('data-id'), {});
+
+        if (siblings.length === 0) {
+            $(document).find('#alert-button').prop('disabled', true);
+            document
+                .getElementById('alert_popover')
+                .hide();
+        }
+    },
+
+    showAlerts: function (element) {
+        document
+            .getElementById('alert_popover')
+            .show(element);
+    },
+
     getInfo: function (response) {
         sessionStorage.setItem('isLoggedIn', true);
         localStorage.setItem('role', response.data[0]);

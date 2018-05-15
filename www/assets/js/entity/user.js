@@ -51,6 +51,11 @@ myApp.user = {
         return data.user_flats;
     },
 
+    alerts: function () {
+        let data = JSON.parse(localStorage.getItem('userData')).data;
+        return data.alerts;
+    },
+
     currentFlat: function () {
         let id = localStorage.getItem('currentFlat');
         return myApp.user.flats()[id];

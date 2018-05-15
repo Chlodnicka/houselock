@@ -119,6 +119,11 @@ myApp.services.bill = {
                 let resendAlert = ons.createElement(
                     '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
                 );
+
+                resendAlert.onclick = function () {
+                    myApp.services.bill.resendAlert(info.id);
+                };
+
                 page.querySelector('.content').appendChild(resendAlert);
             }
         }
@@ -215,8 +220,10 @@ myApp.services.bill = {
 
     //Mark bill as paid
     markAsPaid: function (id) {
-        console.log(id);
         ajax.send('post', '/api/bill/' + id + '/markAsPaid', {}, myApp.services.common.updateFlat);
-    }
+    },
 
+    resendAlert: function (id) {
+        ajax.send('post', '/api/bill/reminder/' + id, {})
+    }
 };

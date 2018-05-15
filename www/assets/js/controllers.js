@@ -40,6 +40,13 @@ myApp.controllers = {
             };
     },
 
+    tenantTabbarPage: function (page) {
+        myApp.services.user.userAlerts(page);
+    },
+
+    landlordTabbarPage: function (page) {
+        myApp.services.user.userAlerts(page);
+    },
 
     settingsPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-list"]'), function (element) {
@@ -86,7 +93,7 @@ myApp.controllers = {
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
 
-            myApp.services.dashboard.displayCurrentFlat(info, page);
+            myApp.services.dashboard.displayCurrentFlat(page, info);
 
             myApp.services.dashboard.editFlat(page, info)
             //todo: #edit_flat
