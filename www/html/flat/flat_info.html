@@ -4,12 +4,14 @@
     </ons-toolbar>
     <ons-card>
         <div class="content">
-
-            <ons-fab position="bottom right" component="button/flat-edit">
+            <ons-fab position="bottom right" component="button/edit">
                 <ons-icon icon="md-edit"></ons-icon>
             </ons-fab>
-            <form data-ajax="/api/flat/{flat_id}/edit" method="post" id="flat_info_save">
-            </form>
+            <ons-list>
+
+                <form data-ajax="/api/flat/{flat_id}/edit" method="post" id="flat_info_save">
+                </form>
+            </ons-list>
         </div>
     </ons-card>
 </ons-page>
