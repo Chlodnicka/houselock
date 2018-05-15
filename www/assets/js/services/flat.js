@@ -62,6 +62,7 @@ myApp.services.flat = {
 
     updatedSuccess: function() {
         console.log("Zapisano zmiany");
+
     },
 
     updatedFailed: function() {

@@ -19,8 +19,8 @@ myApp.services.dashboard = {
             '<div><ons-list-header>' + info.name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<ons-input id="street" name="street" modifier="underbar" placeholder="Ulica" value="' + info.street + '" float class="edit hidden"> </ons-input>' +
-            '<ons-input id="building_number" name="building_number" modifier="underbar" placeholder="Numer budynku" value="' + info.building_number + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input id="street" name="street" modifier="underbar" minLength="1" maxLength="50" placeholder="Ulica" value="' + info.street + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input id="building_number" name="building_number" min="1" max="1000" modifier="underbar" placeholder="Numer budynku" value="' + info.building_number + '" float class="edit hidden"> </ons-input>' +
             '<ons-input id="flat_number" name="flat_number" modifier="underbar" placeholder="Numer mieszkania" value="' + info.flat_number + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item>Miasto i kod pocztowy:  ' + info.city + ' ' + info.postal_code + '</ons-list-item>' +
