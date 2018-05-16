@@ -36,10 +36,21 @@ myApp.services.dashboard = {
             '<ons-list-item>Dzień płatności:  ' + info.pay_day + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
             '<ons-input id="pay_day" name="pay_day" modifier="underbar" placeholder="Dzien płatności" value="' + info.pay_day + '" float class="edit hidden"> </ons-input>' +
-            '</div><div class="edit hidden">' + '<ons-list-header>Ustawienia mediów</ons-list-header>'+
-            '<ons-checkbox id="flat_gas_config" name="flat_gas_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat-gas-config">Gaz</label></div>' +
-            '<ons-radio group="gas_payment_option"></ons-radio><ons-radio group="gas_payment_option"></ons-radio>'+'<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>'+
-            
+            '</div><div class="edit hidden" style="display: none">' + '<ons-list-header>Ustawienia mediów</ons-list-header>' + '<ons-card>' +
+            '<ons-checkbox id="flat_gas_config" name="flat_gas_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat-gas-config">Gaz</label>' +
+            '<label for="gas_payment_option_bill">Sposób rozliczenia:</label><ons-select id="gas_payment_option_bill" name="gas_payment_option_bill"><option value="">Na bazie rachunku</option><option>Kwota za jednostkę</option><option value="">Stała opłata</option></ons-select>' + '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '</ons-card></div>' + '<ons-card>' +
+            '<ons-checkbox id="flat_power_config" name="flat_power_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat-power-config">Prąd</label>' +
+            '<label for="power_payment_option_bill">Sposób rozliczenia:</label><ons-select id="power_payment_option_bill" name="power_payment_option_bill"><option value="">Na bazie rachunku</option><option>Kwota za jednostkę</option><option value="">Stała opłata</option></ons-select>' + '<ons-input id="flat_power_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '</ons-card></div>' +
+            '<ons-card>' +
+            '<ons-checkbox id="flat_wastes_config" name="flat_wastes_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat_wastes_config">Śmieci</label>' +
+            '<label for="wastes_payment_option_bill">Sposób rozliczenia:</label><ons-select id="wastes_payment_option_bill" name="wastes_payment_option_bill"><option value="">Na bazie rachunku</option><option>Kwota za jednostkę</option><option value="">Stała opłata</option></ons-select>' + '<ons-input id="flat_wastes_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '</ons-card></div>' +
+            '<ons-card>' +
+            '<ons-checkbox id="flat_water_config" name="flat_water_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat-water-config">Woda</label>' +
+            '<label for="water_payment_option_bill">Sposób rozliczenia:</label><ons-select id="water_payment_option_bill" name="water_payment_option_bill"><option value="">Na bazie rachunku</option><option>Kwota za jednostkę</option><option value="">Stała opłata</option></ons-select>' + '<ons-input id="flat_water_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '</ons-card></div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</div>' + '</form>'
