@@ -22,3 +22,11 @@ ons-input {
     top: 45%;
     margin: 0 auto;
 }
+
+#loaderPage .center {
+    position: absolute;
+    top: calc(50% - 90px);
+    left: calc(50% - 65px);
+    text-align: center;
+    color: #d91a43;
+}
