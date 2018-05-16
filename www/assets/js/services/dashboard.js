@@ -14,6 +14,7 @@ myApp.services.dashboard = {
     },
 
     displayCurrentFlat: function(page, info) {
+        console.log(info);
         let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-list-header>' + info.name + '</ons-list-header>' +
@@ -35,7 +36,10 @@ myApp.services.dashboard = {
             '<ons-list-item>Dzień płatności:  ' + info.pay_day + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
             '<ons-input id="pay_day" name="pay_day" modifier="underbar" placeholder="Dzien płatności" value="' + info.pay_day + '" float class="edit hidden"> </ons-input>' +
-            '</div>' +
+            '</div><div class="edit hidden">' + '<ons-list-header>Ustawienia mediów</ons-list-header>'+
+            '<ons-checkbox id="flat_gas_config" name="flat_gas_config" modifier="underbar" float class="edit hidden"></ons-checkbox><label for="flat-gas-config">Gaz</label></div>' +
+            '<ons-radio group="gas_payment_option"></ons-radio><ons-radio group="gas_payment_option"></ons-radio>'+'<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>'+
+            
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</div>' + '</form>'
