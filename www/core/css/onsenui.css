@@ -65,8 +65,8 @@ ons-bottom-toolbar {
 
 .page, .page__content,
 .page--material, .page--material__content {
-  background-color: transparent !important;
-  background: transparent !important;
+  /*background-color: transparent !important;
+  background: transparent !important;*/
 }
 
 .page__content {

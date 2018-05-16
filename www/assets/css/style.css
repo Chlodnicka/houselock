@@ -1,3 +1,28 @@
+*, .toolbar__center, .list-header, .text-input, .alert-dialog-title, .alert-dialog-content, 
+.alert-dialog-button {
+	color: #ffffff;
+}
+
+.page, .page__content, .page--material, .page--material__content, .toolbar, .tabbar {
+	background-color: #d91a43;
+}
+
+.card, .list, .alert-dialog{
+	background-color: #ed5374;
+}
+
+.list-header {
+	background-color: #bf2445;
+}
+
+polygon {
+	fill: #ffffff
+}
+
+.ons-icon, .text-input__label {
+	color: #0be8dd
+}
+
 ons-input {
     margin-top: 15px;
     font-size: 20px;
