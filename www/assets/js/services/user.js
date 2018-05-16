@@ -221,9 +221,28 @@ myApp.services.user = {
         myNavigator.pushPage('html/user/user_no_flat.html');
     },
 
-    // Add user to flat
-    addSuccess: function (response) {
-        console.log(response);
+    remove: function (page, info) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
+            element.onclick = function () {
+                ons.openActionSheet({
+                    title: 'Usuń lokatora',
+                    cancelable: true,
+                    buttons: [
+                        {
+                            label: 'Usuń',
+                            modifier: 'destructive'
+                        },
+                        {
+                            label: 'Anuluj',
+                            icon: 'md-close'
+                        }
+                    ]
+                }).then(function (index) {
+                    if (index === 0) {
+                        ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
+                    }
+                });
+            };
+        });
     }
-
 };

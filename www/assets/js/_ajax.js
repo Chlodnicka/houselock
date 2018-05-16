@@ -41,6 +41,7 @@ window.ajax = {
 
     sendForm: function (page, onSuccess, onFail) {
         this.setForm(page.querySelector('form'));
+        $('#loading').show();
         $.ajax(this.options)
             .done(function (response) {
                 onSuccess ? onSuccess(response, page) : this.onSuccess();
@@ -49,12 +50,12 @@ window.ajax = {
                 onFail ? onFail(response) : this.onFail(response);
             })
             .always(function () {
-
+                $('#loading').hide();
             });
     },
 
     send: function (method, action, data, onSuccess, onFail) {
-        //todo: show loader
+        $('#loading').show();
         options = this.options;
         $.ajax({
             method: method,
@@ -66,7 +67,9 @@ window.ajax = {
         }).done(function (response) {
             onSuccess ? onSuccess(response) : options.onSuccess();
         }).fail(function (response) {
-            onFail ? onFail(response) : options.onFail();
+            onFail ? onFail(response) : options.onFail(response);
+        }).always(function () {
+            $('#loading').hide();
         });
     }
 

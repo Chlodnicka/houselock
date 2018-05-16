@@ -82,6 +82,7 @@ myApp.controllers = {
             if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
                 myApp.services.dashboard.displayCurrentFlat(page, info);
+                myApp.services.flat.displayActions(page, info);
                 //todo: #display_flat
                 //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
 
@@ -161,23 +162,7 @@ myApp.controllers = {
     tenantPage: function (page) {
         let info = page.data.element;
         myApp.services.user.fill(page, info);
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
-            element.onclick = function () {
-                //todo: nie pokazuje się po raz kolejny
-                document.getElementById('removeTenant').show();
-            };
-        });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/delete-tenant"]'), function (element) {
-            element.onclick = function () {
-                document.getElementById('removeTenant').hide();
-                ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
-            };
-        });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
-            element.onclick = function () {
-                document.getElementById('removeTenant').hide();
-            };
-        });
+        myApp.services.user.remove(page, info);
     },
 
     tenantNewPage: function (page) {
