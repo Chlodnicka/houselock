@@ -8,7 +8,8 @@
     <ons-card>
         <div class="content">
             <form data-ajax="/api/flat/{id}/user/add" method="post" id="user_add">
-                <ons-input placeholder="Email" type="text" float id="email"></ons-input>
+                <ons-input style="width: 100%" placeholder="Email" type="text" id="email" name="email" modifier="underbar"
+                           float></ons-input>
                 <ons-button modifier="large" component="button/save">Zapisz</ons-button>
             </form>
         </div>

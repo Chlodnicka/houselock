@@ -204,5 +204,13 @@ myApp.services.common = {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
         myNavigator.pushPage(myApp.user.splitter());
+    },
+
+    updateInfoAfter: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('userData', data);
+        localStorage.removeItem('currentFlat');
+        localStorage.removeItem('flatData');
+        myNavigator.pushPage('html/flat/flat_list.html');
     }
 };

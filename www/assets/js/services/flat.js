@@ -37,18 +37,34 @@ myApp.services.flat = {
         page.querySelector('.content').insertBefore(flatItem);
     },
 
+    addAction: function (page) {
+        let createFlat = ons.createElement(
+            '<ons-fab position="bottom right" component="button/new-flat">' +
+            '<ons-icon icon="md-plus"></ons-icon>' +
+            '</ons-fab>'
+        );
+
+        createFlat.onclick = function () {
+            document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
+        };
+
+        page.querySelector('.content').appendChild(createFlat);
+    },
+
     emptyFlatLandlord: function (page) {
         let info = ons.createElement('<div>Wybierz lub dodaj mieszkanie.</div>');
         page.querySelector('.content').appendChild(info);
         myApp.services.flat.list(page);
     },
     create: function (page) {
-        ajax.sendForm(page, myApp.services.flat.onCreatedSuccess(), myApp.services.flat.onCreateFail());
+        ajax.sendForm(page, myApp.services.flat.onCreatedSuccess, myApp.services.flat.onCreateFail);
     },
 
-
-    onCreatedSuccess: function () {
-        myNavigator.pushPage('html/flat/flat_info.html');
+    onCreatedSuccess: function (response) {
+        let data = JSON.stringify(response);
+        localStorage.setItem('userData', data);
+        let highest = response.data.user_flats[Object.keys(response.data.user_flats).sort().pop()].id;
+        myApp.services.common.setCurrentFlat(highest);
     },
 
     onCreateFail: function () {
@@ -106,7 +122,7 @@ myApp.services.flat = {
             ]
         }).then(function (index) {
             if (index === 0) {
-                ajax.send('post', '/api/flat/' + flat.id + '/delete', {}, myApp.services.common.updateUser);
+                ajax.send('post', '/api/flat/' + flat.id + '/delete', {}, myApp.services.common.updateInfoAfter);
             }
         });
     }

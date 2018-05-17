@@ -30,3 +30,7 @@ ons-input {
     text-align: center;
     color: #d91a43;
 }
+
+#newFlatPage ons-input {
+    width: 100%;
+}

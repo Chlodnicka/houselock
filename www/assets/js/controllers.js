@@ -61,19 +61,23 @@ myApp.controllers = {
         });
     },
 
+    alertsPage: function (page) {
+        let alerts = myApp.user.alerts();
+        myApp.services.user.fillAlerts(page, alerts);
+    },
+
     //Flat list page
     flatListPage: function (page) {
         let flats = myApp.user.flats();
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/new-flat"]'), function (element) {
-            element.onclick = function () {
-                document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
-            };
-        });
+
+        myApp.services.flat.addAction(page);
+
         if (Object.keys(flats).length === 0) {
             myApp.services.flat.emptyList(page);
         } else {
             myApp.services.flat.list(page, flats);
         }
+
     },
 
     //Single flat page
@@ -90,16 +94,11 @@ myApp.controllers = {
                 let flats = myApp.user.flats();
                 myApp.services.flat.emptyFlatLandlord(page);
                 myApp.services.flat.list(page, flats);
+                myApp.services.flat.addAction(page);
             }
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
-
             myApp.services.dashboard.displayCurrentFlat(page, info);
-
-            myApp.services.dashboard.editFlat(page, info)
-            //todo: #edit_flat
-            //todo: wewnątrz funkcji do wyświetlania mieszkania oprogramować guzik edycji
-            //todo: i zapis formularza - można to ogarnąć tak jak w przypadku edycji danych użytkownika - sprawdź userPage
             let flat = ons.createElement('<div>' + info.name + '</div>');
             page.querySelector('.content').appendChild(flat);
         }
