@@ -87,9 +87,6 @@ myApp.controllers = {
                 let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
                 myApp.services.dashboard.displayCurrentFlat(page, info);
                 myApp.services.flat.displayActions(page, info);
-                //todo: #display_flat
-                //todo: najlepiej stworzyć funkcję w serwisach plik: dashboard.js
-
             } else {
                 let flats = myApp.user.flats();
                 myApp.services.flat.emptyFlatLandlord(page);
@@ -99,8 +96,6 @@ myApp.controllers = {
         } else if (myApp.user.currentFlat() !== undefined) {
             let info = myApp.user.currentFlat();
             myApp.services.dashboard.displayCurrentFlat(page, info);
-            let flat = ons.createElement('<div>' + info.name + '</div>');
-            page.querySelector('.content').appendChild(flat);
         }
     },
 
@@ -149,6 +144,12 @@ myApp.controllers = {
 
     //User info page
     userPage: function (page) {
+
+        if (myApp.user.isTenant()) {
+            let backButton = page.querySelector('.back-button');
+            $(backButton).remove();
+        }
+
         myApp.services.user.fill(page);
 
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {

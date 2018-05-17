@@ -5,7 +5,7 @@ window.ajax = {
         domain: 'http://api.houselock.com.pl',
         data: '',
         onSuccess: function () {
-            ons.notification.alert('Sukces!');
+            // ons.notification.alert('Sukces!');
         },
         onFail: function (response) {
             ons.notification.alert(response.responseJSON.data);
