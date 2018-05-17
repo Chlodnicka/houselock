@@ -17,7 +17,7 @@ myApp.services.dashboard = {
         console.log(info);
         let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
-            '<div><ons-list-header>' + info.name + '</ons-list-header>' +
+            '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
             '<div class="edit" style="display: none">' +
             '<ons-input id="street" name="street" modifier="underbar" minLength="1" maxLength="50" placeholder="Ulica" value="' + info.street + '" float class="edit hidden"> </ons-input>' +
@@ -36,17 +36,18 @@ myApp.services.dashboard = {
             '<ons-list-item>Dzień płatności:  ' + info.pay_day + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
             '<ons-input id="pay_day" name="pay_day" modifier="underbar" placeholder="Dzien płatności" value="' + info.pay_day + '" float class="edit hidden"> </ons-input>' +
-            '</div><div class="edit hidden" style="display: none">' + '<ons-list-header>Ustawienia mediów</ons-list-header>' + '<ons-card>' +
+            '</div></ons-card>' + '<div class="edit hidden" style="display: none"><ons-list-header>Ustawienia mediów</ons-list-header>' + '<ons-card>' +
             '<ons-checkbox id="flat_gas_config" name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox><label for="flat_gas_config">Gaz</label>' +
             '<label for="gas_payment_option_bill">Sposób rozliczenia:</label><ons-select id="gas_payment_option_bill" name="gas_payment_option_bill"><option value="bill">Na bazie rachunku</option><option value="metric">Kwota za jednostkę</option><option value="static">Stała opłata</option></ons-select>' + '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
-            '</ons-card></div>' + '<ons-card>' +
+            '</ons-card></div>' + '<div class="edit hidden" style="display: none">' +
+            '<ons-card>' +
             '<ons-checkbox id="flat_power_config" name="flat_config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox><label for="flat_power_config">Prąd</label>' +
             '<label for="power_payment_option_bill">Sposób rozliczenia:</label><ons-select id="power_payment_option_bill" name="power_payment_option_bill"><option value="bill">Na bazie rachunku</option value="metric"><option>Kwota za jednostkę</option><option value="static">Stała opłata</option></ons-select>' + '<ons-input id="flat_power_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
-            '</ons-card></div>' +
+            '</ons-card></div>' + '<div class="edit hidden" style="display: none">' +
             '<ons-card>' +
             '<ons-checkbox id="flat_wastes_config" name="flat_config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox><label for="flat_wastes_config">Śmieci</label>' +
             '<label for="wastes_payment_option_bill">Sposób rozliczenia:</label><ons-select id="wastes_payment_option_bill" name="wastes_payment_option_bill"><option value="bill">Na bazie rachunku</option><option value="metric">Kwota za jednostkę</option><option value="static">Stała opłata</option></ons-select>' + '<ons-input id="flat_wastes_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
-            '</ons-card></div>' +
+            '</ons-card></div>' + '<div class="edit hidden" style="display: none">' +
             '<ons-card>' +
             '<ons-checkbox id="flat_water_config" name="flat_config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox><label for="flat-water-config">Woda</label>' +
             '<label for="water_payment_option_bill">Sposób rozliczenia:</label><ons-select id="water_payment_option_bill" name="water_payment_option_bill"><option value="bill">Na bazie rachunku</option><option value="metric">Kwota za jednostkę</option><option value="static">Stała opłata</option></ons-select>' + '<ons-input id="flat_water_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
