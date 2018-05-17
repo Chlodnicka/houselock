@@ -230,16 +230,15 @@ myApp.services.user = {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
             element.onclick = function () {
                 ons.openActionSheet({
-                    title: 'Usuń lokatora',
+                    title: 'Ta akcja jest nieodwracalna!',
                     cancelable: true,
                     buttons: [
                         {
-                            label: 'Usuń',
+                            label: 'Usuń lokatora',
                             modifier: 'destructive'
                         },
                         {
-                            label: 'Anuluj',
-                            icon: 'md-close'
+                            label: 'Anuluj'
                         }
                     ]
                 }).then(function (index) {

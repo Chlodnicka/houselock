@@ -108,16 +108,15 @@ myApp.services.flat = {
 
     remove: function (flat) {
         ons.openActionSheet({
-            title: 'Usuń mieszkanie',
+            title: 'Ta akcja jest nieodwracalna!',
             cancelable: true,
             buttons: [
                 {
-                    label: 'Usuń',
+                    label: 'Usuń mieszkanie',
                     modifier: 'destructive'
                 },
                 {
                     label: 'Anuluj',
-                    icon: 'md-close'
                 }
             ]
         }).then(function (index) {
