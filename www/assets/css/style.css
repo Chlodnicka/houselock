@@ -1,29 +1,21 @@
-*, .toolbar__center, .list-header, .text-input, .alert-dialog-title, .alert-dialog-content, 
-.alert-dialog-button {
-	color: #ffffff;
-}
-
-.page, .page__content, .page--material, .page--material__content, .toolbar, .tabbar {
-	background-color: #d91a43;
-}
-
-.card, .list, .alert-dialog{
-	background-color: #ed5374;
-}
-
-.list-header {
-	background-color: #bf2445;
+.ons-icon, .text-input__label{
+	color: #d91a43;
 }
 
 polygon {
-	fill: #ffffff
+	fill: #d91a43;
 }
-
-.ons-icon, .text-input__label {
-	color: #0be8dd
-}
-
 ons-input {
     margin-top: 15px;
     font-size: 20px;
+}
+
+.loader {
+	margin-left: 45%;
+	width: 50%;
+}
+
+.button {
+	background-color: #d91a43;
+	margin: 5px 0px;
 }
