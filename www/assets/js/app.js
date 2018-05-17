@@ -17,18 +17,3 @@ document.addEventListener('init', function (event) {
 
 });
 
-document.addEventListener("deviceready", onDeviceReady, false);
-
-function onDeviceReady() {
-    //
-    // navigator.notification.alert(
-    //     'You are the winner!',  // message
-    //     alertDismissed,         // callback
-    //     'Game Over',            // title
-    //     'Done'                  // buttonName
-    // );
-    //
-    // function alertDismissed() {
-    //     // do something
-    // }
-}

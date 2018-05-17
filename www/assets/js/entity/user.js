@@ -41,6 +41,10 @@ myApp.user = {
         return this.role() === 'ROLE_TENANT';
     },
 
+    userData: function () {
+        return JSON.parse(localStorage.getItem('userData'));
+    },
+
     data: function () {
         let data = JSON.parse(localStorage.getItem('userData')).data;
         return data.user_info;

@@ -27,13 +27,17 @@
 
 <body>
 
+<div id="loading">
+    <ons-progress-circular class="loading-circular" indeterminate></ons-progress-circular>
+</div>
+
 <ons-navigator id="myNavigator" page="loader.html">
 </ons-navigator>
 
 <ons-template id="loader.html">
     <ons-page id="loaderPage">
         <div class="center">
-            <ons-icon icon="ion-load-c" spin="true" size="72px"></ons-icon>
+            <ons-icon icon="ion-load-c" spin="true" size="144px"></ons-icon>
             <br><br>
             ładuję dane...
         </div>
