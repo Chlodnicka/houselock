@@ -14,7 +14,6 @@ myApp.services.dashboard = {
     },
 
     displayCurrentFlat: function(page, info) {
-        console.log(info);
         let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
@@ -37,7 +36,7 @@ myApp.services.dashboard = {
             '<div class="edit" style="display: none">' +
             '<ons-input id="pay_day" name="pay_day" modifier="underbar" placeholder="Dzien płatności" value="' + info.pay_day + '" float class="edit hidden"> </ons-input>' +
             '</div></ons-card>' + '<div class="edit hidden" style="display: none"><ons-list-header>Ustawienia mediów</ons-list-header>' + '<ons-card>' +
-            '<ons-checkbox id="flat_gas_config" name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox><label for="flat_gas_config">Gaz</label>' +
+            '<label for="flat_gas_config"><ons-checkbox id="flat_gas_config" name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>Gaz</label></br>' +
             '<label for="gas_payment_option_bill">Sposób rozliczenia:</label><ons-select id="gas_payment_option_bill" name="gas_payment_option_bill"><option value="bill">Na bazie rachunku</option><option value="metric">Kwota za jednostkę</option><option value="static">Stała opłata</option></ons-select>' + '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
             '</ons-card></div>' + '<div class="edit hidden" style="display: none">' +
             '<ons-card>' +
