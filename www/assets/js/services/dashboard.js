@@ -138,7 +138,7 @@ myApp.services.dashboard = {
             myApp.services.common.selectOption(info.flat_config.water) +
             '</div>' +
             '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
-            '</div>' +
+            '</div></div>' +
 
             '<div id="flat_config_info">' +
             '<div id="gas_config">' +
@@ -166,7 +166,7 @@ myApp.services.dashboard = {
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
-            '</div>' +
+            +
             '</form>'
         );
         page.querySelector('.content').appendChild(flat);
