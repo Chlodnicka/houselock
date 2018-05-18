@@ -197,6 +197,7 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
+                page.querySelector('div.flat_config_info').style.display = 'none';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
                     listitem.style.display = 'none';
                 });
@@ -214,6 +215,7 @@ myApp.services.common = {
                 page.querySelector('[component="button/save"]').style.display = 'none';
                 page.querySelector('[component="button/edit"]').style.display = 'block';
                 page.querySelector('[component="button/flat-edit"]').style.display = 'block';
+                page.querySelector('div.flat_config_info').style.display = 'block';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
                     listitem.style.display = 'flex';
                 });

@@ -141,7 +141,7 @@ myApp.services.dashboard = {
             '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
             '</div></div>' +
 
-            '<div id="flat_config_info">' +
+            '<div class="flat_config_info">' +
             '<div id="gas_config">' +
             '<ons-list-header>Gaz</ons-list-header>' +
             '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.gas) + '</ons-list-item>' +
