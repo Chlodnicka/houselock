@@ -27,7 +27,7 @@ myApp.services.dashboard = {
         if (gasChecked) {
             if (info.flat_config.gas.price_full) {
                 gasPrice = info.flat_config.gas.price_full;
-            } else {
+            } else if (info.flat_config.gas.price_meter) {
                 gasPrice = info.flat_config.gas.price_meter;
             }
         }
@@ -36,16 +36,16 @@ myApp.services.dashboard = {
         if (powerChecked) {
             if (info.flat_config.power.price_full) {
                 powerPrice = info.flat_config.power.price_full;
-            } else {
+            } else if (info.flat_config.power.price_meter) {
                 powerPrice = info.flat_config.power.price_meter;
             }
         }
 
         let waterPrice = '';
-        if (waterPrice) {
+        if (waterChecked) {
             if (info.flat_config.water.price_full) {
                 waterPrice = info.flat_config.water.price_full;
-            } else {
+            } else if (info.flat_config.water.price_meter) {
                 waterPrice = info.flat_config.water.price_meter;
             }
         }
@@ -54,7 +54,7 @@ myApp.services.dashboard = {
         if (wastesChecked) {
             if (info.flat_config.waste_water.price_full) {
                 wastesPrice = info.flat_config.waste_water.price_full;
-            } else {
+            } else if (info.flat_config.waste_water.price_meter) {
                 wastesPrice = info.flat_config.waste_water.price_meter;
             }
         }
@@ -93,33 +93,29 @@ myApp.services.dashboard = {
             '<label class="config-left" for="flat_gas_config">' +
             'Gaz: ' +
             '</label>' +
-            '<ons-checkbox class="config-right" id="flat_gas_config" name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>' +
+            '<ons-checkbox class="config-right" id="flat_gas_config" ' + gasChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>' +
             '</div>' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label  class="config-left" for="gas_payment_option_bill">Sposób rozliczenia:</label>' +
             '<ons-select  style="margin-top: -7px;" class="config-right" id="gas_payment_option_bill" name="gas_payment_option_bill">' +
-            '<option value="bill">Na bazie rachunku</option>' +
-            '<option value="metric">Kwota za jednostkę</option>' +
-            '<option value="static">Stała opłata</option>' +
+            myApp.services.common.selectOption(info.flat_config.gas) +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
+            '<ons-input id="flat_gas_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="flat_power_config">Prąd</label>' +
-            '<ons-checkbox class="config-right" id="flat_power_config" name="flat_config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox>' +
+            '<ons-checkbox class="config-right" id="flat_power_config" ' + powerChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox>' +
             '</div>' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-right" for="power_payment_option_bill">Sposób rozliczenia:</label>' +
             '<ons-select class="config-left" id="power_payment_option_bill" name="power_payment_option_bill">' +
-            '<option value="bill">Na bazie rachunku</option value="metric">' +
-            '<option>Kwota za jednostkę</option>' +
-            '<option value="static">Stała opłata</option>' +
+            myApp.services.common.selectOption(info.flat_config.power) +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_power_price" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
+            '<ons-input id="flat_power_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
@@ -130,27 +126,23 @@ myApp.services.dashboard = {
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="wastes_payment_option_bill">Sposób rozliczenia:</label>' +
             '<ons-select class="config-right" id="wastes_payment_option_bill" name="wastes_payment_option_bill">' +
-            '<option value="bill">Na bazie rachunku</option>' +
-            '<option value="metric">Kwota za jednostkę</option>' +
-            '<option value="static">Stała opłata</option>' +
+            myApp.services.common.selectOption(info.flat_config.waste_water) +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_wastes_price" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
+            '<ons-input id="flat_wastes_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="flat-water-config">Woda</label>' +
-            '<ons-checkbox class="config-right" id="flat_water_config" name="flat_config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox>' +
+            '<ons-checkbox class="config-right" id="flat_water_config" ' + waterChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox>' +
             '</div>' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="water_payment_option_bill">Sposób rozliczenia:</label>' +
             '<ons-select class="config-right" id="water_payment_option_bill" name="water_payment_option_bill">' +
-            '<option value="bill">Na bazie rachunku</option>' +
-            '<option value="metric">Kwota za jednostkę</option>' +
-            '<option value="static">Stała opłata</option></ons-select>' +
+            myApp.services.common.selectOption(info.flat_config.water) +
             '</div>' +
-            '<ons-input id="flat_water_price" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
+            '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
             '</div>' +
 
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
