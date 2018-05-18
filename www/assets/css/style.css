@@ -76,3 +76,7 @@ ons-input {
 .text-input--material__label--active {
     color: #d91a43;
 }
+
+.config-left, .config-right {
+    width: 50%;
+}
