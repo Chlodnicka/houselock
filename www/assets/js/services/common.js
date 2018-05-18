@@ -1,5 +1,21 @@
 myApp.services.common = {
 
+    parseStatus: function (status) {
+        switch (status) {
+            case 'TEMP':
+                return 'Zaproszenie oczekuje na akceptację lokatora';
+                break;
+            case 'DELETED_BY_LANDLORD':
+                return 'Usunięty - oczekuje na akceptację lokatora';
+                break;
+            case 'DELETED_BY_SELF' :
+                return 'Usunięty - oczekuje na akceptację właściciela';
+                break;
+            default:
+                return 'Aktywny';
+        }
+    },
+
     parseAlertMessage: function (message) {
         switch (message) {
             case 'bill_generated':
