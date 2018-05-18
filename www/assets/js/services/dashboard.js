@@ -54,10 +54,9 @@ myApp.services.dashboard = {
             }
         }
 
-        if ()
 
 
-            let flat = ons.createElement(
+        let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
@@ -150,25 +149,24 @@ myApp.services.dashboard = {
             '</div>' +
             '<div id="power_config">' +
             '<ons-list-header>Prąd</ons-list-header>' +
-            '<ons-list-item>Sposób rozliczenia:' + +'</ons-list-item>' +
-            '<ons-list-item>Kwota: ' + +'</ons-list-item>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.power) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + powerPrice + '</ons-list-item>' +
             '</div>' +
             '<div id="wastes_config">' +
             '<ons-list-header>Śmieci</ons-list-header>' +
-            '<ons-list-item>Sposób rozliczenia:' + +'</ons-list-item>' +
-            '<ons-list-item>Kwota: ' + +'</ons-list-item>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.waste_water) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
             '</div>' +
             '<div id="water_config">' +
             '<ons-list-header>Woda</ons-list-header>' +
-            '<ons-list-item>Sposób rozliczenia:' + +'</ons-list-item>' +
-            '<ons-list-item>Kwota: ' + +'</ons-list-item>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.water) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + waterPrice + '</ons-list-item>' +
             '</div>' +
             '</div>' +
 
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
-            +
             '</form>'
         );
         page.querySelector('.content').appendChild(flat);
