@@ -14,6 +14,52 @@ myApp.services.dashboard = {
     },
 
     displayCurrentFlat: function (page, info) {
+
+        console.log(info);
+
+        let gasChecked = info.flat_config.gas ? ' checked ' : '';
+        let powerChecked = info.flat_config.power ? ' checked ' : '';
+        let waterChecked = info.flat_config.water ? ' checked ' : '';
+        let wastesChecked = info.flat_config.waste_water ? ' checked ' : '';
+
+
+        let gasPrice = '';
+        if (gasChecked) {
+            if (info.flat_config.gas.price_full) {
+                gasPrice = info.flat_config.gas.price_full;
+            } else {
+                gasPrice = info.flat_config.gas.price_meter;
+            }
+        }
+
+        let powerPrice = '';
+        if (powerChecked) {
+            if (info.flat_config.power.price_full) {
+                powerPrice = info.flat_config.power.price_full;
+            } else {
+                powerPrice = info.flat_config.power.price_meter;
+            }
+        }
+
+        let waterPrice = '';
+        if (waterPrice) {
+            if (info.flat_config.water.price_full) {
+                waterPrice = info.flat_config.water.price_full;
+            } else {
+                waterPrice = info.flat_config.water.price_meter;
+            }
+        }
+
+        let wastesPrice = '';
+        if (wastesChecked) {
+            if (info.flat_config.waste_water.price_full) {
+                wastesPrice = info.flat_config.waste_water.price_full;
+            } else {
+                wastesPrice = info.flat_config.waste_water.price_meter;
+            }
+        }
+
+
         let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
@@ -57,7 +103,7 @@ myApp.services.dashboard = {
             '<option value="static">Stała opłata</option>' +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '<ons-input id="flat_gas_price" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
@@ -73,13 +119,13 @@ myApp.services.dashboard = {
             '<option value="static">Stała opłata</option>' +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_power_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '<ons-input id="flat_power_price" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="flat_wastes_config">Śmieci</label>' +
-            '<ons-checkbox class="config-right" id="flat_wastes_config" name="flat_config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox>' +
+            '<ons-checkbox class="config-right" id="flat_wastes_config" ' + wastesChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox>' +
             '</div>' +
             '<div style="display:flex; margin: 20px 0;">' +
             '<label class="config-left" for="wastes_payment_option_bill">Sposób rozliczenia:</label>' +
@@ -89,7 +135,7 @@ myApp.services.dashboard = {
             '<option value="static">Stała opłata</option>' +
             '</ons-select>' +
             '</div>' +
-            '<ons-input id="flat_wastes_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '<ons-input id="flat_wastes_price" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
             '</div>' +
 
             '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
@@ -104,7 +150,7 @@ myApp.services.dashboard = {
             '<option value="metric">Kwota za jednostkę</option>' +
             '<option value="static">Stała opłata</option></ons-select>' +
             '</div>' +
-            '<ons-input id="flat_water_price" placeholder="Kwota" float class="edit hidden"></ons-input>' +
+            '<ons-input id="flat_water_price" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
             '</div>' +
 
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
