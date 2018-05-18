@@ -31,7 +31,7 @@ Prototyp został wykonany w programie Mockplus. Link do programu:
 https://www.mockplus.com/
 
 link do prototypu Houselock:
-http://v-ie.uek.krakow.pl/~s181368/Houselock_prototype.mp
+[Houselock prototype](http://v-ie.uek.krakow.pl/~s181368/Houselock_prototype.mp)
 
 ## Raport wykonanych prac
 
