@@ -33,7 +33,7 @@ https://trello.com/b/4n35Erl0/houselock
 | :---         |     :---:      |          ---: |
 | Implementacja API   | Maja Chłodnicka     | 25    |
 | Wykonanie prototypu aplikacji     | Kamil Pietrucha       | 4      |
-| Wykonanie makiet     | Filip Tańcula       | 4     |
+| Wykonanie makiet     | Filip Tańcula       | 5     |
 | Początkowa konfiguracja projektu aplikacji (framework Onsen)     | Maja Chłodnicka       | 4      |
 | Integracja makiet do struktury plików aplikacji     | Filip Tańcula       | 2      |
 | Autoryzacja i wylogowanie użytkownika aplikacji mobilnej     | Maja Chłodnicka       | 3      |
@@ -49,7 +49,7 @@ https://trello.com/b/4n35Erl0/houselock
 | Edycja rachunku (wprowadzanie danych, zmiany stanu rachunku)     | Maja Chłodnicka       | 4      |
 | Wyświetlanie listy rachunków     | Maja Chłodnicka       | 2      |
 | Mechanizm alertów     | Maja Chłodnicka       | 3      |
-| Testy     | Filip Tańcula       | 2      |
+| Testy     | Filip Tańcula       | 3      |
 | Dodawanie i usuwanie lokatorów |  Maja Chłodnicka | 3
 | Implementacja bootstrapa | Kamil Pietrucha | 1
 | Dodawanie i edytowanie przycisków | Kamil Pietrucha | 2
@@ -61,6 +61,6 @@ https://trello.com/b/4n35Erl0/houselock
 | Osoba | Czas pracy |
 | :---         |         ---: |
 | Maja Chłodnicka     | 56    |
-| Filip Tańcula       | 19     |
+| Filip Tańcula       | 21     |
 | Kamil Pietrucha     | 15     |
 
