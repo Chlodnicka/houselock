@@ -54,8 +54,10 @@ myApp.services.dashboard = {
             }
         }
 
+        if ()
 
-        let flat = ons.createElement(
+
+            let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
             '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
@@ -143,8 +145,8 @@ myApp.services.dashboard = {
             '<div id="flat_config_info">' +
             '<div id="gas_config">' +
             '<ons-list-header>Gaz</ons-list-header>' +
-            '<ons-list-item>Sposób rozliczenia:' + +'</ons-list-item>' +
-            '<ons-list-item>Kwota: ' + +'</ons-list-item></br>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.gas) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + gasPrice + '</ons-list-item></br>' +
             '</div>' +
             '<div id="power_config">' +
             '<ons-list-header>Prąd</ons-list-header>' +
