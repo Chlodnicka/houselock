@@ -15,8 +15,7 @@ myApp.services.common = {
                 return 'Aktywny';
         }
     },
-
-    parseAlertMessage: function (message) {
+    parseAlertMessage: function(message) {
         switch (message) {
             case 'bill_generated':
                 return 'Wygenerowano nowy rachunek. Uzupełnij informacje o płatnościach';
@@ -36,7 +35,7 @@ myApp.services.common = {
     },
 
 
-    parseMonth: function (month) {
+    parseMonth: function(month) {
         switch (month) {
             case 'January':
                 return 'styczeń';
@@ -79,7 +78,7 @@ myApp.services.common = {
         }
     },
 
-    parsePaymentStatus: function (status) {
+    parsePaymentStatus: function(status) {
         switch (status) {
             case 'NEW':
                 return 'nowy';
@@ -98,7 +97,7 @@ myApp.services.common = {
         }
     },
 
-    parseConfig: function (config) {
+    parseConfig: function(config) {
         if (config === 'METER') {
             return 'Uzupełnij stan licznika';
         } else if (config === 'BILL') {
@@ -107,13 +106,13 @@ myApp.services.common = {
         return false;
     },
 
-    parseAction: function (form, id) {
+    parseAction: function(form, id) {
         let ajax = $(form).attr('data-ajax').replace('{id}', id);
         $(form).attr('data-ajax', ajax);
     },
 
     token: {
-        get: function () {
+        get: function() {
             return localStorage.getItem('token');
         },
 

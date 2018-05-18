@@ -34,7 +34,12 @@ window.ajax = {
         var data = [];
         $.each(inputs, function () {
             var input = $(this);
-            data.push('_' + input.attr('id') + '=' + input.val());
+            if (input.prop('localName') == 'ons-checkbox') {
+                var actualInputDOM = input.children('input');
+                data.push('_' + input.attr('id') + '=' + actualInputDOM.prop('checked'));
+            } else {
+                data.push('_' + input.attr('id') + '=' + input.val());
+            }
         });
         return data.join('&');
     },
