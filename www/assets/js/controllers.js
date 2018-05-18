@@ -217,5 +217,13 @@ myApp.controllers = {
             };
         });
 
+    },
+
+    userAcceptRemovalPage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept-removal"]'), function (element) {
+            element.onclick = function () {
+                myApp.services.user.acceptRemoval();
+            };
+        });
     }
 };

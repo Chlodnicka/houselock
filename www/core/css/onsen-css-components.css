@@ -1642,7 +1642,7 @@ h4, h5, h6 {
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
   text-transform: uppercase;
-  background-color: #2979ff;
+  background-color: #d91a43;
   color: #ffffff;
   font-weight: 500;
   transition: background-color 0.25s linear;
@@ -1657,7 +1657,7 @@ h4, h5, h6 {
       0 6px 10px 0 rgba(0, 0, 0, .14),
       0 1px 18px 0 rgba(0, 0, 0, .12),
       0 3px 5px -1px rgba(0, 0, 0, .4);
-  background-color: #2979ff;
+  background-color: #d91a43;
   opacity: 0.9;
   transition: all 0.25s linear;
 }
@@ -1731,13 +1731,13 @@ h4, h5, h6 {
   -webkit-transform: translate3d(0, 0, 0);
           transform: translate3d(0, 0, 0);
   text-transform: uppercase;
-  background-color: #2979ff;
+  background-color: #d91a43;
   color: #ffffff;
   font-weight: 500;
   transition: background-color 0.25s linear;
   box-shadow: none;
   background-color: transparent;
-  color: #2979ff;
+  color: #d91a43;
   transition: all 0.25s linear;
 }
 .button--material--flat:hover { /* stylelint-disable-line */
@@ -1746,7 +1746,7 @@ h4, h5, h6 {
 .button--material--flat:focus { /* stylelint-disable-line */
   box-shadow: none;
   background-color: transparent;
-  color: #2979ff;
+  color: #d91a43;
   outline: 0;
   opacity: 1;
   border: none;
@@ -1757,7 +1757,7 @@ h4, h5, h6 {
   opacity: 1;
   border: none;
   background-color: rgba(153, 153, 153, 0.2);
-  color: #2979ff;
+  color: #d91a43;
   transition: all 0.25s linear;
 }
 .button--material--flat:disabled, .button--material--flat[disabled] {/* stylelint-disable-line */
@@ -2656,7 +2656,7 @@ h4, h5, h6 {
 */
 .toolbar-button--material {
   font-size: 22px;
-  color: #1e88e5;
+  color: #d91a43;
   display: inline-block;
   padding: 0 12px;
   height: 100%;
@@ -2709,7 +2709,7 @@ h4, h5, h6 {
 }
 .back-button--material {
   font-size: 22px;
-  color: #1e88e5;
+  color: #d91a43;
   display: inline-block;
   padding: 0 12px;
   height: 100%;
@@ -2728,7 +2728,7 @@ h4, h5, h6 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: inline-flex;
-  fill: #1e88e5;
+  fill: #d91a43;
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
@@ -4655,7 +4655,7 @@ h4, h5, h6 {
   pointer-events: none;
 }
 .text-input--material__label--active {
-  color: #3d5afe;
+  color: #d91a43;
   -webkit-transform: translate(0, -75%) scale(0.75);
           transform: translate(0, -75%) scale(0.75);
   -webkit-transform-origin: left top;
@@ -4666,7 +4666,7 @@ h4, h5, h6 {
 }
 .text-input--material:focus {
   background-image:
-    linear-gradient(#3d5afe, #3d5afe),
+    linear-gradient(#d91a43, #d91a43),
     linear-gradient(to top, transparent 1px, #afafaf 1px);
   -webkit-animation: material-text-input-animate 0.3s forwards;
           animation: material-text-input-animate 0.3s forwards;

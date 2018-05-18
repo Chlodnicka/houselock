@@ -119,6 +119,8 @@ myApp.services.user = {
             let id = Object.keys(flats)[0];
             if (id && myApp.user.status() === 'ACTIVE') {
                 myApp.services.common.setCurrentFlat(id);
+            } else if (id && myApp.user.status() === 'DELETED_BY_LANDLORD') {
+                myNavigator.pushPage('html/user/user_deleted.html');
             } else if (myApp.user.hasInvitation()) {
                 localStorage.setItem('currentFlat', id);
                 ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlatInvitation);
@@ -135,14 +137,22 @@ myApp.services.user = {
         let card = page.querySelector('form'),
             userData = data ? data : myApp.user.data(),
             phone = userData.phone ? userData.phone : '',
-            account = userData.account_number ? userData.account_number : '';
+            account = userData.account_number ? userData.account_number : '',
+            firstname = userData.firstname ? userData.firstname : '',
+            lastname = userData.lastname ? userData.lastname : '';
+
+        let status = '';
+        if (userData.status) {
+            status = '<ons-list-item>' + myApp.services.common.parseStatus(userData.status) + '</ons-list-item>'
+        }
 
         let userInfo = ons.createElement(
             '<div>' +
+            status +
             '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.fullname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
-            '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + userData.firstname + '" float class="edit hidden"> </ons-input>' +
-            '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + userData.lastname + '" float class="edit hidden""></ons-input>' +
+            '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + firstname + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden""></ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
@@ -153,7 +163,7 @@ myApp.services.user = {
             '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="Numer konta bankowego" value="' + account + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
-            '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
+            '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</div>'
             )
         ;
@@ -168,6 +178,17 @@ myApp.services.user = {
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
 
+        if (myApp.user.isTenant() && userData.status !== 'DELETED_BY_SELF') {
+            let deleteButton = ons.createElement(
+                '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
+            );
+
+            deleteButton.onclick = function () {
+                ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate)
+            };
+
+            page.querySelector('.content').appendChild(deleteButton);
+        }
     },
 
     save: function (page) {
@@ -190,9 +211,11 @@ myApp.services.user = {
 
         let name = user.lastname ? user.firstname + ' ' + user.lastname : user.email;
 
+        let status = user.status ? myApp.services.common.parseStatus(user.status) : '';
+
         let userItem = ons.createElement(
             '<div>' +
-            '<ons-list-item modifier="chevron" tappable>' + name + '</ons-list-item>' +
+            '<ons-list-item modifier="chevron" tappable>' + name + ' (' + status + ')</ons-list-item>' +
             '</div>'
         );
 
@@ -216,6 +239,10 @@ myApp.services.user = {
 
     ignore: function () {
         ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
+    },
+
+    acceptRemoval: function () {
+        ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate);
     },
 
     ignoreUpdate: function (response) {
