@@ -8,7 +8,7 @@ myApp.services.common = {
             case 'DELETED_BY_LANDLORD':
                 return 'Usunięty - oczekuje na akceptację lokatora';
                 break;
-            case 'DELETED_BY_SELF' :
+            case 'DELETED_BY_SELF':
                 return 'Usunięty - oczekuje na akceptację właściciela';
                 break;
             default:
@@ -178,12 +178,26 @@ myApp.services.common = {
             '<option value="static">Stała opłata</option>';
     },
 
+    getTextFromOption: function (config) {
+        if (config) {
+            if (config.config_type === 'bill') {
+                return 'Na bazie rachunku';
+            } else if (config.config_type === 'metric') {
+                return 'Kwota za jednostkę';
+            } else {
+                return 'Stała opłata';
+            }
+        }
+        return 'Nie zdefiniowano!'
+    },
+
     edit: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function (element) {
             element.onclick = function () {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
+                page.querySelector('div.flat_config_info').style.display = 'none';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'none';
                 });
@@ -199,8 +213,14 @@ myApp.services.common = {
             element.onclick = function () {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'none';
-                page.querySelector('[component="button/edit"]').style.display = 'block';
-                page.querySelector('[component="button/flat-edit"]').style.display = 'block';
+                if (page.querySelector('[component="button/edit"]')) {
+                    page.querySelector('[component="button/edit"]').style.display = 'block';
+                }
+                if (page.querySelector('[component="button/flat-edit"]')) {
+                    page.querySelector('[component="button/flat-edit"]').style.display = 'block';
+                }
+
+                page.querySelector('div.flat_config_info').style.display = 'block';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'flex';
                 });

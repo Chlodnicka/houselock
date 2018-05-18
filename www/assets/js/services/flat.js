@@ -7,11 +7,12 @@ myApp.services.flat = {
             let flat = flats[id];
             myApp.services.flat.item(page, flat);
         }
+        page.querySelector('.flat-list').style.display = 'block';
     },
 
     emptyList: function (page) {
         let info = ons.createElement('<div>Brak dodanych mieszkań - użyj przycisku by dodać mieszkanie.</div>');
-        page.querySelector('.content').appendChild(info);
+        page.querySelector('.flat-list').appendChild(info);
     },
 
     item: function (page, flat) {
@@ -24,17 +25,10 @@ myApp.services.flat = {
 
 
         flatItem.querySelector('.center').onclick = function () {
-            // myNavigator.pushPage(myApp.user.splitter() + 'Splitter.html',
-            //     {
-            //         animation: 'lift',
-            //         data: {
-            //             element: flat
-            //         }
-            //     });
             myApp.services.common.setCurrentFlat(flat.id);
         };
 
-        page.querySelector('.content').insertBefore(flatItem);
+        page.querySelector('.flat-list').appendChild(flatItem);
     },
 
     addAction: function (page) {
@@ -53,15 +47,15 @@ myApp.services.flat = {
 
     emptyFlatLandlord: function (page) {
         let info = ons.createElement('<div>Wybierz lub dodaj mieszkanie.</div>');
-        page.querySelector('.content').appendChild(info);
+        page.querySelector('.flat-list').appendChild(info);
         myApp.services.flat.list(page);
     },
+
     create: function (page) {
-        ajax.sendForm(page, myApp.services.flat.onCreatedSuccess(), myApp.services.flat.onCreateFail());
+        ajax.sendForm(page, myApp.services.flat.onCreatedSuccess, myApp.services.flat.onCreateFail);
     },
 
-
-    onCreatedSuccess: function () {
+    onCreatedSuccess: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
         let highest = response.data.user_flats[Object.keys(response.data.user_flats).sort().pop()].id;
@@ -95,6 +89,7 @@ myApp.services.flat = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
+                page.querySelector('div.flat_config_info').style.display = 'none';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = ' none';
                 });

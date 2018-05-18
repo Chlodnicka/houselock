@@ -4,12 +4,12 @@
 
 myApp.services.dashboard = {
 
-    noLastBill: function(page) {
+    noLastBill: function (page) {
         let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
         page.querySelector('.content').appendChild(info);
     },
 
-    displayCurrentFlat: function(page, info) {
+    displayCurrentFlat: function (page, info) {
 
 
         let gasChecked = info.flat_config.gas ? ' checked ' : '';
@@ -54,11 +54,11 @@ myApp.services.dashboard = {
             }
         }
 
-
+        let name = info.name ? info.name : 'Brak nazwy';
 
         let flat = ons.createElement(
             '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
-            '<div><ons-card><ons-list-header>' + info.name + '</ons-list-header>' +
+            '<div><ons-card><ons-list-header>' + name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
             '<div class="edit" style="display: none">' +
             '<ons-input id="street" name="street" modifier="underbar" minLength="1" maxLength="50" placeholder="Ulica" value="' + info.street + '" float class="edit hidden"> </ons-input>' +
@@ -141,7 +141,7 @@ myApp.services.dashboard = {
             '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
             '</div></div>' +
 
-            '<div id="flat_config_info">' +
+            '<div class="flat_config_info">' +
             '<div id="gas_config">' +
             '<ons-list-header>Gaz</ons-list-header>' +
             '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.gas) + '</ons-list-item>' +
@@ -171,7 +171,7 @@ myApp.services.dashboard = {
         );
         page.querySelector('.content').appendChild(flat);
 
-        page.querySelector('[component="button/save"]').onclick = function() {
+        page.querySelector('[component="button/save"]').onclick = function () {
             myApp.services.flat.update(page, info)
         };
         myApp.services.common.edit(page);
