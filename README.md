@@ -52,3 +52,12 @@ https://trello.com/b/4n35Erl0/houselock
 | Wygląd aplikacji     | Kamil Pietrucha       | ?     |
 | Testy     | Filip Tańcula       | 2      |
 | Dodawanie i usuwanie lokatorów |  Maja Chłodnicka | 3
+
+### Bilans dla każdego z członków zespołu
+
+| Osoba | Czas pracy |
+| :---         |         ---: |
+| Maja Chłodnicka     | 56    |
+| Filip Tańcula       | 19     |
+| Kamil Pietrucha     | ?     |
+
