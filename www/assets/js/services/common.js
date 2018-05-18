@@ -164,7 +164,7 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item:not(.flat-edit)'), function(listitem) {
                     listitem.style.display = 'none';
                 });
                 Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
