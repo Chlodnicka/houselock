@@ -1,3 +1,24 @@
+.ons-icon, .text-input__label{
+	color: #d91a43;
+}
+
+polygon {
+	fill: #d91a43;
+}
+ons-input {
+    margin-top: 15px;
+    font-size: 20px;
+}
+
+.loader {
+	margin-left: 45%;
+	width: 50%;
+}
+
+.button {
+	background-color: #d91a43;
+	margin: 5px 0px;
+
 ons-input {
     margin-top: 15px;
     font-size: 20px;
@@ -18,7 +39,6 @@ ons-input {
 .loading-circular {
     position: absolute;
     z-index: 3;
-    /* display: flex; */
     top: 45%;
     margin: 0 auto;
 }
