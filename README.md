@@ -73,7 +73,7 @@ argumenty:
  - page: strona, na której szukamy znacznika form np. userPage, flatPage itd. 
  - onSuccess i onFail analogiczne jw
  
- Jeśli chodzi o tę metodę wywołujemy ją raczej na onClick jakiego elementu, który ma obsłużyć wysłanie formularza do konkretnego endpointu - jeśli formularz jest poprawnie wygenerowany tj. ma atrbut metoda, akcja i pola zrobione zdefinionwane jak w sekcji o tworzeniu formularzy to funkcje w pliku assets/js/ajax.js zserializują dane z formularza i wyślą tam gdzie trzeba.
+ Jeśli chodzi o tę metodę wywołujemy ją raczej na onClick jakiego elementu, który ma obsłużyć wysłanie formularza do konkretnego endpointu - jeśli formularz jest poprawnie wygenerowany tj. ma atrbut metoda, akcja i pola zrobione zdefinionwane jak w sekcji o tworzeniu formularzy to funkcje w pliku assets/js/ajaxSetup.js zserializują dane z formularza i wyślą tam gdzie trzeba.
  
  
  ## Uwagi
