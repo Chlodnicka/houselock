@@ -18,7 +18,7 @@ Aplikacja ma za zadanie służyć właścicielom i lokatorom do utrzymywania por
 
 ## Skład zespołu projektowego
 1. Maja Chłodnicka – 204606 – KrDUIs2011Is (lider projektu)
-2. Michał Feuer – 166567 – KrDUIs2011Is
+2. Filip Tańcula– 181929 – KrDUIs2012Is
 3. Kamil Pietrucha – 181368 – KrDUIs2012Is
 
 ## Link do Trello
