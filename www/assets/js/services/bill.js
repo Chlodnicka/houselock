@@ -83,7 +83,7 @@ myApp.services.bill = {
             myApp.services.bill.update(page)
         };
 
-        let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary btn-cancel" style="display:none;" component="button/cancel">Anuluj</ons-button>');
+        let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
 
         let form = page.querySelector('form');
         form.appendChild(saveBtn);
