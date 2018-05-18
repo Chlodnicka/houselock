@@ -4,18 +4,13 @@
 
 myApp.services.dashboard = {
 
-    noLastBill: function (page) {
+    noLastBill: function(page) {
         let info = ons.createElement('<div>Brak rachunków dla mieszkania.</div>');
         page.querySelector('.content').appendChild(info);
     },
 
-    editFlat: function (page) {
+    displayCurrentFlat: function(page, info) {
 
-    },
-
-    displayCurrentFlat: function (page, info) {
-
-        console.log(info);
 
         let gasChecked = info.flat_config.gas ? ' checked ' : '';
         let powerChecked = info.flat_config.power ? ' checked ' : '';
@@ -58,6 +53,7 @@ myApp.services.dashboard = {
                 wastesPrice = info.flat_config.waste_water.price_meter;
             }
         }
+
 
 
         let flat = ons.createElement(
@@ -143,17 +139,39 @@ myApp.services.dashboard = {
             myApp.services.common.selectOption(info.flat_config.water) +
             '</div>' +
             '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
+            '</div></div>' +
+
+            '<div id="flat_config_info">' +
+            '<div id="gas_config">' +
+            '<ons-list-header>Gaz</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.gas) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + gasPrice + '</ons-list-item></br>' +
+            '</div>' +
+            '<div id="power_config">' +
+            '<ons-list-header>Prąd</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.power) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + powerPrice + '</ons-list-item>' +
+            '</div>' +
+            '<div id="wastes_config">' +
+            '<ons-list-header>Śmieci</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.waste_water) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
+            '</div>' +
+            '<div id="water_config">' +
+            '<ons-list-header>Woda</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.water) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + waterPrice + '</ons-list-item>' +
+            '</div>' +
             '</div>' +
 
             '<ons-button class="btn btn-danger" style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button class="btn btn-secondary" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
-            '</div>' +
             '</form>'
         );
         page.querySelector('.content').appendChild(flat);
 
-        page.querySelector('[component="button/save"]').onclick = function () {
+        page.querySelector('[component="button/save"]').onclick = function() {
             myApp.services.flat.update(page, info)
         };
         myApp.services.common.edit(page);
