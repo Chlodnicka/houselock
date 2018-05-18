@@ -110,14 +110,12 @@ myApp.services.flat = {
         });
     },
 
-    // Modifies the inner data and current view of an existing flat.
     update: function (page, info) {
-        ajax.sendForm(page, myApp.services.flat.updatedSuccess(), myApp.services.flat.updatedFailed());
+        ajax.sendForm(page, myApp.services.flat.updatedSuccess, myApp.services.flat.updatedFailed);
     },
 
-    updatedSuccess: function () {
-        console.log("Zapisano zmiany");
-
+    updatedSuccess: function (response) {
+        myApp.services.common.updateFlat(response);
     },
 
     updatedFailed: function () {
