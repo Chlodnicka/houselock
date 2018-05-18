@@ -1,83 +1,54 @@
 # Houselock
+Aplikacja do zarządzania mieszkaniem
 
-##Instalacja 
+## Opis aplikacji
+Aplikacja ma za zadanie służyć właścicielom i lokatorom do utrzymywania porządku w rachunkach i płatnościach za mieszkanie oraz ułatwiać komunikację między nimi jeśli chodzi o sumy rachunków, odczyty liczników i terminy płatności.
 
-1. Utwórz serwer (może być za pomocą xamppa, dockera, vagranta + scotchbox)
-https://www.vagrantup.com/docs/installation/
-https://box.scotch.io/ 
-2. Dodaj wpis z adresem do pliku hosts np.:
-<pre>
-192.168.33.10  app_houselock.local
-</pre>
-3. Jeśli użyłeś scotchboxa - wrzuć pliki aplikacji do folderu public i odpal ją wpisując w przeglądarce adres hosta/www/
+### Scenariusz korzystania z aplikacji:
+1. Właściciel rejestruje się, dodaje swoje mieszkanie i wysyła z jej poziomu zaproszenia na maile lokatorów w postaci linka.
+2. Właściciel konfiguruje swoje mieszkanie – wypełnia adres mieszkania, informacje o tym jakie media są w nim dostępne, czy ceny za nie są ustalone z góry / na podstawie licznika, do kiedy powinny być płacone rachunki itp.
+3. Comiesięcznie system na podstawie konfiguracji mieszkania wysyła powiadomienia do lokatorów/właściciela o uzupełnienie odpowiednich informacji np. stanu licznika lub rachunku od operatora medium. Jeśli wszystkie informacje są dostępne, wysyła powiadomienia o możliwości dokonania płatności.
+4. Lokator oznacza swój rachunek jako opłacony, dodatkowo właściciel posiada możliwość oznaczenia całego rachunku jako oznaczony. 
+5. Jeśli wszyscy lokatorzy opłacą swoje rachunki, rachunek główny zostaje uregulowany i przeniesiony do historii.
+6. Jeśli mija termin płatności właściciel mieszkania może wysłać za pomocą aplikacji ponaglenie do lokatora.
+7. Właściciel może odpiąć lokatora od mieszkania, wymaga to zaakceptowania przez lokatora. Tak samo lokator może usunąć się z mieszkania, właściciel musi potwierdzić tę akcję. 
+8. Każdy użytkownik ma dostęp do historycznych danych mieszkania, do którego jest przypisany - historię rachunków, daty płatności, historyczne stany liczników itp.
+9. Właściciel może edytować dane mieszkania.
+10. Właściciel lub lokator (w zależności od konfiguracji mieszkania) mogą edytować informacje bieżącego rachunku, dopóki nie zostanie on opłacony np. aktualny stan licznika, rachunek za internet.
 
-Z serwerem chodzi o to, że Onsen UI robi requesty ajaxem do plików z szablonami i nie ogarnia, jak się otworzy plik index.html w przeglądarce. 
+## Skład zespołu projektowego
+1. Maja Chłodnicka – 204606 – KrDUIs2011Is (lider projektu)
+2. Michał Feuer – 166567 – KrDUIs2011Is
+3. Kamil Pietrucha – 181368 – KrDUIs2012Is
 
+## Link do Trello
+https://trello.com/b/4n35Erl0/houselock
 
-## Dane do logowania 
-1. Na etapie tworzenia aplikacji dostępne można zalogować się do aplikacji jako:
- - właściciel mieszkania - email: landlord@houselock.pl, hasło: testtest
- - lokator - email: tenant1@houselock.pl, hasło: testtest
- 
-## Formularze
+## Prototyp projektu
+//todo
 
-Proponuję rozwązać wszelkie formularze edycji czegokolwiek jak w przypadku formularza edycji danych użytkownika: userPage
- - Tworzymy obiekt formularza wg schematu: <ons-list-item> - nieedytowalna informacja o czymś - widoczna odrazu i div z display:none z polem formularza: 
+## Raport wykonanych prac
 
-```html
-    let element = 
-        ons.createElement(
-            '<div>
-                <ons-list-item>nazwa mieszkania</ons-list-item>
-                <div class="edit" style="display: none;">
-                    <ons-input name="name" modifier="underbar" placeholder="Nazwa" value="' + name + '" float class="edit hidden"></ons-input>
-                    </div><ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>
-                </div>);'
-        );
-```
-
- - Dodajemy na stronie przycisk edytuj: 
-```html
-<ons-fab position="bottom right" component="button/edit">
-                <ons-icon icon="md-edit"></ons-icon>
-            </ons-fab>
-```
-
- - Pod koniec renderowania szablonu wrzucamy akcję: <pre>myApp.services.common.edit(page);</pre> - jest odpowidzialna za włączanie trybu edycji
-
-
-## Wysyłanie danych
-
-Są dwie metody:
-
-### ajax.send()
-<pre>
-ajax.send(method, action, data, onSuccess, onFail);
-</pre>
-
-argumenty: 
- - method - metoda: POST/GET
- - action - np. /api/all
- - data - dane w formacie json, które chcemy wysłać np. {name: value, name: value}
- - onSuccess - nazwa funkcji, która ma się wywołać jeśli akcja się powiedzie
- - onFail - jw. tylko w przypadku niepowodzenia
- 
- 
-### ajax.sendForm()
-
-<pre>
-ajax.sendForm(page, onSuccess, onFail);
-</pre>
-
-argumenty: 
- - page: strona, na której szukamy znacznika form np. userPage, flatPage itd. 
- - onSuccess i onFail analogiczne jw
- 
- Jeśli chodzi o tę metodę wywołujemy ją raczej na onClick jakiego elementu, który ma obsłużyć wysłanie formularza do konkretnego endpointu - jeśli formularz jest poprawnie wygenerowany tj. ma atrbut metoda, akcja i pola zrobione zdefinionwane jak w sekcji o tworzeniu formularzy to funkcje w pliku assets/js/ajaxSetup.js zserializują dane z formularza i wyślą tam gdzie trzeba.
- 
- 
- ## Uwagi
- 
- Podpięłam zewnętrzne api - logowanie i pobieranie danych działa.
- Można zaimplementować wysyłanie danych na podane w trello endpointy, na razie api będzie zwracać 500.
- 
+| Zadanie | Osoba/y, która wykonywała | Czas pracy |
+| :---         |     :---:      |          ---: |
+| Implementacja API   | Maja Chłodnicka     | 25    |
+| Wykonanie prototypu aplikacji     | Kamil Pietrucha       | ?      |
+| Wykonanie makiet     | Filip Tańcula       | 4     |
+| Początkowa konfiguracja projektu aplikacji (framework Onsen)     | Maja Chłodnicka       | 4      |
+| Integracja makiet do struktury plików aplikacji     | Filip Tańcula       | 2      |
+| Autoryzacja i wylogowanie użytkownika aplikacji mobilnej     | Maja Chłodnicka       | 3      |
+| Wyświetlanie i edycja danych użytkownika     | Maja Chłodnicka       |  2     |
+| Wyświetlanie listy mieszkań     | Maja Chłodnicka       | 1,5      |
+| Dodawanie nowego mieszkania     | Filip Tańcula       | 3      |
+| Wyświetlanie informacji o mieszkaniu     | Filip Tańcula       | 3      |
+| Edycja mieszkania     | Filip Tańcula       | 5      |
+| Usuwanie mieszkania     | Maja Chłodnicka       | 1      |
+| Lista lokatorów     | Maja Chłodnicka       | 2      |
+| Zaakceptowanie lub odrzucenie zaproszenie do mieszkania przez lokatora     | Maja Chłodnicka       | 3      |
+| Wyświetlnie informacji o rachunku     | Maja Chłodnicka       | 2      |
+| Edycja rachunku (wprowadzanie danych, zmiany stanu rachunku)     | Maja Chłodnicka       | 4      |
+| Wyświetlanie listy rachunków     | Maja Chłodnicka       | 2      |
+| Mechanizm alertów     | Maja Chłodnicka       | 3      |
+| Wygląd aplikacji     | Kamil Pietrucha       | ?     |
+| Testy     | Filip Tańcula       | 2      |
+| Dodawanie i usuwanie lokatorów |  Maja Chłodnicka | 3
