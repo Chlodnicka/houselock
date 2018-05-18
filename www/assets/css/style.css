@@ -76,8 +76,3 @@ ons-input {
 .text-input--material__label--active {
     color: #d91a43;
 }
-
-.text-input--underbar {
-    color: #d91a43;
-    background-color: #d91a43;
-}
