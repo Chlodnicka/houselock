@@ -27,6 +27,12 @@ https://trello.com/b/4n35Erl0/houselock
 ## Prototyp projektu
 <img src="https://github.com/Chlodnicka/houselock/blob/master/www/prototype/Dashboard.jpg" alt="Prototype" width="240" height="500"  />
 
+Prototyp został wykonany w programie Mockplus. Link do programu:
+https://www.mockplus.com/
+
+link do prototypu Houselock:
+http://v-ie.uek.krakow.pl/~s181368/Houselock_prototype.mp
+
 ## Raport wykonanych prac
 
 | Zadanie | Osoba/y, która wykonywała | Czas pracy |
