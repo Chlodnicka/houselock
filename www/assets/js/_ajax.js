@@ -5,7 +5,7 @@ window.ajax = {
         domain: 'http://api.houselock.com.pl',
         data: '',
         onSuccess: function () {
-            ons.notification.alert('Sukces!');
+            // ons.notification.alert('Sukces!');
         },
         onFail: function (response) {
             ons.notification.alert(response.responseJSON.data);
@@ -41,6 +41,7 @@ window.ajax = {
 
     sendForm: function (page, onSuccess, onFail) {
         this.setForm(page.querySelector('form'));
+        $('#loading').show();
         $.ajax(this.options)
             .done(function (response) {
                 onSuccess ? onSuccess(response, page) : this.onSuccess();
@@ -49,23 +50,26 @@ window.ajax = {
                 onFail ? onFail(response) : this.onFail(response);
             })
             .always(function () {
-
+                $('#loading').hide();
             });
     },
 
     send: function (method, action, data, onSuccess, onFail) {
-        //todo: show loader
+        $('#loading').show();
+        options = this.options;
         $.ajax({
             method: method,
-            url: this.options.domain + action,
+            url: options.domain + action,
             data: data,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("Authorization", "Bearer " + localStorage.getItem('token'));
             }
         }).done(function (response) {
-            onSuccess(response);
+            onSuccess ? onSuccess(response) : options.onSuccess();
         }).fail(function (response) {
-            onFail(response);
+            onFail ? onFail(response) : options.onFail(response);
+        }).always(function () {
+            $('#loading').hide();
         });
     }
 

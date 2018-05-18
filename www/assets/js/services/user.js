@@ -2,6 +2,96 @@
 // User Service //
 ////////////////////
 myApp.services.user = {
+
+    userAlerts: function (page) {
+        let alerts = myApp.user.alerts();
+
+        let alertButton = ons.createElement(
+            '<ons-button id="alert-button" component="button/show-alerts" style="background: transparent;color: black;" disabled>' +
+            '<ons-icon icon="md-notifications-none"></ons-icon>' +
+            '</ons-button>'
+        );
+
+        if (Object.keys(alerts).length > 0) {
+            alertButton = ons.createElement(
+                '<ons-button id="alert-button" component="button/show-alerts"  style="background: transparent;color: black;">' +
+                '<ons-icon icon="md-notifications-active"></ons-icon>' +
+                '</ons-button>'
+            );
+
+        }
+
+        alertButton.onclick = function () {
+            myNavigator.pushPage('html/alerts.html')
+        };
+
+        page.querySelector('.alert-container').appendChild(alertButton);
+    },
+
+    fillAlerts: function (page, alerts) {
+
+        for (let id in alerts) {
+            let message = myApp.services.common.parseAlertMessage(alerts[id].type);
+            let address = myApp.flat.getAddress(alerts[id].flat);
+            alert = ons.createElement(
+                '<ons-card data-id="' + alerts[id].id + '" ' +
+                'data-flat-id="' + alerts[id].flat + '">' +
+                '<div style="display: flex; margin-bottom: 10px;">' +
+                '<div style="font-size: 10px; width: 50%;">Mieszkanie: ' + address + '</div>' +
+                '<div style="font-size: 10px; width: 50%; text-align: right;">' + alerts[id].created_at + '</div>' +
+                '</div>' +
+                message +
+                '</ons-card>'
+            );
+
+            alert.onclick = function () {
+                myApp.services.user.alertSeen(page, $(this));
+            };
+
+            page.querySelector('.alerts-list').appendChild(alert);
+        }
+    },
+
+    alertSeen: function (page, element) {
+        let siblings = element.siblings();
+        let userData = myApp.user.userData();
+        let id = element.attr('data-id');
+        element.remove();
+        delete userData.data.alerts[id];
+        localStorage.setItem('userData', JSON.stringify(userData));
+        ajax.send('post', '/api/alert/seen/' + element.attr('data-id'), {});
+
+        if (siblings.length === 0) {
+
+            let noAlerts = ons.createElement(
+                '<ons-card style="text-align: center">' +
+                'Brak powiadomień' +
+                '<div class="no-alerts">' +
+                '<ons-icon icon="md-notifications-off" size="144px"></ons-icon>' +
+                '</div>' +
+                '</ons-card>'
+            );
+
+            page.querySelector('.alerts-list').appendChild(noAlerts);
+
+            $(document).find('.alert-container').find('#alert-button').remove();
+
+            let alertButton = ons.createElement(
+                '<ons-button id="alert-button" component="button/show-alerts" style="background: transparent;color: black;" disabled>' +
+                '<ons-icon icon="md-notifications-none"></ons-icon>' +
+                '</ons-button>'
+            );
+
+            $(document).find('.alert-container').append(alertButton);
+        }
+    },
+
+    showAlerts: function (element) {
+        document
+            .getElementById('alert_popover')
+            .show(element);
+    },
+
     getInfo: function (response) {
         sessionStorage.setItem('isLoggedIn', true);
         localStorage.setItem('role', response.data[0]);
@@ -56,11 +146,11 @@ myApp.services.user = {
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<ons-input name="phone" id="phone" modifier="underbar" placeholder="" value="' + phone + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input name="phone" id="phone" modifier="underbar" placeholder="Telefon" value="' + phone + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="account_number">Numer konta bankowego: ' + account + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
-            '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="" value="' + account + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="Numer konta bankowego" value="' + account + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
@@ -136,9 +226,27 @@ myApp.services.user = {
         myNavigator.pushPage('html/user/user_no_flat.html');
     },
 
-    // Add user to flat
-    addSuccess: function (response) {
-        console.log(response);
+    remove: function (page, info) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
+            element.onclick = function () {
+                ons.openActionSheet({
+                    title: 'Ta akcja jest nieodwracalna!',
+                    cancelable: true,
+                    buttons: [
+                        {
+                            label: 'Usuń lokatora',
+                            modifier: 'destructive'
+                        },
+                        {
+                            label: 'Anuluj'
+                        }
+                    ]
+                }).then(function (index) {
+                    if (index === 0) {
+                        ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
+                    }
+                });
+            };
+        });
     }
-
 };

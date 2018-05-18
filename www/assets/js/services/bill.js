@@ -93,16 +93,17 @@ myApp.services.bill = {
         myApp.services.common.cancel(page);
 
         if (myApp.user.isLandlord()) {
+            if (info.payment_status === 'NEW' || info.payment_status === 'UNPAID') {
+                let edit = ons.createElement(
+                    '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
+                );
+
+                page.querySelector('form').appendChild(edit);
+
+                myApp.services.common.edit(page);
+            }
+
             if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
-                if (info.payment_status === 'NEW') {
-                    let edit = ons.createElement(
-                        '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
-                    );
-
-                    page.querySelector('form').appendChild(edit);
-
-                    myApp.services.common.edit(page);
-                }
 
                 let markAsPaid = ons.createElement(
                     '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
@@ -112,13 +113,19 @@ myApp.services.bill = {
                     myApp.services.bill.markAsPaid(info.id);
                 };
 
-
                 page.querySelector('.content').appendChild(markAsPaid);
 
-            } else if (info.payment_status === 'UNPAID') {
+            }
+
+            if (info.payment_status === 'UNPAID') {
                 let resendAlert = ons.createElement(
                     '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
                 );
+
+                resendAlert.onclick = function () {
+                    myApp.services.bill.resendAlert(info.id);
+                };
+
                 page.querySelector('.content').appendChild(resendAlert);
             }
         }
@@ -215,8 +222,10 @@ myApp.services.bill = {
 
     //Mark bill as paid
     markAsPaid: function (id) {
-        console.log(id);
         ajax.send('post', '/api/bill/' + id + '/markAsPaid', {}, myApp.services.common.updateFlat);
-    }
+    },
 
+    resendAlert: function (id) {
+        ajax.send('post', '/api/bill/reminder/' + id, {})
+    }
 };
