@@ -119,7 +119,7 @@ myApp.services.flat = {
     },
 
     updatedFailed: function () {
-        console.log("Nie udalo sie zapisac zmian!");
+
     },
 
     remove: function (flat) {

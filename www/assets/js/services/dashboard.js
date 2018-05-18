@@ -9,13 +9,8 @@ myApp.services.dashboard = {
         page.querySelector('.content').appendChild(info);
     },
 
-    editFlat: function (page) {
-
-    },
-
     displayCurrentFlat: function (page, info) {
 
-        console.log(info);
 
         let gasChecked = info.flat_config.gas ? ' checked ' : '';
         let powerChecked = info.flat_config.power ? ' checked ' : '';
@@ -146,7 +141,7 @@ myApp.services.dashboard = {
             '</div>' +
 
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
-            '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
+            '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
             '</div>' +
             '</form>'

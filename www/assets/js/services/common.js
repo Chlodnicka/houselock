@@ -99,9 +99,9 @@ myApp.services.common = {
     },
 
     parseConfig: function (config) {
-        if (config === 'METER') {
+        if (config === 'metric') {
             return 'Uzupełnij stan licznika';
-        } else if (config === 'BILL') {
+        } else if (config === 'bill') {
             return 'Uzupełnij kwotę rachunku'
         }
         return false;
@@ -142,7 +142,6 @@ myApp.services.common = {
     },
 
     authorizeFail: function (response) {
-        console.log(response.responseJSON.message);
         // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
         ons.notification.alert({message: response.responseJSON.message});
     },
@@ -201,6 +200,7 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'none';
                 page.querySelector('[component="button/edit"]').style.display = 'block';
+                page.querySelector('[component="button/flat-edit"]').style.display = 'block';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'flex';
                 });
