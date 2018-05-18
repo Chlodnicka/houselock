@@ -25,8 +25,7 @@ Aplikacja ma za zadanie służyć właścicielom i lokatorom do utrzymywania por
 https://trello.com/b/4n35Erl0/houselock
 
 ## Prototyp projektu
-![Prototype](https://github.com/Chlodnicka/houselock/blob/master/www/prototype/Dashboard.jpg) 
-<img src="https://github.com/Chlodnicka/houselock/blob/master/www/prototype/Dashboard.jpg" alt="Wysyłanie smsów" width="240" height="400"  />
+<img src="https://github.com/Chlodnicka/houselock/blob/master/www/prototype/Dashboard.jpg" alt="Prototype" width="195" height="400"  />
 
 ## Raport wykonanych prac
 
