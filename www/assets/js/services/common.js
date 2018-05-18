@@ -1,6 +1,6 @@
 myApp.services.common = {
 
-    parseStatus: function(status) {
+    parseStatus: function (status) {
         switch (status) {
             case 'TEMP':
                 return 'Zaproszenie oczekuje na akceptację lokatora';
@@ -16,7 +16,7 @@ myApp.services.common = {
         }
     },
 
-    parseAlertMessage: function(message) {
+    parseAlertMessage: function (message) {
         switch (message) {
             case 'bill_generated':
                 return 'Wygenerowano nowy rachunek. Uzupełnij informacje o płatnościach';
@@ -36,7 +36,7 @@ myApp.services.common = {
     },
 
 
-    parseMonth: function(month) {
+    parseMonth: function (month) {
         switch (month) {
             case 'January':
                 return 'styczeń';
@@ -79,7 +79,7 @@ myApp.services.common = {
         }
     },
 
-    parsePaymentStatus: function(status) {
+    parsePaymentStatus: function (status) {
         switch (status) {
             case 'NEW':
                 return 'nowy';
@@ -98,7 +98,7 @@ myApp.services.common = {
         }
     },
 
-    parseConfig: function(config) {
+    parseConfig: function (config) {
         if (config === 'metric') {
             return 'Uzupełnij stan licznika';
         } else if (config === 'bill') {
@@ -107,57 +107,57 @@ myApp.services.common = {
         return false;
     },
 
-    parseAction: function(form, id) {
+    parseAction: function (form, id) {
         let ajax = $(form).attr('data-ajax').replace('{id}', id);
         $(form).attr('data-ajax', ajax);
     },
 
     token: {
-        get: function() {
+        get: function () {
             return localStorage.getItem('token');
         },
 
-        set: function(token) {
+        set: function (token) {
             localStorage.setItem('token', token);
         },
 
-        check: function() {
+        check: function () {
             ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.authorize);
         }
     },
 
-    checkCredentials: function() {
+    checkCredentials: function () {
         return myApp.user.email() && myApp.user.password();
     },
 
-    authorize: function() {
+    authorize: function () {
         let data = '_username=' + myApp.user.email() + '&_password=' + myApp.user.password();
         ajax.send('post', '/api/login_check', data, myApp.services.common.setTokenAndGetInfo, myApp.services.common.redirectToLogin);
     },
 
-    authorizeSuccess: function(response, page) {
+    authorizeSuccess: function (response, page) {
         let form = page.querySelector('form');
         myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
         myApp.services.common.setTokenAndGetInfo(response);
     },
 
-    authorizeFail: function(response) {
+    authorizeFail: function (response) {
         // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
-        ons.notification.alert({ message: response.responseJSON.message });
+        ons.notification.alert({message: response.responseJSON.message});
     },
 
-    redirectToLogin: function() {
+    redirectToLogin: function () {
         myNavigator.pushPage('html/auth/login.html');
         sessionStorage.setItem('isLoggedIn', false);
         myApp.services.common.clearAll();
     },
 
-    setTokenAndGetInfo: function(response) {
+    setTokenAndGetInfo: function (response) {
         myApp.services.common.token.set(response.token);
         ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.redirectToLogin);
     },
 
-    selectOption: function(config) {
+    selectOption: function (config) {
         if (config) {
             if (config.config_type === 'bill') {
                 return '<option value="bill" selected>Na bazie rachunku</option>' +
@@ -178,7 +178,7 @@ myApp.services.common = {
             '<option value="static">Stała opłata</option>';
     },
 
-    getTextFromOption: function(config) {
+    getTextFromOption: function (config) {
         if (config) {
             if (config.config_type === 'bill') {
                 return 'Na bazie rachunku';
@@ -191,74 +191,79 @@ myApp.services.common = {
         return 'Nie zdefiniowano!'
     },
 
-    edit: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function(element) {
-            element.onclick = function() {
+    edit: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function (element) {
+            element.onclick = function () {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
                 page.querySelector('div.flat_config_info').style.display = 'none';
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'none';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
                     edititem.style.display = 'block';
                 });
             };
         });
     },
 
-    cancel: function(page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function(element) {
-            element.onclick = function() {
+    cancel: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
+            element.onclick = function () {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'none';
-                page.querySelector('[component="button/edit"]').style.display = 'block';
-                page.querySelector('[component="button/flat-edit"]').style.display = 'block';
+                if (page.querySelector('[component="button/edit"]')) {
+                    page.querySelector('[component="button/edit"]').style.display = 'block';
+                }
+                if (page.querySelector('[component="button/flat-edit"]')) {
+                    page.querySelector('[component="button/flat-edit"]').style.display = 'block';
+                }
+
                 page.querySelector('div.flat_config_info').style.display = 'block';
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'flex';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
                     edititem.style.display = 'none';
                 });
             };
         });
     },
 
-    save: function(page, onSuccess) {
+    save: function (page, onSuccess) {
         ajax.sendForm(page, onSuccess);
     },
 
-    clearAll: function() {
+    clearAll: function () {
         localStorage.clear();
         sessionStorage.clear();
     },
 
-    setCurrentFlat: function(id) {
+    setCurrentFlat: function (id) {
         localStorage.setItem('currentFlat', id);
         ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlat);
     },
 
-    updateFlat: function(response) {
+    updateFlat: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('flatData', data);
         myNavigator.pushPage(myApp.user.splitter());
     },
 
-    updateFlatInvitation: function(response) {
+    updateFlatInvitation: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('flatData', data);
         myNavigator.pushPage('html/user/user_accept_invitation.html');
     },
 
-    updateUser: function(response) {
+    updateUser: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
         myNavigator.pushPage(myApp.user.splitter());
     },
 
-    updateInfoAfter: function(response) {
+    updateInfoAfter: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
         localStorage.removeItem('currentFlat');
