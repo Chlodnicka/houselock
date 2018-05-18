@@ -25,7 +25,7 @@ Aplikacja ma za zadanie służyć właścicielom i lokatorom do utrzymywania por
 https://trello.com/b/4n35Erl0/houselock
 
 ## Prototyp projektu
-![alt text](https://raw.githubusercontent.com/chlodnicka/houselock/www/prototype/Dashboard.jpg)
+https://github.com/Chlodnicka/houselock/blob/master/www/prototype/Dashboard.jpg
 
 ## Raport wykonanych prac
 
