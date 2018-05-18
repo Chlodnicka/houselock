@@ -141,6 +141,11 @@ myApp.services.common = {
         myApp.services.common.setTokenAndGetInfo(response);
     },
 
+    authorizeRegister: function (response) {
+        ons.notification.alert({message: response.data});
+        myNavigator.pushPage('html/auth/login.html');
+    },
+
     authorizeFail: function (response) {
         // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
         ons.notification.alert({message: response.responseJSON.message});

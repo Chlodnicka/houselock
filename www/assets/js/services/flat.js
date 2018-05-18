@@ -106,12 +106,9 @@ myApp.services.flat = {
     },
 
     update: function (page, info) {
-        ajax.sendForm(page, myApp.services.flat.updatedSuccess, myApp.services.flat.updatedFailed);
+        ajax.sendForm(page, myApp.services.common.updateUser, myApp.services.flat.updatedFailed);
     },
-
-    updatedSuccess: function (response) {
-        myApp.services.common.updateFlat(response);
-    },
+    
 
     updatedFailed: function () {
 

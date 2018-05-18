@@ -32,12 +32,11 @@ myApp.controllers = {
     },
 
     registerPage: function (page) {
-        page.querySelectorAll('[component="button/register"]'),
-            function (element) {
-                element.onclick = function () {
-                    ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
-                }; //TODO make it work and properly register new user
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/register"]'), function (element) {
+            element.onclick = function () {
+                ajax.sendForm(page, myApp.services.common.authorizeRegister, myApp.services.common.authorizeFail);
             };
+        });
     },
 
     tenantTabbarPage: function (page) {
