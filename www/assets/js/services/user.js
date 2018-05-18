@@ -153,7 +153,7 @@ myApp.services.user = {
             '<ons-input name="account_number"  id="account_number" modifier="underbar" placeholder="Numer konta bankowego" value="' + account + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
-            '<ons-button style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
+            '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</div>'
             )
         ;

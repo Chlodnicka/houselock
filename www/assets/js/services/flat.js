@@ -39,7 +39,7 @@ myApp.services.flat = {
 
     addAction: function (page) {
         let createFlat = ons.createElement(
-            '<ons-fab position="bottom right" component="button/new-flat">' +
+            '<ons-fab class="fab-colors" position="bottom right" component="button/new-flat">' +
             '<ons-icon icon="md-plus"></ons-icon>' +
             '</ons-fab>'
         );
@@ -75,13 +75,13 @@ myApp.services.flat = {
 
         let actions = ons.createElement(
             '<ons-speed-dial position="bottom right" direction="up">' +
-            '    <ons-fab>' +
+            '    <ons-fab class="fab-colors">' +
             '      <ons-icon icon="md-share"></ons-icon>' +
             '    </ons-fab>' +
-            '    <ons-speed-dial-item component="button/flat-edit">' +
+            '    <ons-speed-dial-item class="fab-colors" component="button/flat-edit">' +
             '      <ons-icon icon="md-edit"></ons-icon>' +
             '    </ons-speed-dial-item>' +
-            '    <ons-speed-dial-item component="button/flat-remove">' +
+            '    <ons-speed-dial-item class="fab-colors" component="button/flat-remove">' +
             '      <ons-icon icon="md-delete"></ons-icon>' +
             '    </ons-speed-dial-item>' +
             '  </ons-speed-dial>'

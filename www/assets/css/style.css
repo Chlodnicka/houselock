@@ -1,23 +1,25 @@
-.ons-icon, .text-input__label{
-	color: #d91a43;
+.ons-icon, .text-input__label {
+    color: #d91a43;
 }
 
 polygon {
-	fill: #d91a43;
+    fill: #d91a43;
 }
+
 ons-input {
     margin-top: 15px;
     font-size: 20px;
 }
 
 .loader {
-	margin-left: 45%;
-	width: 50%;
+    margin-left: 45%;
+    width: 50%;
 }
 
 .button {
-	background-color: #d91a43;
-	margin: 5px 0px;
+    background-color: #d91a43;
+    margin: 5px 0px;
+}
 
 ons-input {
     margin-top: 15px;
@@ -53,4 +55,29 @@ ons-input {
 
 #newFlatPage ons-input {
     width: 100%;
+}
+
+.fab-colors {
+    background: #d91a43;
+}
+
+.fab-colors ons-icon {
+    color: #fff;
+}
+
+.tabbar__item.active .tabbar__label {
+    color: #d91a43;
+}
+
+.cancel-btn {
+    background: #AAACB1;
+}
+
+.text-input--material__label--active {
+    color: #d91a43;
+}
+
+.text-input--underbar {
+    color: #d91a43;
+    background-color: #d91a43;
 }
