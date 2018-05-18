@@ -41,6 +41,7 @@ https://trello.com/b/4n35Erl0/houselock
 | Wyświetlanie listy mieszkań     | Maja Chłodnicka       | 1,5      |
 | Dodawanie nowego mieszkania     | Filip Tańcula       | 3      |
 | Wyświetlanie informacji o mieszkaniu     | Filip Tańcula, Kamil Pietrucha       | 3, 2      |
+| Testowanie  | Kamil Pietrucha   | 2   |
 | Edycja mieszkania     | Filip Tańcula       | 5      |
 | Usuwanie mieszkania     | Maja Chłodnicka       | 1      |
 | Lista lokatorów     | Maja Chłodnicka       | 2      |
@@ -62,5 +63,5 @@ https://trello.com/b/4n35Erl0/houselock
 | :---         |         ---: |
 | Maja Chłodnicka     | 56    |
 | Filip Tańcula       | 21     |
-| Kamil Pietrucha     | 15     |
+| Kamil Pietrucha     | 17     |
 
