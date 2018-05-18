@@ -77,13 +77,13 @@ myApp.services.bill = {
 
         myApp.services.bill.fillConfig(page, info, flat.flat_config);
 
-        let saveBtn = ons.createElement('<ons-button style="display:none;" component="button/save">Zapisz</ons-button>');
+        let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
 
         saveBtn.onclick = function () {
             myApp.services.bill.update(page)
         };
 
-        let cancelBtn = ons.createElement('<ons-button class="cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
+        let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary" style="display:none;" component="button/cancel">Anuluj</ons-button>');
 
         let form = page.querySelector('form');
         form.appendChild(saveBtn);
@@ -101,18 +101,6 @@ myApp.services.bill = {
                 page.querySelector('form').appendChild(edit);
 
                 myApp.services.common.edit(page);
-
-                let reload = ons.createElement(
-                    '<ons-button component="button/reload">Przeładuj rachunek</ons-button>'
-                );
-
-                reload.onclick = function () {
-                    ajax.send('post', '/api/bill/' + info.id + '/reload', {}, myApp.services.common.updateFlat);
-                };
-
-                page.querySelector('form').appendChild(reload);
-
-
             }
 
             if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
@@ -158,7 +146,6 @@ myApp.services.bill = {
     },
 
     fillConfig: function (page, info, config) {
-
         if (info.gas_price !== null) {
             myApp.services.bill.fillConfigElement(page, info, config.gas.config_type, 'Gaz', 'gas');
         }
@@ -211,7 +198,7 @@ myApp.services.bill = {
         let edit = '<div class="edit" style="display: none;">' +
             '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
 
-        if (config === 'metric') {
+        if (config === 'METER') {
             edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
         } else {
             edit += parseFloat(value).toFixed(2);

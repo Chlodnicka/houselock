@@ -54,7 +54,6 @@ myApp.services.dashboard = {
             }
         }
 
-
         let name = info.name ? info.name : 'Brak nazwy';
 
         let flat = ons.createElement(
@@ -165,8 +164,8 @@ myApp.services.dashboard = {
             '</div>' +
             '</div>' +
 
-            '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
-            '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
+            '<ons-button class="btn btn-danger" style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
+            '<ons-button class="btn btn-secondary" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
             '</form>'
         );
