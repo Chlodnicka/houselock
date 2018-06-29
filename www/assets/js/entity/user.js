@@ -13,6 +13,10 @@ myApp.user = {
         return firebase.database().ref('/users/' + id);
     },
 
+    get: function (id) {
+        return firebase.database().ref('/users/' + id);
+    },
+
     role: function () {
         let id = this.id();
         return firebase.database().ref('/users/' + id + '/role');
