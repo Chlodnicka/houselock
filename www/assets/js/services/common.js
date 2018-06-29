@@ -277,12 +277,6 @@ myApp.services.common = {
         myNavigator.pushPage('html/user/user_accept_invitation.html');
     },
 
-    updateUser: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('userData', data);
-        myNavigator.pushPage(myApp.user.splitter());
-    },
-
     updateInfoAfter: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);

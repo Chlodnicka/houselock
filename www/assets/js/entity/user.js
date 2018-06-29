@@ -30,6 +30,15 @@ myApp.user = {
         return role === 'TENANT';
     },
 
+    splitter: function () {
+        this.role().once('value').then(function (role) {
+            if (myApp.user.isLandlord(role.val())) {
+                myNavigator.pushPage('landlordSplitter.html');
+            }
+            myNavigator.pushPage('landlordSplitter.html');
+        });
+    },
+
     flats: function () {
         let id = this.id();
         return firebase.database().ref('/users/' + id + '/flats');
