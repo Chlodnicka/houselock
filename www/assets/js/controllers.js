@@ -73,35 +73,13 @@ myApp.controllers = {
 
     //Flat list page
     flatListPage: function (page) {
-        let flats = myApp.user.flats();
-
-        myApp.services.flat.addAction(page);
-
-        if (Object.keys(flats).length === 0) {
-            myApp.services.flat.emptyList(page);
-        } else {
-            myApp.services.flat.list(page, flats);
-        }
-
+        myApp.services.flat.list(page);
     },
 
     //Single flat page
     flatPage: function (page) {
-        if (myApp.user.isLandlord()) {
-            if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
-                let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
-                myApp.services.dashboard.displayCurrentFlat(page, info);
-                myApp.services.flat.displayActions(page, info);
-            } else {
-                let flats = myApp.user.flats();
-                myApp.services.flat.emptyFlatLandlord(page);
-                myApp.services.flat.list(page, flats);
-                myApp.services.flat.addAction(page);
-            }
-        } else if (myApp.user.currentFlat() !== undefined) {
-            let info = myApp.user.currentFlat();
-            myApp.services.dashboard.displayCurrentFlat(page, info);
-        }
+        let id = myApp.services.flat.current();
+        myApp.services.flat.display(page, id);
     },
 
     //New flat page

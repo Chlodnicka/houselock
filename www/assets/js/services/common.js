@@ -256,11 +256,6 @@ myApp.services.common = {
         sessionStorage.clear();
     },
 
-    setCurrentFlat: function (id) {
-        localStorage.setItem('currentFlat', id);
-        ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlat);
-    },
-
     updateFlat: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('flatData', data);
