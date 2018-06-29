@@ -137,7 +137,7 @@ myApp.services.user = {
         ;
 
         userInfo.querySelector('[component="button/save"]').onclick = function () {
-            myApp.services.user.save(page)
+            myApp.services.user.update(page)
         };
 
 
@@ -159,8 +159,16 @@ myApp.services.user = {
         }
     },
 
-    save: function (page) {
-        ajax.sendForm(page, myApp.services.common.updateUser);
+    update: function (page) {
+        myApp.user.current().once('value').then(function (userSnapshot) {
+            let userData = $.extend({}, userSnapshot.val(), form.serialize(page))
+            console.log(userData);
+            firebase.database().ref('users/' + myApp.user.id()).set(userData).then(function () {
+                myApp.user.splitter();
+            }).catch(
+                //error
+            );
+        });
     },
 
     list: function (page, users) {
