@@ -17,10 +17,10 @@ myApp.controllers = {
                 let email = $(form).find('#username').children('input').val();
                 let password = $(form).find('#password').children('input').val();
                 firebase.auth().signInWithEmailAndPassword(email, password)
-                    .catch(function(error) {
+                    .catch(function (error) {
                         console.log(error);
                         // myApp.services.common.authorizeFail()
-                });
+                    });
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
@@ -38,9 +38,9 @@ myApp.controllers = {
                 let password = $(form).find('#password').children('input').val();
                 firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then(myApp.services.common.authorizeRegister())
-                    .catch(function(error) {
-                    myApp.services.common.authorizeFail()
-                });
+                    .catch(function (error) {
+                        myApp.services.common.authorizeFail()
+                    });
             };
         });
     },
@@ -129,15 +129,14 @@ myApp.controllers = {
     userPage: function (page) {
 
         myApp.user.role().once('value').then(function (role) {
-            if(myApp.user.isTenant(role.val())) {
+            if (myApp.user.isTenant(role.val())) {
                 let backButton = page.querySelector('.back-button');
                 $(backButton).remove();
             }
-            // myApp.services.user.fill(page);
+            myApp.services.user.display(page);
 
             Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
                 element.onclick = function () {
-                    console.log('wylogowuję');
                     myApp.services.common.redirectToLogin();
                 };
             });

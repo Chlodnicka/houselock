@@ -3,14 +3,6 @@
 ////////////////////
 myApp.services.user = {
 
-    info: function(page) {
-        myApp.user.current().once('value').then(function (user) {
-            user.val();
-        }).catch(function (error) {
-
-        });
-    },
-
     userAlerts: function (page) {
         let alerts = myApp.user.alerts();
 
@@ -100,24 +92,23 @@ myApp.services.user = {
             .show(element);
     },
 
-    getInfo: function (response) {
-        sessionStorage.setItem('isLoggedIn', true);
-        localStorage.setItem('role', response.data[0]);
-        ajax.send('get', '/api/all', '{}', myApp.services.user.setData, myApp.services.common.redirectToLogin);
+    display: function (page, id) {
+        if (id) {
+            myApp.user.get(id).once('value').then(function (user) {
+                myApp.services.user.fill(page, user.val());
+            });
+        } else {
+            myApp.user.current().once('value').then(function (user) {
+                myApp.services.user.fill(page, user.val());
+            });
+        }
     },
 
-    setData: function (response) {
-        localStorage.setItem('userData', JSON.stringify(response));
-        myApp.services.user.setAppForUser();
-    },
-
-    fill: function (page, data) {
+    fill: function (page, userData) {
         let card = page.querySelector('form'),
-            userData = data ? data : myApp.user.data(),
             phone = userData.phone ? userData.phone : '',
             account = userData.account_number ? userData.account_number : '',
-            firstname = userData.firstname ? userData.firstname : '',
-            lastname = userData.lastname ? userData.lastname : '';
+            username = userData.username ? userData.username : '';
 
         let status = '';
         if (userData.status) {
@@ -127,10 +118,9 @@ myApp.services.user = {
         let userInfo = ons.createElement(
             '<div>' +
             status +
-            '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.fullname + '</ons-list-item>' +
+            '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.username + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
-            '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + firstname + '" float class="edit hidden"> </ons-input>' +
-            '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden""></ons-input>' +
+            '<ons-input id="username" name="username" modifier="underbar" placeholder="Imię i nazwisko" value="' + username + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +

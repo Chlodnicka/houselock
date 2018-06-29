@@ -143,8 +143,8 @@ myApp.services.common = {
             if (myApp.user.isLandlord(role)) {
                 myApp.user.flats().once('value').then(function (snapshot) {
                     let flats = snapshot.val();
-                    if(flats) {
-                        if(Object.keys(flats).length > 1) {
+                    if (flats) {
+                        if (Object.keys(flats).length > 1) {
                             myNavigator.pushPage('html/flat/flat_list.html');
                         } else {
                             myApp.services.flat.setCurrent(Object.keys(flats)[0]);
@@ -168,10 +168,10 @@ myApp.services.common = {
     },
 
     redirectToLogin: function () {
-        firebase.auth().signOut().then(function() {
+        firebase.auth().signOut().then(function () {
             myApp.services.common.clearAll();
             myNavigator.pushPage('html/auth/login.html');
-        }).catch(function(error) {
+        }).catch(function (error) {
             // An error happened.
         });
 
@@ -217,7 +217,9 @@ myApp.services.common = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
-                page.querySelector('div.flat_config_info').style.display = 'none';
+                if (page.querySelector('div.flat_config_info')) {
+                    page.querySelector('div.flat_config_info').style.display = 'none';
+                }
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'none';
                 });
@@ -240,7 +242,10 @@ myApp.services.common = {
                     page.querySelector('[component="button/flat-edit"]').style.display = 'block';
                 }
 
-                page.querySelector('div.flat_config_info').style.display = 'block';
+                if (page.querySelector('div.flat_config_info')) {
+                    page.querySelector('div.flat_config_info').style.display = 'block';
+                }
+
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = 'flex';
                 });
