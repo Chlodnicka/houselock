@@ -3,3 +3,4 @@
 /.vscode
 /typings
 jsconfig.json
+/www/functions/node_modules
