@@ -3,6 +3,14 @@
 ////////////////////
 myApp.services.user = {
 
+    info: function(page) {
+        myApp.user.current().once('value').then(function (user) {
+            user.val();
+        }).catch(function (error) {
+
+        });
+    },
+
     userAlerts: function (page) {
         let alerts = myApp.user.alerts();
 

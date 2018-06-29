@@ -127,22 +127,38 @@ myApp.services.common = {
     },
 
     checkCredentials: function () {
-        return myApp.user.email() && myApp.user.password();
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                myApp.services.common.authorizeSuccess()
+            } else {
+                myApp.services.common.redirectToLogin()
+            }
+        });
     },
 
-    authorize: function () {
-        let data = '_username=' + myApp.user.email() + '&_password=' + myApp.user.password();
-        ajax.send('post', '/api/login_check', data, myApp.services.common.setTokenAndGetInfo, myApp.services.common.redirectToLogin);
+    authorizeSuccess: function () {
+
+        myApp.user.role().once('value').then(function (snapshot) {
+            let role = snapshot.val();
+            if (myApp.user.isLandlord(role)) {
+                myApp.user.flats().once('value').then(function (snapshot) {
+                    let flats = snapshot.val();
+                    if(flats) {
+                        if(Object.keys(flats).length > 1) {
+                            myNavigator.pushPage('html/flat/flat_list.html');
+                        } else {
+                            myApp.services.flat.setCurrent(Object.keys(flats)[0]);
+                            myNavigator.pushPage('landlordSplitter.html');
+                        }
+                    } else {
+                        myNavigator.pushPage('html/flat/flat_new.html');
+                    }
+                });
+            }
+        });
     },
 
-    authorizeSuccess: function (response, page) {
-        let form = page.querySelector('form');
-        myApp.user.set(form.querySelector('#username').value, form.querySelector('#password').value);
-        myApp.services.common.setTokenAndGetInfo(response);
-    },
-
-    authorizeRegister: function (response) {
-        ons.notification.alert({message: response.data});
+    authorizeRegister: function () {
         myNavigator.pushPage('html/auth/login.html');
     },
 
@@ -155,11 +171,6 @@ myApp.services.common = {
         myNavigator.pushPage('html/auth/login.html');
         sessionStorage.setItem('isLoggedIn', false);
         myApp.services.common.clearAll();
-    },
-
-    setTokenAndGetInfo: function (response) {
-        myApp.services.common.token.set(response.token);
-        ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.redirectToLogin);
     },
 
     selectOption: function (config) {
