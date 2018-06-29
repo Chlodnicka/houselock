@@ -128,18 +128,21 @@ myApp.controllers = {
     //User info page
     userPage: function (page) {
 
-        if (myApp.user.isTenant()) {
-            let backButton = page.querySelector('.back-button');
-            $(backButton).remove();
-        }
+        myApp.user.role().once('value').then(function (role) {
+            if(myApp.user.isTenant(role.val())) {
+                let backButton = page.querySelector('.back-button');
+                $(backButton).remove();
+            }
+            // myApp.services.user.fill(page);
 
-        myApp.services.user.fill(page);
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.common.redirectToLogin();
-            };
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+                element.onclick = function () {
+                    console.log('wylogowuję');
+                    myApp.services.common.redirectToLogin();
+                };
+            });
         });
+
     },
 
     tenantPage: function (page) {

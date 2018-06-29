@@ -168,9 +168,13 @@ myApp.services.common = {
     },
 
     redirectToLogin: function () {
-        myNavigator.pushPage('html/auth/login.html');
-        sessionStorage.setItem('isLoggedIn', false);
-        myApp.services.common.clearAll();
+        firebase.auth().signOut().then(function() {
+            myApp.services.common.clearAll();
+            myNavigator.pushPage('html/auth/login.html');
+        }).catch(function(error) {
+            // An error happened.
+        });
+
     },
 
     selectOption: function (config) {

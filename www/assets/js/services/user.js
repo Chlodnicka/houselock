@@ -111,36 +111,6 @@ myApp.services.user = {
         myApp.services.user.setAppForUser();
     },
 
-    setAppForUser: function () {
-        if (myApp.user.isLandlord()) {
-            if (myApp.user.flats()) {
-                if (myApp.user.currentFlat()) {
-                    myNavigator.pushPage('landlordSplitter.html');
-                } else {
-                    myNavigator.pushPage('html/flat/flat_info.html');
-                }
-            } else {
-                myNavigator.pushPage('html/flat/flat_info.html');
-            }
-        } else if (myApp.user.isTenant()) {
-            let flats = myApp.user.flats();
-            let id = Object.keys(flats)[0];
-            if (id && myApp.user.status() === 'ACTIVE') {
-                myApp.services.common.setCurrentFlat(id);
-            } else if (id && myApp.user.status() === 'DELETED_BY_LANDLORD') {
-                myNavigator.pushPage('html/user/user_deleted.html');
-            } else if (myApp.user.hasInvitation()) {
-                localStorage.setItem('currentFlat', id);
-                ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlatInvitation);
-            } else {
-                myNavigator.pushPage('html/user/user_no_flat.html');
-            }
-        } else {
-            myApp.services.common.clearAll();
-            myApp.services.common.redirectToLogin();
-        }
-    },
-
     fill: function (page, data) {
         let card = page.querySelector('form'),
             userData = data ? data : myApp.user.data(),
