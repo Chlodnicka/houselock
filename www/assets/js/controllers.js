@@ -6,22 +6,21 @@ myApp.controllers = {
 
     //Loader page
     loaderPage: function (page) {
-        if (myApp.services.common.token.get()) {
-            myApp.services.common.token.check();
-        } else {
-            if (myApp.services.common.checkCredentials()) {
-                myApp.services.common.authorize();
-            } else {
-                myApp.services.common.redirectToLogin();
-            }
-        }
+        myApp.services.common.checkCredentials();
     },
 
     //Login page
     loginPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
+                let form = page.querySelector('form');
+                let email = $(form).find('#username').children('input').val();
+                let password = $(form).find('#password').children('input').val();
+                firebase.auth().signInWithEmailAndPassword(email, password)
+                    .catch(function(error) {
+                        console.log(error);
+                        // myApp.services.common.authorizeFail()
+                });
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
@@ -34,7 +33,14 @@ myApp.controllers = {
     registerPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.authorizeRegister, myApp.services.common.authorizeFail);
+                let form = page.querySelector('form');
+                let email = $(form).find('#username').children('input').val();
+                let password = $(form).find('#password').children('input').val();
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(myApp.services.common.authorizeRegister())
+                    .catch(function(error) {
+                    myApp.services.common.authorizeFail()
+                });
             };
         });
     },
