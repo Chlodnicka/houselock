@@ -25,22 +25,27 @@ Aplikacja ma za zadanie służyć właścicielom i lokatorom do utrzymywania por
 https://trello.com/b/4n35Erl0/houselock
 
 ## Prototyp projektu
-//todo
+Prototyp został wykonany w programie Mockplus. Link do programu:
+https://www.mockplus.com/
+
+link do prototypu Houselock:
+[Houselock prototype](http://v-ie.uek.krakow.pl/~s181368/Houselock_prototype.mp)
 
 ## Raport wykonanych prac
 
 | Zadanie | Osoba/y, która wykonywała | Czas pracy |
 | :---         |     :---:      |          ---: |
 | Implementacja API   | Maja Chłodnicka     | 25    |
-| Wykonanie prototypu aplikacji     | Kamil Pietrucha       | ?      |
-| Wykonanie makiet     | Filip Tańcula       | 4     |
+| Wykonanie prototypu aplikacji     | Kamil Pietrucha       | 4      |
+| Wykonanie makiet     | Filip Tańcula       | 5     |
 | Początkowa konfiguracja projektu aplikacji (framework Onsen)     | Maja Chłodnicka       | 4      |
 | Integracja makiet do struktury plików aplikacji     | Filip Tańcula       | 2      |
 | Autoryzacja i wylogowanie użytkownika aplikacji mobilnej     | Maja Chłodnicka       | 3      |
 | Wyświetlanie i edycja danych użytkownika     | Maja Chłodnicka       |  2     |
 | Wyświetlanie listy mieszkań     | Maja Chłodnicka       | 1,5      |
 | Dodawanie nowego mieszkania     | Filip Tańcula       | 3      |
-| Wyświetlanie informacji o mieszkaniu     | Filip Tańcula       | 3      |
+| Wyświetlanie informacji o mieszkaniu     | Filip Tańcula, Kamil Pietrucha       | 3, 2      |
+| Testowanie  | Kamil Pietrucha   | 2   |
 | Edycja mieszkania     | Filip Tańcula       | 5      |
 | Usuwanie mieszkania     | Maja Chłodnicka       | 1      |
 | Lista lokatorów     | Maja Chłodnicka       | 2      |
@@ -49,15 +54,18 @@ https://trello.com/b/4n35Erl0/houselock
 | Edycja rachunku (wprowadzanie danych, zmiany stanu rachunku)     | Maja Chłodnicka       | 4      |
 | Wyświetlanie listy rachunków     | Maja Chłodnicka       | 2      |
 | Mechanizm alertów     | Maja Chłodnicka       | 3      |
-| Wygląd aplikacji     | Kamil Pietrucha       | ?     |
-| Testy     | Filip Tańcula       | 2      |
+| Testy     | Filip Tańcula       | 3      |
 | Dodawanie i usuwanie lokatorów |  Maja Chłodnicka | 3
+| Implementacja bootstrapa | Kamil Pietrucha | 1
+| Dodawanie i edytowanie przycisków | Kamil Pietrucha | 2
+| Projektowanie i programowanie wyglądu aplikacji | Kamil Pietrucha | 6
+
 
 ### Bilans dla każdego z członków zespołu
 
 | Osoba | Czas pracy |
 | :---         |         ---: |
 | Maja Chłodnicka     | 56    |
-| Filip Tańcula       | 19     |
-| Kamil Pietrucha     | ?     |
+| Filip Tańcula       | 21     |
+| Kamil Pietrucha     | 17     |
 
