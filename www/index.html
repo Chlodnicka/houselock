@@ -2,13 +2,25 @@
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <meta http-equiv="Content-Security-Policy"
-          content="img-src * 'self' data:; default-src * 'self' gap: wss: ws: ; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval';">
+    <meta http-equiv="Content-Security-Policy" content="default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.gstatic.com https://connect.facebook.net">
 
     <script src="cordova.js"></script>
     <link rel="stylesheet" href="core/css/onsenui.css">
     <link rel="stylesheet" href="core/css/onsen-css-components.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://www.gstatic.com/firebasejs/5.1.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyD98Isvv7NNjnLeu2FUuDlbKlScetipPOA",
+            authDomain: "houselock-1.firebaseapp.com",
+            databaseURL: "https://houselock-1.firebaseio.com",
+            projectId: "houselock-1",
+            storageBucket: "houselock-1.appspot.com",
+            messagingSenderId: "374903412059"
+        };
+        firebase.initializeApp(config);
+    </script>
     <script src="core/js/onsenui.min.js"></script>
     <script src="core/js/jquery/jquery.min.js"></script>
     <script src="assets/js/ajaxSetup.js"></script>
