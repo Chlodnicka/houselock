@@ -3,6 +3,15 @@
 ////////////////////
 myApp.services.user = {
 
+    create: function (data) {
+        console.log(data);
+        myApp.user.create(data).then(function () {
+            myApp.user.splitter();
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
+
     userAlerts: function (page) {
         let alerts = myApp.user.alerts();
 
@@ -168,6 +177,18 @@ myApp.services.user = {
             }).catch(
                 //error
             );
+        });
+    },
+
+    addTenant: function (page) {
+        let user = form.serialize(page);
+        myApp.user.getByEmail(user.email).on("value", function (user) {
+            if (user.val()) {
+                let userData = user.val();
+                console.log(userData.keys());
+            } else {
+                console.log('nie ma');
+            }
         });
     },
 

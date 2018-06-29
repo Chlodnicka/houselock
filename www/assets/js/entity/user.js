@@ -17,6 +17,10 @@ myApp.user = {
         return firebase.database().ref('/users/' + id);
     },
 
+    getByEmail: function (email) {
+        return firebase.database().ref('/users/').orderByChild('email').equalTo(email).limitToFirst(1);
+    },
+
     role: function () {
         let id = this.id();
         return firebase.database().ref('/users/' + id + '/role');
@@ -42,5 +46,10 @@ myApp.user = {
     flats: function () {
         let id = this.id();
         return firebase.database().ref('/users/' + id + '/flats');
+    },
+
+    create: function (data) {
+        let id = this.id();
+        return firebase.database().ref('/users/' + id).set(data);
     }
 };

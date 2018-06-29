@@ -158,10 +158,6 @@ myApp.services.common = {
         });
     },
 
-    authorizeRegister: function () {
-        myNavigator.pushPage('html/auth/login.html');
-    },
-
     authorizeFail: function (response) {
         // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
         ons.notification.alert({message: response.responseJSON.message});
