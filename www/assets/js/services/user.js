@@ -117,19 +117,24 @@ myApp.services.user = {
         let card = page.querySelector('form'),
             phone = userData.phone ? userData.phone : '',
             account = userData.account_number ? userData.account_number : '',
-            username = userData.username ? userData.username : '';
+            firstname = userData.firstname ? userData.firstname : '',
+            lastname = userData.lastname ? userData.lastname : '';
 
         let status = '';
         if (userData.status) {
-            status = '<ons-list-item>' + myApp.services.common.parseStatus(userData.status) + '</ons-list-item>'
+            status = '<ons-list-item>STATUS: ' + myApp.services.common.parseStatus(userData.status) + '</ons-list-item>'
         }
 
         let userInfo = ons.createElement(
             '<div>' +
             status +
-            '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.username + '</ons-list-item>' +
+            '<ons-list-item class="firstname">Imię: ' + userData.firstname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
-            '<ons-input id="username" name="username" modifier="underbar" placeholder="Imię i nazwisko" value="' + username + '" float class="edit hidden"> </ons-input>' +
+            '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + firstname + '" float class="edit hidden"> </ons-input>' +
+            '</div>' +
+            '<ons-list-item class="lastname">Nazwisko: ' + userData.lastname + '</ons-list-item>' +
+            '<div class="edit" style="display: none;">' +
+            '<ons-input id="lastname" name="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
@@ -171,7 +176,6 @@ myApp.services.user = {
     update: function (page) {
         myApp.user.current().once('value').then(function (userSnapshot) {
             let userData = $.extend({}, userSnapshot.val(), form.serialize(page))
-            console.log(userData);
             firebase.database().ref('users/' + myApp.user.id()).set(userData).then(function () {
                 myApp.user.splitter();
             }).catch(
