@@ -95,163 +95,155 @@ myApp.services.bill = {
     },
 
     fill: function (page, info) {
-
-        let month = myApp.services.common.parseMonth(info.month);
+        let billDate = info.date.split('_');
+        let month = myApp.services.common.parseMonth(billDate[1]);
 
         if (page.getAttribute('id') !== 'dashboardPage') {
-            let date = month + ' ' + info.year;
+            let date = month + ' ' + billDate[0];
 
             page.querySelector('.bill_name').appendChild(document.createTextNode(date));
         }
 
-        let flat = myApp.user.currentFlat(),
-            payDay = flat.pay_day + ' ' + month + ' ' + info.year;
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flat = flatSnapshot.val();
+            payDay = flat.pay_day + ' ' + month + ' ' + billDate[0];
 
-        let sum = parseFloat(info.sum).toFixed(2);
+            let sum = parseFloat(info.sum).toFixed(2);
 
-        if (myApp.user.isTenant()) {
-            let countTenant = Object.keys(myApp.flat.tenants()).length;
-            sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
-        } else {
-            sum += ' zł';
-        }
-
-        let billMainInfo = ons.createElement(
-            '<div>' +
-            '<ons-list-item>' +
-            '<div class="left">Do kiedy płatny:</div>' +
-            '<div class="right" id="">' + payDay + '</div>' +
-            '</ons-list-item>' +
-            '<div>' +
-            '<ons-list-item>' +
-            '<div class="left">Do zapłaty:</div>' +
-            '<div class="right" id="">' + sum + '</div>' +
-            '</ons-list-item>' +
-            '</div>'
-        );
-        page.querySelector('form').appendChild(billMainInfo);
-
-        myApp.services.bill.fillConfig(page, info, flat.flat_config);
-
-        let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
-
-        saveBtn.onclick = function () {
-            myApp.services.bill.update(page)
-        };
-
-        let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
-
-        let form = page.querySelector('form');
-        form.appendChild(saveBtn);
-        form.appendChild(cancelBtn);
-
-        myApp.services.common.parseAction(form, info.id);
-        myApp.services.common.cancel(page);
-
-        if (myApp.user.isLandlord()) {
-            if (info.payment_status === 'NEW' || info.payment_status === 'UNPAID') {
-                let edit = ons.createElement(
-                    '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
-                );
-
-                page.querySelector('form').appendChild(edit);
-
-                myApp.services.common.edit(page);
-
-                let reload = ons.createElement(
-                    '<ons-button component="button/reload">Przeładuj rachunek</ons-button>'
-                );
-
-                reload.onclick = function () {
-                    ajax.send('post', '/api/bill/' + info.id + '/reload', {}, myApp.services.common.updateFlat);
-                };
-
-                page.querySelector('form').appendChild(reload);
+            if (myApp.user.isTenant()) {
+                let countTenant = Object.keys(myApp.flat.tenants()).length;
+                sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
+            } else {
+                sum += ' zł';
             }
 
-            if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
+            let billMainInfo = ons.createElement(
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do kiedy płatny:</div>' +
+                '<div class="right" id="">' + payDay + '</div>' +
+                '</ons-list-item>' +
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do zapłaty:</div>' +
+                '<div class="right" id="">' + sum + '</div>' +
+                '</ons-list-item>' +
+                '</div>'
+            );
+            page.querySelector('form').appendChild(billMainInfo);
 
-                let markAsPaid = ons.createElement(
-                    '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
-                );
+            myApp.services.bill.fillConfig(page, info, flat.config);
 
-                markAsPaid.onclick = function () {
-                    myApp.services.bill.markAsPaid(info.id);
-                };
+            let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
 
-                page.querySelector('.content').appendChild(markAsPaid);
+            saveBtn.onclick = function () {
+                myApp.services.bill.update(page)
+            };
 
-            }
+            let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
 
-            if (info.payment_status === 'UNPAID') {
-                let resendAlert = ons.createElement(
-                    '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
-                );
+            let form = page.querySelector('form');
+            form.appendChild(saveBtn);
+            form.appendChild(cancelBtn);
 
-                resendAlert.onclick = function () {
-                    myApp.services.bill.resendAlert(info.id);
-                };
+            myApp.services.common.cancel(page);
 
-                page.querySelector('.content').appendChild(resendAlert);
-            }
-        }
+            myApp.user.role().once('value').then(function (roleSnapshot) {
+                let role = roleSnapshot.val();
+                if (myApp.user.isLandlord(role)) {
+                    if (info.status === 'NEW' || info.status === 'UNPAID') {
+                        let edit = ons.createElement(
+                            '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
+                        );
 
-        if (myApp.user.isTenant()) {
-            if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
-                let pay = ons.createElement(
-                    '<ons-button component="button/pay">Zapłać</ons-button>'
-                );
+                        page.querySelector('form').appendChild(edit);
 
-                pay.onclick = function () {
-                    myApp.services.bill.pay(info.id);
-                };
+                        myApp.services.common.edit(page);
+                    }
 
-                page.querySelector('.content').appendChild(pay);
-            }
-        }
+                    if (info.status === 'NEW' || info.status === 'PARTIALLY PAID') {
+
+                        let markAsPaid = ons.createElement(
+                            '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
+                        );
+
+                        markAsPaid.onclick = function () {
+                            myApp.services.bill.markAsPaid(info.id);
+                        };
+
+                        page.querySelector('.content').appendChild(markAsPaid);
+
+                    }
+
+                    if (info.status === 'UNPAID') {
+                        let resendAlert = ons.createElement(
+                            '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
+                        );
+
+                        resendAlert.onclick = function () {
+                            myApp.services.bill.resendAlert(info.id);
+                        };
+
+                        page.querySelector('.content').appendChild(resendAlert);
+                    }
+                } else {
+                    if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
+                        let pay = ons.createElement(
+                            '<ons-button component="button/pay">Zapłać</ons-button>'
+                        );
+
+                        pay.onclick = function () {
+                            myApp.services.bill.pay(info.id);
+                        };
+
+                        page.querySelector('.content').appendChild(pay);
+                    }
+                }
+            });
+        });
     },
 
     fillConfig: function (page, info, config) {
-        if (info.gas_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.gas.config_type, 'Gaz', 'gas');
+        if (info.details.gas) {
+            myApp.services.bill.fillConfigElement(page, info, config.gas.type, 'Gaz', 'gas');
         }
 
-        if (info.power_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.power.config_type, 'Prąd', 'power');
+        if (info.details.power !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.power.type, 'Prąd', 'power');
         }
 
-        if (info.water_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.water.config_type, 'Woda', 'water');
+        if (info.details.water !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.water.type, 'Woda', 'water');
         }
 
-        if (info.waste_water_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.waste_water.config_type, 'Ścieki', 'waste_water');
+        if (info.details.waste_water !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.waste_water.type, 'Ścieki', 'waste_water');
         }
 
-        if (info.rent_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.rent.config_type, 'Czynsz', 'rent');
+        if (info.details.rent !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.rent.type, 'Czynsz', 'rent');
         }
 
-        if (info.tv_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.tv.config_type, 'Telewizja', 'tv');
+        if (info.details.tv !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.tv.type, 'Telewizja', 'tv');
         }
 
-        if (info.internet_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.internet.config_type, 'Internet', 'internet');
+        if (info.details.internet !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.internet.type, 'Internet', 'internet');
         }
     },
 
     fillConfigElement: function (page, info, config, name, index) {
         let configMessage = myApp.services.common.parseConfig(config);
         let edit = configMessage ?
-            myApp.services.bill.configEdit(name, index, info[index + '_price'], configMessage, config)
+            myApp.services.bill.configEdit(name, index, info.details[index], configMessage, config)
             : '';
 
         bill = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">' + name + ':</div>' +
-            '<div class="right" id="">' + parseFloat(info[index + '_price']).toFixed(2) + '</div>' +
+            '<div class="right" id="">' + parseFloat(info.details[index]).toFixed(2) + '</div>' +
             '</ons-list-item>' +
             edit +
             '</div>'
