@@ -171,14 +171,14 @@ myApp.services.flat = {
             mediaTemplate +
 
             '<ons-button class="btn btn-danger" style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
-            '<ons-button class="btn btn-secondary" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
+            '<ons-button class="btn btn-secondary cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</ons-card>' +
             '</form>'
         );
         page.querySelector('.content').appendChild(flat);
 
         page.querySelector('[component="button/save"]').onclick = function () {
-            myApp.services.flat.update(page, info)
+            myApp.services.flat.update(page)
         };
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
@@ -207,7 +207,7 @@ myApp.services.flat = {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
-                page.querySelector('div.flat_config_info').style.display = 'none';
+                page.querySelector('div.config_info').style.display = 'none';
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
                     listitem.style.display = ' none';
                 });
@@ -299,8 +299,17 @@ myApp.services.flat = {
         ons.notification.alert({message: 'Nie udało się dodać mieszkania!'});
     },
 
-    update: function (page, info) {
-        ajax.sendForm(page, myApp.services.common.updateUser, myApp.services.flat.updatedFailed);
+    update: function (page) {
+        console.log( form.serialize(page));
+
+        // myApp.flat.current().once('value').then(function (flatSnapshot) {
+        //     let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page))
+        //     firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
+        //         myApp.user.splitter();
+        //     }).catch(
+        //         //error
+        //     );
+        // });
     },
 
 

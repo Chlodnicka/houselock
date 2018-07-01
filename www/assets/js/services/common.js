@@ -238,8 +238,8 @@ myApp.services.common = {
                     page.querySelector('[component="button/flat-edit"]').style.display = 'block';
                 }
 
-                if (page.querySelector('div.flat_config_info')) {
-                    page.querySelector('div.flat_config_info').style.display = 'block';
+                if (page.querySelector('div.config_info')) {
+                    page.querySelector('div.config_info').style.display = 'block';
                 }
 
                 Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
