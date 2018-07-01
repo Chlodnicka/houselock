@@ -221,7 +221,7 @@ myApp.services.user = {
                 tenants.forEach(function (tenant) {
                     let userId = tenant.key;
                     myApp.user.get(userId).once('value').then(function (user) {
-                        myApp.services.user.item(page, user.val());
+                        myApp.services.user.item(page, user.val(), userId);
                     });
                     page.querySelector('.flat-list').style.display = 'block';
                 });
@@ -234,7 +234,7 @@ myApp.services.user = {
         page.querySelector('.content').appendChild(info);
     },
 
-    item: function (page, user) {
+    item: function (page, user, id) {
 
         let name = user.lastname ? user.firstname + ' ' + user.lastname : user.email;
 
@@ -246,6 +246,7 @@ myApp.services.user = {
             '</div>'
         );
 
+        user['id'] = id;
 
         userItem.querySelector('.center').onclick = function () {
             myNavigator.pushPage('html/user/tenant_info.html',
@@ -268,9 +269,6 @@ myApp.services.user = {
         ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
     },
 
-    acceptRemoval: function () {
-        ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate);
-    },
 
     ignoreUpdate: function (response) {
         let data = JSON.stringify(response);
@@ -297,10 +295,17 @@ myApp.services.user = {
                     ]
                 }).then(function (index) {
                     if (index === 0) {
-                        ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
+                        let userId = info.id;
+                        myApp.user.setDeleted(userId);
                     }
                 });
             };
         });
+    },
+
+
+    acceptRemoval: function () {
+        ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate);
     }
+
 };
