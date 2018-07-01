@@ -120,12 +120,9 @@ myApp.controllers = {
                 document.querySelector('#myNavigator').pushPage('html/user/user_new.html');
             };
         });
-        let tenants = myApp.flat.tenants();
-        if (Object.keys(tenants).length === 0) {
-            myApp.services.user.emptyList(page);
-        } else {
-            myApp.services.user.list(page, tenants);
-        }
+
+        myApp.services.user.list(page);
+
     },
 
     //User info page
