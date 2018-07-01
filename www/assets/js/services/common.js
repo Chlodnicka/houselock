@@ -38,40 +38,40 @@ myApp.services.common = {
 
     parseMonth: function (month) {
         switch (month) {
-            case 'January':
+            case '0':
                 return 'styczeń';
                 break;
-            case 'February':
+            case '1':
                 return 'luty';
                 break;
-            case 'March':
+            case '2':
                 return 'marzec';
                 break;
-            case 'April':
+            case '3':
                 return 'kwiecień';
                 break;
-            case 'May':
+            case '4':
                 return 'maj';
                 break;
-            case 'June':
+            case '5':
                 return 'czerwiec';
                 break;
-            case 'July':
+            case '6':
                 return 'lipiec';
                 break;
-            case 'August':
+            case '7':
                 return 'sierpień';
                 break;
-            case 'September':
+            case '8':
                 return 'wrzesień';
                 break;
-            case 'October':
+            case '9':
                 return 'październik';
                 break;
-            case 'November':
+            case '10':
                 return 'listopad';
                 break;
-            case 'December':
+            case '11':
                 return 'grudzień';
                 break;
             default:

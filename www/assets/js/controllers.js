@@ -100,12 +100,7 @@ myApp.controllers = {
     },
 
     billListPage: function (page) {
-        let bills = myApp.flat.bills();
-        if (Object.keys(bills).length === 0) {
-            myApp.services.bill.emptyList(page);
-        } else {
-            myApp.services.bill.list(page, bills);
-        }
+        myApp.services.bill.list(page);
     },
 
     billPage: function (page) {
@@ -159,12 +154,12 @@ myApp.controllers = {
     },
 
     dashboardPage: function (page) {
-        let lastBill = myApp.flat.bill();
-        if (Object.keys(lastBill).length === 0) {
-            myApp.services.dashboard.noLastBill(page);
-        } else {
-            myApp.services.bill.fill(page, lastBill);
-        }
+        // let lastBill = myApp.flat.bill();
+        // if (Object.keys(lastBill).length === 0) {
+        //     myApp.services.dashboard.noLastBill(page);
+        // } else {
+        //     myApp.services.bill.fill(page, lastBill);
+        // }
     },
 
     userNoFlatPage: function (page) {
