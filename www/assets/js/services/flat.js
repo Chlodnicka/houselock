@@ -41,48 +41,18 @@ myApp.services.flat = {
 
         let mediaTemplate = '';
 
-        if (info.flat_config) {
-            let gasChecked = info.flat_config.gas ? ' checked ' : '';
-            let powerChecked = info.flat_config.power ? ' checked ' : '';
-            let waterChecked = info.flat_config.water ? ' checked ' : '';
-            let wastesChecked = info.flat_config.waste_water ? ' checked ' : '';
+        if (info.config) {
+            let gasChecked = info.config.gas ? ' checked ' : '';
+            let powerChecked = info.config.power ? ' checked ' : '';
+            let waterChecked = info.config.water ? ' checked ' : '';
+            let wastesChecked = info.config.waste_water ? ' checked ' : '';
 
 
-            let gasPrice = '';
-            if (gasChecked) {
-                if (info.flat_config.gas.price_full) {
-                    gasPrice = info.flat_config.gas.price_full;
-                } else if (info.flat_config.gas.price_meter) {
-                    gasPrice = info.flat_config.gas.price_meter;
-                }
-            }
+            let gasPrice = gasChecked ? info.config.gas.value : '';
+            let powerPrice = powerChecked ? info.config.power.value : '';
+            let waterPrice = waterChecked ? info.config.water.value : '';
+            let wastesPrice = wastesChecked ? info.config.waste_water.value : '';
 
-            let powerPrice = '';
-            if (powerChecked) {
-                if (info.flat_config.power.price_full) {
-                    powerPrice = info.flat_config.power.price_full;
-                } else if (info.flat_config.power.price_meter) {
-                    powerPrice = info.flat_config.power.price_meter;
-                }
-            }
-
-            let waterPrice = '';
-            if (waterChecked) {
-                if (info.flat_config.water.price_full) {
-                    waterPrice = info.flat_config.water.price_full;
-                } else if (info.flat_config.water.price_meter) {
-                    waterPrice = info.flat_config.water.price_meter;
-                }
-            }
-
-            let wastesPrice = '';
-            if (wastesChecked) {
-                if (info.flat_config.waste_water.price_full) {
-                    wastesPrice = info.flat_config.waste_water.price_full;
-                } else if (info.flat_config.waste_water.price_meter) {
-                    wastesPrice = info.flat_config.waste_water.price_meter;
-                }
-            }
 
             mediaTemplate =
                 '<div class="edit hidden" style="display: none">' +
@@ -93,12 +63,12 @@ myApp.services.flat = {
                 '<label class="config-left" for="flat_gas_config">' +
                 'Gaz: ' +
                 '</label>' +
-                '<ons-checkbox class="config-right" id="flat_gas_config" ' + gasChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>' +
+                '<ons-checkbox class="config-right" id="flat_gas_config" ' + gasChecked + ' name="config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label  class="config-left" for="gas_payment_option_bill">Sposób rozliczenia:</label>' +
                 '<ons-select  style="margin-top: -7px;" class="config-right" id="gas_payment_option_bill" name="gas_payment_option_bill">' +
-                myApp.services.common.selectOption(info.flat_config.gas) +
+                myApp.services.common.selectOption(info.config.gas) +
                 '</ons-select>' +
                 '</div>' +
                 '<ons-input id="flat_gas_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
@@ -107,12 +77,12 @@ myApp.services.flat = {
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-left" for="flat_power_config">Prąd</label>' +
-                '<ons-checkbox class="config-right" id="flat_power_config" ' + powerChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox>' +
+                '<ons-checkbox class="config-right" id="flat_power_config" ' + powerChecked + ' name="config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-right" for="power_payment_option_bill">Sposób rozliczenia:</label>' +
                 '<ons-select class="config-left" id="power_payment_option_bill" name="power_payment_option_bill">' +
-                myApp.services.common.selectOption(info.flat_config.power) +
+                myApp.services.common.selectOption(info.config.power) +
                 '</ons-select>' +
                 '</div>' +
                 '<ons-input id="flat_power_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
@@ -121,12 +91,12 @@ myApp.services.flat = {
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-left" for="flat_wastes_config">Śmieci</label>' +
-                '<ons-checkbox class="config-right" id="flat_wastes_config" ' + wastesChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox>' +
+                '<ons-checkbox class="config-right" id="flat_wastes_config" ' + wastesChecked + ' name="config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-left" for="wastes_payment_option_bill">Sposób rozliczenia:</label>' +
                 '<ons-select class="config-right" id="wastes_payment_option_bill" name="wastes_payment_option_bill">' +
-                myApp.services.common.selectOption(info.flat_config.waste_water) +
+                myApp.services.common.selectOption(info.config.waste_water) +
                 '</ons-select>' +
                 '</div>' +
                 '<ons-input id="flat_wastes_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
@@ -135,35 +105,35 @@ myApp.services.flat = {
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-left" for="flat-water-config">Woda</label>' +
-                '<ons-checkbox class="config-right" id="flat_water_config" ' + waterChecked + ' name="flat_config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox>' +
+                '<ons-checkbox class="config-right" id="flat_water_config" ' + waterChecked + ' name="config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
                 '<label class="config-left" for="water_payment_option_bill">Sposób rozliczenia:</label>' +
                 '<ons-select class="config-right" id="water_payment_option_bill" name="water_payment_option_bill">' +
-                myApp.services.common.selectOption(info.flat_config.water) +
+                myApp.services.common.selectOption(info.config.water) +
                 '</div>' +
                 '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
                 '</div></div>' +
 
-                '<div class="flat_config_info">' +
+                '<div class="config_info">' +
                 '<div id="gas_config">' +
                 '<ons-list-header>Gaz</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.gas) + '</ons-list-item>' +
+                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.gas) + '</ons-list-item>' +
                 '<ons-list-item>Kwota: ' + gasPrice + '</ons-list-item></br>' +
                 '</div>' +
                 '<div id="power_config">' +
                 '<ons-list-header>Prąd</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.power) + '</ons-list-item>' +
+                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.power) + '</ons-list-item>' +
                 '<ons-list-item>Kwota: ' + powerPrice + '</ons-list-item>' +
                 '</div>' +
                 '<div id="wastes_config">' +
                 '<ons-list-header>Śmieci</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.waste_water) + '</ons-list-item>' +
+                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.waste_water) + '</ons-list-item>' +
                 '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
                 '</div>' +
                 '<div id="water_config">' +
                 '<ons-list-header>Woda</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia:' + myApp.services.common.getTextFromOption(info.flat_config.water) + '</ons-list-item>' +
+                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.water) + '</ons-list-item>' +
                 '<ons-list-item>Kwota: ' + waterPrice + '</ons-list-item>' +
                 '</div>' +
                 '</div>';
