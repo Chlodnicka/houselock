@@ -51,5 +51,10 @@ myApp.user = {
     create: function (data) {
         let id = this.id();
         return firebase.database().ref('/users/' + id).set(data);
+    },
+
+    addToFlat: function (data) {
+        let id = this.id();
+        return firebase.database().ref('/users/' + id).set(data);
     }
 };

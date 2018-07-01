@@ -184,8 +184,27 @@ myApp.services.user = {
         let user = form.serialize(page);
         myApp.user.getByEmail(user.email).on("value", function (user) {
             if (user.val()) {
-                let userData = user.val();
-                console.log(userData.keys());
+                let usersData = user.val();
+                let id = Object.keys(usersData);
+                console.log(usersData[id]);
+                console.log(usersData[id].flat);
+                if (usersData[id].flat || myApp.user.isLandlord(usersData[id].role)) {
+                    //jak ma mieszkanie lub jest właścicielem mieszkania
+                } else {
+                    let flatId = myApp.services.flat.current();
+                    let updates = {};
+                    updates['/flats/' + flatId + '/tenants/' + id] = true;
+                    updates['/users/' + id + '/flat/'] = flatId;
+                    updates['/users/' + id + '/role'] = 'TENANT';
+                    updates['/users/' + id + '/status'] = 'WAITING';
+                    return firebase.database().ref().update(updates, function (error) {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            myNavigator.pushPage('landlordSplitter.html');
+                        }
+                    });
+                }
             } else {
                 console.log('nie ma');
             }
