@@ -223,7 +223,6 @@ myApp.services.user = {
                     myApp.user.get(userId).once('value').then(function (user) {
                         myApp.services.user.item(page, user.val(), userId);
                     });
-                    page.querySelector('.flat-list').style.display = 'block';
                 });
             }
         });

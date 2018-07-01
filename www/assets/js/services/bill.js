@@ -27,7 +27,6 @@ myApp.services.bill = {
         let details = {};
         if (flat.config) {
             $.each(flat.config, function (key, value) {
-                console.log(bill);
                 if (value.type === 'STATIC') {
                     sum += details[key] = parseFloat(value.value);
                 } else if (value.type === 'METER') {
@@ -47,11 +46,21 @@ myApp.services.bill = {
         };
     },
 
-    list: function (page, bills) {
-        for (let id in bills) {
-            let bill = bills[id];
-            myApp.services.bill.item(page, bill);
-        }
+    list: function (page) {
+        myApp.bill.list().once('value').then(function (flatBills) {
+            if (flatBills.numChildren() === 0) {
+                myApp.services.bill.emptyList(page);
+            } else {
+                flatBills.forEach(function (flatBill) {
+                    let billId = flatBill.key;
+                    myApp.bill.get(billId).once('value').then(function (bill) {
+                        myApp.services.bill.item(page, billId, bill.val());
+                    });
+                });
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
     },
 
     emptyList: function (page) {
@@ -59,9 +68,10 @@ myApp.services.bill = {
         page.querySelector('.content').appendChild(info);
     },
 
-    item: function (page, bill) {
-        let date = myApp.services.common.parseMonth(bill.month) + ' ' + bill.year,
-            name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.payment_status);
+    item: function (page, id, bill) {
+        let billDate = bill.date.split('_');
+        let date = myApp.services.common.parseMonth(billDate[1]) + ' ' + billDate[0],
+            name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.status);
 
         let billItem = ons.createElement(
             '<div>' +
@@ -69,6 +79,7 @@ myApp.services.bill = {
             '</div>'
         );
 
+        bill['id'] = id;
 
         billItem.querySelector('.center').onclick = function () {
             myNavigator.pushPage('html/bill/bill_info.html',
@@ -80,7 +91,7 @@ myApp.services.bill = {
                 });
         };
 
-        page.querySelector('.content').insertBefore(billItem);
+        $(page).find('.content').prepend(billItem);
     },
 
     fill: function (page, info) {
