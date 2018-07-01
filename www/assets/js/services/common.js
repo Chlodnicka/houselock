@@ -2,7 +2,7 @@ myApp.services.common = {
 
     parseStatus: function (status) {
         switch (status) {
-            case 'TEMP':
+            case 'WAITING':
                 return 'Zaproszenie oczekuje na akceptację lokatora';
                 break;
             case 'DELETED_BY_LANDLORD':

@@ -186,8 +186,6 @@ myApp.services.user = {
             if (user.val()) {
                 let usersData = user.val();
                 let id = Object.keys(usersData);
-                console.log(usersData[id]);
-                console.log(usersData[id].flat);
                 if (usersData[id].flat || myApp.user.isLandlord(usersData[id].role)) {
                     //jak ma mieszkanie lub jest właścicielem mieszkania
                 } else {
@@ -211,11 +209,20 @@ myApp.services.user = {
         });
     },
 
-    list: function (page, users) {
-        for (let id in users) {
-            let user = users[id];
-            myApp.services.user.item(page, user);
-        }
+    list: function (page) {
+        myApp.flat.tenants().once('value').then(function (tenants) {
+            if (tenants.numChildren() === 0) {
+                myApp.services.user.emptyList(page);
+            } else {
+                tenants.forEach(function (tenant) {
+                    let userId = tenant.key;
+                    myApp.user.get(userId).once('value').then(function (user) {
+                        myApp.services.user.item(page, user.val());
+                    });
+                    page.querySelector('.flat-list').style.display = 'block';
+                });
+            }
+        });
     },
 
     emptyList: function (page) {
