@@ -33,11 +33,14 @@ myApp.controllers = {
     registerPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register"]'), function (element) {
             element.onclick = function () {
-                let form = page.querySelector('form');
-                let email = $(form).find('#username').children('input').val();
-                let password = $(form).find('#password').children('input').val();
+                let email = $(page.querySelector('form')).find('#username').children('input').val();
+                let password = $(page.querySelector('form')).find('#password').children('input').val();
+                let data = form.serialize(page);
+                delete data.password;
                 firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(myApp.services.common.authorizeRegister())
+                    .then(function (user) {
+                        myApp.services.user.create(data);
+                    })
                     .catch(function (error) {
                         myApp.services.common.authorizeFail()
                     });
@@ -151,12 +154,9 @@ myApp.controllers = {
     },
 
     tenantNewPage: function (page) {
-        form = $(page.querySelector('form'));
-        let action = form.attr('data-ajax').replace('{id}', myApp.user.currentFlatId());
-        form.attr('data-ajax', action);
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function (element) {
             element.onclick = function () {
-                myApp.services.common.save(page, myApp.services.common.updateFlat);
+                myApp.services.user.addTenant(page);
             };
         });
     },
