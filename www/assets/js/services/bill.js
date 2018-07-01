@@ -2,6 +2,51 @@
 // Bill Service //
 ////////////////////
 myApp.services.bill = {
+
+    create: function () {
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flat = flatSnapshot.val();
+            let now = new Date();
+            let bill = myApp.services.bill.count(now, flat, {});
+            let updates = {};
+            let billKey = firebase.database().ref().child('bills').push().key;
+            updates['/bills/' + billKey] = bill;
+            updates['/flats/' + myApp.flat.id() + '/bills/' + billKey] = {date: now.getFullYear() + '_' + now.getMonth()};
+            return firebase.database().ref().update(updates, function (error) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    myNavigator.pushPage('landlordSplitter.html');
+                }
+            });
+        })
+    },
+
+    count: function (now, flat, bill) {
+        let sum = 0;
+        let details = {};
+        if (flat.config) {
+            $.each(flat.config, function (key, value) {
+                console.log(bill);
+                if (value.type === 'STATIC') {
+                    sum += details[key] = parseFloat(value.value);
+                } else if (value.type === 'METER') {
+                    let billValue = bill[key] ? bill[key] : '0.00';
+                    sum += details[key] = parseFloat(billValue) * parseFloat(value.value);
+                } else if (value.type === 'BILL' && bill[key]) {
+                    sum += details[key] = parseFloat(bill[key]);
+                }
+            });
+        }
+        sum += parseFloat(flat.mercenary);
+        return {
+            sum: sum,
+            details: details,
+            date: now.getFullYear() + '_' + now.getMonth(),
+            status: 'NEW'
+        };
+    },
+
     list: function (page, bills) {
         for (let id in bills) {
             let bill = bills[id];

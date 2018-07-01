@@ -70,10 +70,5 @@ myApp.user = {
             });
         });
 
-    },
-
-    addToFlat: function (data) {
-        let id = this.id();
-        return firebase.database().ref('/users/' + id).set(data);
     }
 };
