@@ -262,6 +262,7 @@ myApp.services.bill = {
             edit += parseFloat(value).toFixed(2);
         // }
 
+
         edit += '" float class="edit hidden">';
         edit += '</ons-input></div>';
         return edit;
