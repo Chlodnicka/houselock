@@ -145,7 +145,11 @@ myApp.services.common = {
                     let flats = snapshot.val();
                     if (flats) {
                         if (Object.keys(flats).length > 1) {
-                            myNavigator.pushPage('html/flat/flat_list.html');
+                            if(myApp.flat.id()) {
+                                myNavigator.pushPage('landlordSplitter.html');
+                            } else {
+                                myNavigator.pushPage('html/flat/flat_list.html');
+                            }
                         } else {
                             myApp.services.flat.setCurrent(Object.keys(flats)[0]);
                             myNavigator.pushPage('landlordSplitter.html');
