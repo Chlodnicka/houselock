@@ -154,12 +154,7 @@ myApp.controllers = {
     },
 
     dashboardPage: function (page) {
-        // let lastBill = myApp.flat.bill();
-        // if (Object.keys(lastBill).length === 0) {
-        //     myApp.services.dashboard.noLastBill(page);
-        // } else {
-        //     myApp.services.bill.fill(page, lastBill);
-        // }
+        myApp.services.dashboard.lastBill(page);
     },
 
     userNoFlatPage: function (page) {
