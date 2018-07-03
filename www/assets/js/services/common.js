@@ -158,6 +158,17 @@ myApp.services.common = {
                         myNavigator.pushPage('html/flat/flat_new.html');
                     }
                 });
+            } else if(myApp.user.isTenant(role)) {
+                myApp.user.current().once('value').then(function (userSnapshot) {
+                    let user = userSnapshot.val();
+                    if(user.flat) {
+                        myApp.services.flat.setCurrent(user.flat);
+                        myNavigator.pushPage('tenantSplitter.html');
+                    } else {
+                        console.log('brak mieszkania');
+                    }
+                });
+
             }
         });
     },

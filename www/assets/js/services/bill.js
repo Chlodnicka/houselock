@@ -187,7 +187,8 @@ myApp.services.bill = {
                         page.querySelector('.content').appendChild(resendAlert);
                     }
                 } else {
-                    if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
+                    // if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
+                    //todo:ogarnięcie statusów
                         let pay = ons.createElement(
                             '<ons-button component="button/pay">Zapłać</ons-button>'
                         );
@@ -197,7 +198,7 @@ myApp.services.bill = {
                         };
 
                         page.querySelector('.content').appendChild(pay);
-                    }
+                    // }
                 }
             });
         });

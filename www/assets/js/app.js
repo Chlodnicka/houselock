@@ -18,20 +18,21 @@ document.addEventListener('init', function (event) {
 
     firebase.auth().onAuthStateChanged(function (user) {
         //todo: znaleźć lepszy moment na update rachunku
-        if (user) {
-            myApp.bill.last().once('value', function (flatBills) {
-                if (flatBills.val()) {
-                    let billId = Object.keys(flatBills.val());
-                    let bill = flatBills.val()[billId];
-                    let now = new Date();
-                    let date = now.getFullYear() + '_' + now.getMonth();
-                    if (bill.date < date || flatBills.numChildren() === 0) {
-                        myApp.services.bill.create();
-                    }
-                }
 
-            });
-        }
+        // if (user) {
+        //     myApp.bill.last().once('value', function (flatBills) {
+        //         if (flatBills.val()) {
+        //             let billId = Object.keys(flatBills.val());
+        //             let bill = flatBills.val()[billId];
+        //             let now = new Date();
+        //             let date = now.getFullYear() + '_' + now.getMonth();
+        //             if (bill.date < date || flatBills.numChildren() === 0) {
+        //                 myApp.services.bill.create();
+        //             }
+        //         }
+        //
+        //     });
+        // }
     });
 
 });

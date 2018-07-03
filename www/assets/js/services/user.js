@@ -268,7 +268,6 @@ myApp.services.user = {
         ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
     },
 
-
     ignoreUpdate: function (response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
