@@ -145,7 +145,7 @@ myApp.services.common = {
                     let flats = snapshot.val();
                     if (flats) {
                         if (Object.keys(flats).length > 1) {
-                            if(myApp.flat.id()) {
+                            if (myApp.flat.id()) {
                                 myNavigator.pushPage('landlordSplitter.html');
                             } else {
                                 myNavigator.pushPage('html/flat/flat_list.html');
@@ -158,14 +158,22 @@ myApp.services.common = {
                         myNavigator.pushPage('html/flat/flat_new.html');
                     }
                 });
-            } else if(myApp.user.isTenant(role)) {
+            } else if (myApp.user.isTenant(role)) {
                 myApp.user.current().once('value').then(function (userSnapshot) {
                     let user = userSnapshot.val();
-                    if(user.flat) {
-                        myApp.services.flat.setCurrent(user.flat);
-                        myNavigator.pushPage('tenantSplitter.html');
+                    if (user.flat) {
+                        if (user.status === 'DELETED_BY_LANDLORD') {
+                            myNavigator.pushPage('html/user/user_deleted.html');
+                        } else if (user.status === 'WAITING') {
+                            myNavigator.pushPage('html/user/user_accept_invitation.html');
+                        } else if (user.status === 'DELETED_BY_SELF') {
+                            myNavigator.pushPage('html/user/user_no_flat.html');
+                        } else {
+                            myApp.services.flat.setCurrent(user.flat);
+                            myNavigator.pushPage('tenantSplitter.html');
+                        }
                     } else {
-                        console.log('brak mieszkania');
+                        myNavigator.pushPage('html/user/user_no_flat.html');
                     }
                 });
 
