@@ -106,7 +106,7 @@ myApp.services.bill = {
 
         myApp.flat.current().once('value').then(function (flatSnapshot) {
             let flat = flatSnapshot.val();
-            payDay = flat.pay_day + ' ' + month + ' ' + billDate[0];
+            let payDay = flat.pay_day + ' ' + month + ' ' + billDate[0];
 
             let sum = parseFloat(info.sum).toFixed(2);
 
@@ -256,11 +256,12 @@ myApp.services.bill = {
         let edit = '<div class="edit" style="display: none;">' +
             '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
 
-        if (config === 'metric') {
-            edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
-        } else {
+        // if (config === 'metric') {
+        //     // edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
+        // } else {
             edit += parseFloat(value).toFixed(2);
-        }
+        // }
+
 
         edit += '" float class="edit hidden">';
         edit += '</ons-input></div>';
