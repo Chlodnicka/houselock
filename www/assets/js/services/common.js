@@ -175,11 +175,11 @@ myApp.services.common = {
 
     selectOption: function (config) {
         if (config) {
-            if (config.type === 'BILL') {
+            if (config.type === 'bill') {
                 return '<option value="bill" selected>Na bazie rachunku</option>' +
                     '<option value="metric">Kwota za jednostkę</option>' +
                     '<option value="static">Stała opłata</option>';
-            } else if (config.type === 'METER') {
+            } else if (config.type === 'metric') {
                 return '<option value="bill">Na bazie rachunku</option>' +
                     '<option value="metric" selected>Kwota za jednostkę</option>' +
                     '<option value="static">Stała opłata</option>';
@@ -196,9 +196,9 @@ myApp.services.common = {
 
     getTextFromOption: function (config) {
         if (config) {
-            if (config.type === 'BILL') {
+            if (config.type === 'bill') {
                 return 'Na bazie rachunku';
-            } else if (config.type === 'METER') {
+            } else if (config.type === 'metric') {
                 return 'Kwota za jednostkę';
             } else {
                 return 'Stała opłata';

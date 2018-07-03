@@ -45,13 +45,13 @@ myApp.services.flat = {
             let gasChecked = info.config.gas ? ' checked ' : '';
             let powerChecked = info.config.power ? ' checked ' : '';
             let waterChecked = info.config.water ? ' checked ' : '';
-            let wastesChecked = info.config.waste_water ? ' checked ' : '';
+            let wastesChecked = info.config.wastes ? ' checked ' : '';
 
 
             let gasPrice = gasChecked ? info.config.gas.value : '';
             let powerPrice = powerChecked ? info.config.power.value : '';
             let waterPrice = waterChecked ? info.config.water.value : '';
-            let wastesPrice = wastesChecked ? info.config.waste_water.value : '';
+            let wastesPrice = wastesChecked ? info.config.wastes.value : '';
 
 
             mediaTemplate =
@@ -60,59 +60,59 @@ myApp.services.flat = {
 
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="flat_gas_config">' +
+                '<label class="config-left" for="config.gas">' +
                 'Gaz: ' +
                 '</label>' +
-                '<ons-checkbox class="config-right" id="flat_gas_config" ' + gasChecked + ' name="config" modifier="underbar" float class="edit hidden" value="gas_option"></ons-checkbox>' +
+                '<ons-checkbox class="config-right" id="config.gas" ' + gasChecked + ' name="config.gas" modifier="underbar" float class="edit hidden" value="config.gas"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label  class="config-left" for="gas_payment_option_bill">Sposób rozliczenia:</label>' +
-                '<ons-select  style="margin-top: -7px;" class="config-right" id="gas_payment_option_bill" name="gas_payment_option_bill">' +
+                '<label  class="config-left" for="config.gas.type">Sposób rozliczenia:</label>' +
+                '<ons-select  style="margin-top: -7px;" class="config-right" id="config.gas.type" name="config.gas.type">' +
                 myApp.services.common.selectOption(info.config.gas) +
                 '</ons-select>' +
                 '</div>' +
-                '<ons-input id="flat_gas_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
+                '<ons-input id="config.gas.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
                 '</div>' +
 
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="flat_power_config">Prąd</label>' +
-                '<ons-checkbox class="config-right" id="flat_power_config" ' + powerChecked + ' name="config" modifier="underbar" float class="edit hidden" value="power_option"></ons-checkbox>' +
+                '<label class="config-left" for="config.power">Prąd</label>' +
+                '<ons-checkbox class="config-right" id="config.power" ' + powerChecked + ' name="config.power" modifier="underbar" float class="edit hidden" value="config.power"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-right" for="power_payment_option_bill">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-left" id="power_payment_option_bill" name="power_payment_option_bill">' +
+                '<label class="config-right" for="config.power.type">Sposób rozliczenia:</label>' +
+                '<ons-select class="config-left" id="config.power.type" name="config.power.type">' +
                 myApp.services.common.selectOption(info.config.power) +
                 '</ons-select>' +
                 '</div>' +
-                '<ons-input id="flat_power_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
+                '<ons-input id="config.power.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
                 '</div>' +
 
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="flat_wastes_config">Śmieci</label>' +
-                '<ons-checkbox class="config-right" id="flat_wastes_config" ' + wastesChecked + ' name="config" modifier="underbar" float class="edit hidden" value="wastes_option"></ons-checkbox>' +
+                '<label class="config-left" for="config.wastes">Śmieci</label>' +
+                '<ons-checkbox class="config-right" id="config.wastes" ' + wastesChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.wastes"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="wastes_payment_option_bill">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-right" id="wastes_payment_option_bill" name="wastes_payment_option_bill">' +
-                myApp.services.common.selectOption(info.config.waste_water) +
+                '<label class="config-left" for="config.wastes.type">Sposób rozliczenia:</label>' +
+                '<ons-select class="config-right" id="config.wastes.type" name="config.wastes.type">' +
+                myApp.services.common.selectOption(info.config.wastes) +
                 '</ons-select>' +
                 '</div>' +
-                '<ons-input id="flat_wastes_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
+                '<ons-input id="config.wastes.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
                 '</div>' +
 
                 '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="flat-water-config">Woda</label>' +
-                '<ons-checkbox class="config-right" id="flat_water_config" ' + waterChecked + ' name="config" modifier="underbar" float class="edit hidden" value="water_option"></ons-checkbox>' +
+                '<label class="config-left" for="config.water">Woda</label>' +
+                '<ons-checkbox class="config-right" id="config.water" ' + waterChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.water"></ons-checkbox>' +
                 '</div>' +
                 '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="water_payment_option_bill">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-right" id="water_payment_option_bill" name="water_payment_option_bill">' +
+                '<label class="config-left" for="config.water.type">Sposób rozliczenia:</label>' +
+                '<ons-select class="config-right" id="config.water.type" name="config.water.type">' +
                 myApp.services.common.selectOption(info.config.water) +
                 '</div>' +
-                '<ons-input id="flat_water_price" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
+                '<ons-input id="config.water.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
                 '</div></div>' +
 
                 '<div class="config_info">' +
@@ -128,7 +128,7 @@ myApp.services.flat = {
                 '</div>' +
                 '<div id="wastes_config">' +
                 '<ons-list-header>Śmieci</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.waste_water) + '</ons-list-item>' +
+                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.wastes) + '</ons-list-item>' +
                 '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
                 '</div>' +
                 '<div id="water_config">' +
@@ -143,7 +143,7 @@ myApp.services.flat = {
         let name = info.name ? info.name : 'Brak nazwy';
 
         let flat = ons.createElement(
-            '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save">' +
+            '<form data-ajax="/api/flat/' + info.id + '" method="post" id="flat_info_save" class="edit-flat">' +
             '<div><ons-card><ons-list-header>' + name + '</ons-list-header>' +
             '<ons-list-item><div>Adres:  </div><div>ul. ' + info.street + ' ' + info.building_number + '/' + info.flat_number + '</div></ons-list-item>' +
             '<div class="edit" style="display: none">' +
@@ -278,6 +278,17 @@ myApp.services.flat = {
         page.querySelector('.content').appendChild(createFlat);
     },
 
+    update: function (page) {
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page))
+            firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
+                myApp.user.splitter();
+            }).catch(
+                //error
+            );
+        });
+    },
+
     /*
     Dotąd jest ok
      */
@@ -298,20 +309,6 @@ myApp.services.flat = {
     onCreateFail: function () {
         ons.notification.alert({message: 'Nie udało się dodać mieszkania!'});
     },
-
-    update: function (page) {
-        console.log( form.serialize(page));
-
-        // myApp.flat.current().once('value').then(function (flatSnapshot) {
-        //     let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page))
-        //     firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
-        //         myApp.user.splitter();
-        //     }).catch(
-        //         //error
-        //     );
-        // });
-    },
-
 
     updatedFailed: function () {
 
