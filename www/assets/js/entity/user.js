@@ -38,8 +38,9 @@ myApp.user = {
         this.role().once('value').then(function (role) {
             if (myApp.user.isLandlord(role.val())) {
                 myNavigator.pushPage('landlordSplitter.html');
+            } else if (myApp.user.isTenant(role.val())) {
+                myNavigator.pushPage('tenantSplitter.html');
             }
-            myNavigator.pushPage('landlordSplitter.html');
         });
     },
 

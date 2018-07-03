@@ -104,8 +104,6 @@ myApp.controllers = {
     },
 
     billPage: function (page) {
-        //todo: display_bill
-        //todo: edit_bill
         myApp.services.bill.fill(page, page.data.element);
     },
 
@@ -115,14 +113,11 @@ myApp.controllers = {
                 document.querySelector('#myNavigator').pushPage('html/user/user_new.html');
             };
         });
-
         myApp.services.user.list(page);
-
     },
 
     //User info page
     userPage: function (page) {
-
         myApp.user.role().once('value').then(function (role) {
             if (myApp.user.isTenant(role.val())) {
                 let backButton = page.querySelector('.back-button');
@@ -136,7 +131,6 @@ myApp.controllers = {
                 };
             });
         });
-
     },
 
     tenantPage: function (page) {
@@ -166,29 +160,31 @@ myApp.controllers = {
     },
 
     userAcceptPage: function (page) {
-        let flatInfo = myApp.flat.currentFlat();
-        let flat_number = flatInfo.flat_number ? '/' + flatInfo.flat_number : '';
-        let flat = ons.createElement(
-            '<div>' +
-            '<ons-list-item>Ulica i numer: ' + flatInfo.street + ' ' + flatInfo.building_number + flat_number + '</ons-list-item>' +
-            '<ons-list-item>Miasto: ' + flatInfo.city + '</ons-list-item>' +
-            '</div>'
-        );
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flatData = flatSnapshot.val();
+            let flat_number = flatData.flat_number ? '/' + flatData.flat_number : '';
+            let flat = ons.createElement(
+                '<div>' +
+                '<ons-list-item>Ulica i numer: ' + flatData.street + ' ' + flatData.building_number + flat_number + '</ons-list-item>' +
+                '<ons-list-item>Miasto: ' + flatData.city + '</ons-list-item>' +
+                '</div>'
+            );
 
-        page.querySelector('.flat_info').appendChild(flat);
+            page.querySelector('.flat_info').appendChild(flat);
 
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.user.accept();
-            };
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
+                element.onclick = function () {
+                    myApp.services.user.accept();
+                };
+            });
+
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
+                element.onclick = function () {
+                    myApp.services.user.ignore();
+                };
+            });
+
         });
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.user.ignore();
-            };
-        });
-
     },
 
     userAcceptRemovalPage: function (page) {

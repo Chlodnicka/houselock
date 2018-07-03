@@ -261,19 +261,32 @@ myApp.services.user = {
     },
 
     accept: function () {
-        ajax.send('post', '/api/user/accept', {}, myApp.services.common.updateUser);
+        let updates = {};
+        let userId = myApp.user.id();
+        updates['/users/' + userId + '/status/'] = 'ACTIVE';
+
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error)
+            } else {
+                myApp.user.splitter();
+            }
+        });
     },
 
     ignore: function () {
-        ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
-    },
+        let updates = {};
+        let userId = myApp.user.id();
+        updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
+        updates['/users/' + userId + '/flat/'] = null;
 
-    ignoreUpdate: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('userData', data);
-        localStorage.removeItem('currentFlat');
-        localStorage.removeItem('flatData');
-        myNavigator.pushPage('html/user/user_no_flat.html');
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error)
+            } else {
+                myNavigator.pushPage('html/user/user_no_flat.html');
+            }
+        });
     },
 
     remove: function (page, info) {

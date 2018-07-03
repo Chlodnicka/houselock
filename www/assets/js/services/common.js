@@ -35,7 +35,6 @@ myApp.services.common = {
         }
     },
 
-
     parseMonth: function (month) {
         switch (month) {
             case '0':
@@ -107,25 +106,6 @@ myApp.services.common = {
         return false;
     },
 
-    parseAction: function (form, id) {
-        let ajax = $(form).attr('data-ajax').replace('{id}', id);
-        $(form).attr('data-ajax', ajax);
-    },
-
-    token: {
-        get: function () {
-            return localStorage.getItem('token');
-        },
-
-        set: function (token) {
-            localStorage.setItem('token', token);
-        },
-
-        check: function () {
-            ajax.send('get', '/api/check', '{}', myApp.services.user.getInfo, myApp.services.common.authorize);
-        }
-    },
-
     checkCredentials: function () {
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -176,7 +156,6 @@ myApp.services.common = {
                         myNavigator.pushPage('html/user/user_no_flat.html');
                     }
                 });
-
             }
         });
     },
@@ -275,32 +254,8 @@ myApp.services.common = {
         });
     },
 
-    save: function (page, onSuccess) {
-        ajax.sendForm(page, onSuccess);
-    },
-
     clearAll: function () {
         localStorage.clear();
         sessionStorage.clear();
-    },
-
-    updateFlat: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('flatData', data);
-        myNavigator.pushPage(myApp.user.splitter());
-    },
-
-    updateFlatInvitation: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('flatData', data);
-        myNavigator.pushPage('html/user/user_accept_invitation.html');
-    },
-
-    updateInfoAfter: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('userData', data);
-        localStorage.removeItem('currentFlat');
-        localStorage.removeItem('flatData');
-        myNavigator.pushPage('html/flat/flat_list.html');
     }
 };
