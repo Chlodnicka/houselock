@@ -30,6 +30,7 @@ myApp.services.flat = {
     display: function (page, id) {
         return firebase.database().ref('/flats/' + id).once('value').then(function (snapshot) {
             let flat = snapshot.val();
+            flat['id'] = id;
             myApp.services.flat.displayFlat(page, flat);
             myApp.services.flat.displayActions(page, flat);
         }).catch(function (error) {
@@ -328,7 +329,23 @@ myApp.services.flat = {
             ]
         }).then(function (index) {
             if (index === 0) {
-                ajax.send('post', '/api/flat/' + flat.id + '/delete', {}, myApp.services.common.updateInfoAfter);
+                if(flat.tenants && Object.keys(flat.tenants).length > 0) {
+                    ons.notification.alert({message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokaorzy"});
+                } else {
+                    let updates = {};
+                    let userId = myApp.user.id();
+                    if(userId) {
+                        updates['/users/' + userId + '/flats/' + flat.id] = null;
+                        updates['/flats/' + flat.id] = null;
+                    }
+                    return firebase.database().ref().update(updates, function (error) {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            myNavigator.pushPage('html/flat/flat_list.html')
+                        }
+                    });
+                }
             }
         });
     }
