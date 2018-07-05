@@ -142,6 +142,7 @@ myApp.services.common = {
                 myApp.user.current().once('value').then(function (userSnapshot) {
                     let user = userSnapshot.val();
                     if (user.flat) {
+                        myApp.services.flat.setCurrent(user.flat);
                         if (user.status === 'DELETED_BY_LANDLORD') {
                             myNavigator.pushPage('html/user/user_deleted.html');
                         } else if (user.status === 'WAITING') {

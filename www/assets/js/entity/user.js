@@ -68,7 +68,7 @@ myApp.user = {
                     }
                 } else {
                     updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
-                    if(removedUser.status === 'DELETED_BY_LANDLORD') {
+                    if(removedUser.status === 'DELETED_BY_LANDLORD' || removedUser.status === 'WAITING') {
                         updates['/users/' + userId + '/flat'] = null;
                         updates['/flats/' + flatId + '/tenants/' + userId] = null;
                     }
