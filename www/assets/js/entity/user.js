@@ -57,17 +57,34 @@ myApp.user = {
     setDeleted: function (userId) {
         let updates = {};
         this.role().once('value').then(function (role) {
-            if (myApp.user.isLandlord(role.val())) {
-                updates['/users/' + userId + '/status/'] = 'DELETED_BY_LANDLORD';
-            } else {
-                updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
-            }
-            return firebase.database().ref().update(updates, function (error) {
-                if (error) {
-                    console.log(error)
+            myApp.user.get(userId).once('value').then(function (userSnapshot) {
+               let removedUser = userSnapshot.val();
+               let flatId = removedUser.flat;
+                if (myApp.user.isLandlord(role.val())) {
+                    updates['/users/' + userId + '/status/'] = 'DELETED_BY_LANDLORD';
+                    if(removedUser.status === 'DELETED_BY_SELF') {
+                        updates['/users/' + userId + '/flat'] = null;
+                        updates['/flats/' + flatId + '/tenants/' + userId] = null;
+                    }
                 } else {
-                    myApp.user.splitter();
+                    updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
+                    if(removedUser.status === 'DELETED_BY_LANDLORD') {
+                        updates['/users/' + userId + '/flat'] = null;
+                        updates['/flats/' + flatId + '/tenants/' + userId] = null;
+                    }
                 }
+
+                return firebase.database().ref().update(updates, function (error) {
+                    if (error) {
+                        console.log(error)
+                    } else {
+                        if (myApp.user.isTenant(role.val())) {
+                            myNavigator.pushPage('html/user/user_no_flat.html');
+                        } else {
+                            myApp.user.splitter();
+                        }
+                    }
+                });
             });
         });
 

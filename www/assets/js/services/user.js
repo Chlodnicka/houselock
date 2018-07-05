@@ -160,17 +160,22 @@ myApp.services.user = {
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
 
-        if (myApp.user.isTenant() && userData.status !== 'DELETED_BY_SELF') {
-            let deleteButton = ons.createElement(
-                '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
-            );
+        myApp.user.current().once('value').then(function(userSnapshot) {
+           let user = userSnapshot.val();
+            if (myApp.user.isTenant(user.role) && user.status !== 'DELETED_BY_SELF') {
+                let deleteButton = ons.createElement(
+                    '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
+                );
 
-            deleteButton.onclick = function () {
-                ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate)
-            };
+                deleteButton.onclick = function () {
+                    let userId = myApp.user.id();
+                    myApp.user.setDeleted(userId);
+                };
 
-            page.querySelector('.content').appendChild(deleteButton);
-        }
+                page.querySelector('.content').appendChild(deleteButton);
+            }
+        });
+
     },
 
     update: function (page) {
@@ -314,9 +319,9 @@ myApp.services.user = {
         });
     },
 
-
     acceptRemoval: function () {
-        ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate);
+        let userId = myApp.user.id();
+        myApp.user.setDeleted(userId);
     }
 
 };
