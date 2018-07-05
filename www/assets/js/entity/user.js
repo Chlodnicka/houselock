@@ -88,5 +88,25 @@ myApp.user = {
             });
         });
 
+    },
+
+    invitation: function (email) {
+        let data = {
+            'flat' : myApp.flat.id(),
+            'landlord' :  this.id(),
+            'email' : email,
+            'status' : 'NEW'
+        };
+
+        let invitationKey = firebase.database().ref().child('invitations').push().key;
+        let updates = {};
+        updates['/invitations/' + invitationKey] = data;
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error)
+            } else {
+                myApp.user.splitter();
+            }
+        });
     }
 };
