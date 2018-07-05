@@ -280,18 +280,8 @@ myApp.services.user = {
     },
 
     ignore: function () {
-        let updates = {};
         let userId = myApp.user.id();
-        updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
-        updates['/users/' + userId + '/flat/'] = null;
-
-        return firebase.database().ref().update(updates, function (error) {
-            if (error) {
-                console.log(error)
-            } else {
-                myNavigator.pushPage('html/user/user_no_flat.html');
-            }
-        });
+        myApp.user.setDeleted(userId);
     },
 
     remove: function (page, info) {
