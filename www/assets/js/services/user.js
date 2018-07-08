@@ -5,7 +5,20 @@ myApp.services.user = {
 
     create: function (data) {
         myApp.user.create(data).then(function () {
-            myApp.user.splitter();
+            myApp.user.getInvitatonByEmail(data.email).once("value", function (invitationSnapshot) {
+                let invitationsData = invitationSnapshot.val();
+                if (invitationsData) {
+                    let id = Object.keys(invitationsData);
+                    if (invitationsData[id] && invitationsData[id].status === 'NEW') {
+                        let userId = myApp.user.id();
+                        myApp.flat.addTenant(userId, invitationsData[id].flat, id);
+                    } else {
+                        myNavigator.pushPage('html/user/set_role.html');
+                    }
+                } else {
+                    myNavigator.pushPage('html/user/set_role.html');
+                }
+            });
         }).catch(function (error) {
             console.log(error);
         });
@@ -198,18 +211,7 @@ myApp.services.user = {
                     ons.notification.alert({message: "Nie możesz zaprosić do mieszkania użytkownika, który ma mieszkanie lub jest właścicielem mieszkania"});
                 } else {
                     let flatId = myApp.services.flat.current();
-                    let updates = {};
-                    updates['/flats/' + flatId + '/tenants/' + id] = true;
-                    updates['/users/' + id + '/flat/'] = flatId;
-                    updates['/users/' + id + '/role'] = 'TENANT';
-                    updates['/users/' + id + '/status'] = 'WAITING';
-                    return firebase.database().ref().update(updates, function (error) {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            myNavigator.pushPage('landlordSplitter.html');
-                        }
-                    });
+                    myApp.flat.addTenant(id, flatId);
                 }
             } else {
                 myApp.user.invitation(user.email);

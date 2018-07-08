@@ -157,6 +157,8 @@ myApp.services.common = {
                         myNavigator.pushPage('html/user/user_no_flat.html');
                     }
                 });
+            } else {
+                myNavigator.pushPage('html/user/set_role.html');
             }
         });
     },

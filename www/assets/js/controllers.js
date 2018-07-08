@@ -4,6 +4,19 @@
 
 myApp.controllers = {
 
+    setRolePage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/landlord"]'), function (element) {
+            element.onclick = function () {
+                myApp.user.setRole('LANDLORD');
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/tenant"]'), function (element) {
+            element.onclick = function () {
+                myApp.user.setRole('TENANT');
+            };
+        });
+    },
+
     //Loader page
     loaderPage: function (page) {
         myApp.services.common.checkCredentials();
@@ -16,8 +29,9 @@ myApp.controllers = {
                 let form = page.querySelector('form');
                 let email = $(form).find('#username').children('input').val();
                 let password = $(form).find('#password').children('input').val();
-                firebase.auth().signInWithEmailAndPassword(email, password)
-                    .catch(function (error) {
+                firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+                    myApp.services.common.checkCredentials();
+                }).catch(function (error) {
                         console.log(error);
                         // myApp.services.common.authorizeFail()
                     });
@@ -33,7 +47,7 @@ myApp.controllers = {
     registerPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register"]'), function (element) {
             element.onclick = function () {
-                let email = $(page.querySelector('form')).find('#username').children('input').val();
+                let email = $(page.querySelector('form')).find('#email').children('input').val();
                 let password = $(page.querySelector('form')).find('#password').children('input').val();
                 let data = form.serialize(page);
                 delete data.password;

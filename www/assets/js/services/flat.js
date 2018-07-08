@@ -281,7 +281,7 @@ myApp.services.flat = {
 
     update: function (page) {
         myApp.flat.current().once('value').then(function (flatSnapshot) {
-            let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page))
+            let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page));
             firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
                 myApp.user.splitter();
             }).catch(
