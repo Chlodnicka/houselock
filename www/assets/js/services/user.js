@@ -4,9 +4,21 @@
 myApp.services.user = {
 
     create: function (data) {
-        console.log(data);
         myApp.user.create(data).then(function () {
-            myApp.user.splitter();
+            myApp.user.getInvitatonByEmail(data.email).once("value", function (invitationSnapshot) {
+                let invitationsData = invitationSnapshot.val();
+                if (invitationsData) {
+                    let id = Object.keys(invitationsData);
+                    if (invitationsData[id] && invitationsData[id].status === 'NEW') {
+                        let userId = myApp.user.id();
+                        myApp.flat.addTenant(userId, invitationsData[id].flat, id);
+                    } else {
+                        myNavigator.pushPage('html/user/set_role.html');
+                    }
+                } else {
+                    myNavigator.pushPage('html/user/set_role.html');
+                }
+            });
         }).catch(function (error) {
             console.log(error);
         });
@@ -160,8 +172,8 @@ myApp.services.user = {
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
 
-        myApp.user.current().once('value').then(function(userSnapshot) {
-           let user = userSnapshot.val();
+        myApp.user.current().once('value').then(function (userSnapshot) {
+            let user = userSnapshot.val();
             if (myApp.user.isTenant(user.role) && user.status !== 'DELETED_BY_SELF') {
                 let deleteButton = ons.createElement(
                     '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
@@ -191,29 +203,18 @@ myApp.services.user = {
 
     addTenant: function (page) {
         let user = form.serialize(page);
-        myApp.user.getByEmail(user.email).on("value", function (user) {
-            if (user.val()) {
-                let usersData = user.val();
+        myApp.user.getByEmail(user.email).on("value", function (userSnapshot) {
+            if (userSnapshot.val()) {
+                let usersData = userSnapshot.val();
                 let id = Object.keys(usersData);
                 if (usersData[id].flat || myApp.user.isLandlord(usersData[id].role)) {
-                    //jak ma mieszkanie lub jest właścicielem mieszkania
+                    ons.notification.alert({message: "Nie możesz zaprosić do mieszkania użytkownika, który ma mieszkanie lub jest właścicielem mieszkania"});
                 } else {
                     let flatId = myApp.services.flat.current();
-                    let updates = {};
-                    updates['/flats/' + flatId + '/tenants/' + id] = true;
-                    updates['/users/' + id + '/flat/'] = flatId;
-                    updates['/users/' + id + '/role'] = 'TENANT';
-                    updates['/users/' + id + '/status'] = 'WAITING';
-                    return firebase.database().ref().update(updates, function (error) {
-                        if (error) {
-                            console.log(error)
-                        } else {
-                            myNavigator.pushPage('landlordSplitter.html');
-                        }
-                    });
+                    myApp.flat.addTenant(id, flatId);
                 }
             } else {
-                console.log('nie ma');
+                myApp.user.invitation(user.email);
             }
         });
     },

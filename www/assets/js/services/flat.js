@@ -281,7 +281,7 @@ myApp.services.flat = {
 
     update: function (page) {
         myApp.flat.current().once('value').then(function (flatSnapshot) {
-            let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page))
+            let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page));
             firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
                 myApp.user.splitter();
             }).catch(
@@ -330,7 +330,7 @@ myApp.services.flat = {
         }).then(function (index) {
             if (index === 0) {
                 if(flat.tenants && Object.keys(flat.tenants).length > 0) {
-                    ons.notification.alert({message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokaorzy"});
+                    ons.notification.alert({message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokatorzy"});
                 } else {
                     let updates = {};
                     let userId = myApp.user.id();
