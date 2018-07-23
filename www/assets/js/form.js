@@ -35,6 +35,19 @@ window.form = {
             });
         }
 
+        if(form.hasClass('edit-bill')) {
+            let media = ['gas', 'water', 'wastes', 'power'];
+
+            data['details'] = {};
+
+            $.each(media, function (key, value) {
+                if (data[value]) {
+                    data['details'][value] = data[value] ? parseFloat(data[value]).toFixed(2) : 0.00;
+                }
+                delete data[value];
+            });
+        }
+
         return data;
     }
 };

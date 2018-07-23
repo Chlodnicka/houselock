@@ -25,15 +25,17 @@ myApp.services.bill = {
     count: function (now, flat, bill) {
         let sum = 0;
         let details = {};
+        let meters = {};
         if (flat.config) {
             $.each(flat.config, function (key, value) {
-                if (value.type === 'STATIC') {
+                if (value.type === 'static') {
                     sum += details[key] = parseFloat(value.value);
-                } else if (value.type === 'METER') {
-                    let billValue = bill[key] ? bill[key] : '0.00';
-                    sum += details[key] = parseFloat(billValue) * parseFloat(value.value);
-                } else if (value.type === 'BILL' && bill[key]) {
-                    sum += details[key] = parseFloat(bill[key]);
+                } else if (value.type === 'metric') {
+                    let billValue = bill.details[key] ? bill.details[key] : '0.00';
+                    sum += details[key] = (parseFloat(billValue) - flat.meters[key]) * parseFloat(value.value);
+                    meters[key] = parseFloat(billValue);
+                } else if (value.type === 'bill' && bill.details[key]) {
+                    sum += details[key] = parseFloat(bill.details[key]);
                 }
             });
         }
@@ -42,7 +44,8 @@ myApp.services.bill = {
             sum: sum,
             details: details,
             date: now.getFullYear() + '_' + now.getMonth(),
-            status: 'NEW'
+            status: 'NEW',
+            meters: meters
         };
     },
 
@@ -137,7 +140,7 @@ myApp.services.bill = {
             let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
 
             saveBtn.onclick = function () {
-                myApp.services.bill.update(page)
+                myApp.services.bill.update(page, flat, info.id)
             };
 
             let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
@@ -189,15 +192,15 @@ myApp.services.bill = {
                 } else {
                     // if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
                     //todo:ogarnięcie statusów
-                        let pay = ons.createElement(
-                            '<ons-button component="button/pay">Zapłać</ons-button>'
-                        );
+                    let pay = ons.createElement(
+                        '<ons-button component="button/pay">Zapłać</ons-button>'
+                    );
 
-                        pay.onclick = function () {
-                            myApp.services.bill.pay(info.id);
-                        };
+                    pay.onclick = function () {
+                        myApp.services.bill.pay(info.id);
+                    };
 
-                        page.querySelector('.content').appendChild(pay);
+                    page.querySelector('.content').appendChild(pay);
                     // }
                 }
             });
@@ -205,46 +208,47 @@ myApp.services.bill = {
     },
 
     fillConfig: function (page, info, config) {
-        if (info.details.gas) {
+        if (config.gas) {
             myApp.services.bill.fillConfigElement(page, info, config.gas.type, 'Gaz', 'gas');
         }
 
-        if (info.details.power !== undefined) {
+        if (config.power !== undefined) {
             myApp.services.bill.fillConfigElement(page, info, config.power.type, 'Prąd', 'power');
         }
 
-        if (info.details.water !== undefined) {
+        if (config.water !== undefined) {
             myApp.services.bill.fillConfigElement(page, info, config.water.type, 'Woda', 'water');
         }
 
-        if (info.details.waste_water !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.waste_water.type, 'Ścieki', 'waste_water');
+        if (config.wastes !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.wastes.type, 'Ścieki', 'wastes');
         }
 
-        if (info.details.rent !== undefined) {
+        if (config.rent !== undefined) {
             myApp.services.bill.fillConfigElement(page, info, config.rent.type, 'Czynsz', 'rent');
         }
 
-        if (info.details.tv !== undefined) {
+        if (config.tv !== undefined) {
             myApp.services.bill.fillConfigElement(page, info, config.tv.type, 'Telewizja', 'tv');
         }
 
-        if (info.details.internet !== undefined) {
+        if (config.internet !== undefined) {
             myApp.services.bill.fillConfigElement(page, info, config.internet.type, 'Internet', 'internet');
         }
     },
 
     fillConfigElement: function (page, info, config, name, index) {
         let configMessage = myApp.services.common.parseConfig(config);
+        let value = info.details[index] === undefined ? '0.00' : info.details[index];
         let edit = configMessage ?
-            myApp.services.bill.configEdit(name, index, info.details[index], configMessage, config)
+            myApp.services.bill.configEdit(name, index, value, configMessage, config)
             : '';
 
-        bill = ons.createElement(
+        let bill = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">' + name + ':</div>' +
-            '<div class="right" id="">' + parseFloat(info.details[index]).toFixed(2) + '</div>' +
+            '<div class="right" id="">' + parseFloat(value).toFixed(2) + '</div>' +
             '</ons-list-item>' +
             edit +
             '</div>'
@@ -255,12 +259,12 @@ myApp.services.bill = {
 
     configEdit: function (name, index, value, configMessage, config) {
         let edit = '<div class="edit" style="display: none;">' +
-            '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
+            '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + configMessage + '" value="';
 
         // if (config === 'metric') {
         //     // edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
         // } else {
-            edit += parseFloat(value).toFixed(2);
+        edit += parseFloat(value).toFixed(2);
         // }
 
 
@@ -270,8 +274,26 @@ myApp.services.bill = {
     },
 
     // Update bill
-    update: function (page) {
-        ajax.sendForm(page, myApp.services.common.updateFlat);
+    update: function (page, flat, id) {
+        let now = new Date();
+        let billForm = form.serialize(page);
+        myApp.bill.get(id).once('value').then(function (billSnapshot) {
+            let billDetails = $.extend({}, billSnapshot.val().details, billForm.details);
+            let billData = $.extend({}, billSnapshot.val(), billForm);
+            billData.details = billDetails;
+            let bill = myApp.services.bill.count(now, flat, billData);
+            billData.sum = bill.sum;
+            firebase.database().ref('bills/' + id).set(billData).then(function () {
+                let meters = $.extend({}, flat.meters, bill.meters);
+                firebase.database().ref('flats/' + myApp.flat.id() + '/meters/').set(meters).then(function () {
+                    myApp.user.splitter();
+                }).catch(
+                    //error
+                );
+            }).catch(
+                //error
+            );
+        });
     },
 
 
