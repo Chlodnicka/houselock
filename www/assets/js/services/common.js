@@ -86,7 +86,7 @@ myApp.services.common = {
             case 'PAID':
                 return 'opłacony';
                 break;
-            case 'PARTIALLY PAID':
+            case 'PARTIALLY_PAID':
                 return 'częściowo opłacony';
                 break;
             case 'UNPAID':
