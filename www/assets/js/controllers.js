@@ -4,24 +4,37 @@
 
 myApp.controllers = {
 
+    setRolePage: function (page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/landlord"]'), function (element) {
+            element.onclick = function () {
+                myApp.user.setRole('LANDLORD');
+            };
+        });
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/tenant"]'), function (element) {
+            element.onclick = function () {
+                myApp.user.setRole('TENANT');
+            };
+        });
+    },
+
     //Loader page
     loaderPage: function (page) {
-        if (myApp.services.common.token.get()) {
-            myApp.services.common.token.check();
-        } else {
-            if (myApp.services.common.checkCredentials()) {
-                myApp.services.common.authorize();
-            } else {
-                myApp.services.common.redirectToLogin();
-            }
-        }
+        myApp.services.common.checkCredentials();
     },
 
     //Login page
     loginPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/login"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.authorizeSuccess, myApp.services.common.authorizeFail);
+                let form = page.querySelector('form');
+                let email = $(form).find('#username').children('input').val();
+                let password = $(form).find('#password').children('input').val();
+                firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
+                    myApp.services.common.checkCredentials();
+                }).catch(function (error) {
+                        console.log(error);
+                        // myApp.services.common.authorizeFail()
+                    });
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
@@ -34,7 +47,17 @@ myApp.controllers = {
     registerPage: function (page) {
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register"]'), function (element) {
             element.onclick = function () {
-                ajax.sendForm(page, myApp.services.common.authorizeRegister, myApp.services.common.authorizeFail);
+                let email = $(page.querySelector('form')).find('#email').children('input').val();
+                let password = $(page.querySelector('form')).find('#password').children('input').val();
+                let data = form.serialize(page);
+                delete data.password;
+                firebase.auth().createUserWithEmailAndPassword(email, password)
+                    .then(function (user) {
+                        myApp.services.user.create(data);
+                    })
+                    .catch(function (error) {
+                        myApp.services.common.authorizeFail()
+                    });
             };
         });
     },
@@ -67,35 +90,13 @@ myApp.controllers = {
 
     //Flat list page
     flatListPage: function (page) {
-        let flats = myApp.user.flats();
-
-        myApp.services.flat.addAction(page);
-
-        if (Object.keys(flats).length === 0) {
-            myApp.services.flat.emptyList(page);
-        } else {
-            myApp.services.flat.list(page, flats);
-        }
-
+        myApp.services.flat.list(page);
     },
 
     //Single flat page
     flatPage: function (page) {
-        if (myApp.user.isLandlord()) {
-            if ((page.data && Object.keys(page.data).length !== 0) || myApp.user.currentFlat() !== undefined) {
-                let info = myApp.user.currentFlat() ? myApp.user.currentFlat() : page.data.element;
-                myApp.services.dashboard.displayCurrentFlat(page, info);
-                myApp.services.flat.displayActions(page, info);
-            } else {
-                let flats = myApp.user.flats();
-                myApp.services.flat.emptyFlatLandlord(page);
-                myApp.services.flat.list(page, flats);
-                myApp.services.flat.addAction(page);
-            }
-        } else if (myApp.user.currentFlat() !== undefined) {
-            let info = myApp.user.currentFlat();
-            myApp.services.dashboard.displayCurrentFlat(page, info);
-        }
+        let id = myApp.services.flat.current();
+        myApp.services.flat.display(page, id);
     },
 
     //New flat page
@@ -113,17 +114,10 @@ myApp.controllers = {
     },
 
     billListPage: function (page) {
-        let bills = myApp.flat.bills();
-        if (Object.keys(bills).length === 0) {
-            myApp.services.bill.emptyList(page);
-        } else {
-            myApp.services.bill.list(page, bills);
-        }
+        myApp.services.bill.list(page);
     },
 
     billPage: function (page) {
-        //todo: display_bill
-        //todo: edit_bill
         myApp.services.bill.fill(page, page.data.element);
     },
 
@@ -133,28 +127,23 @@ myApp.controllers = {
                 document.querySelector('#myNavigator').pushPage('html/user/user_new.html');
             };
         });
-        let tenants = myApp.flat.tenants();
-        if (Object.keys(tenants).length === 0) {
-            myApp.services.user.emptyList(page);
-        } else {
-            myApp.services.user.list(page, tenants);
-        }
+        myApp.services.user.list(page);
     },
 
     //User info page
     userPage: function (page) {
+        myApp.user.role().once('value').then(function (role) {
+            if (myApp.user.isTenant(role.val())) {
+                let backButton = page.querySelector('.back-button');
+                $(backButton).remove();
+            }
+            myApp.services.user.display(page);
 
-        if (myApp.user.isTenant()) {
-            let backButton = page.querySelector('.back-button');
-            $(backButton).remove();
-        }
-
-        myApp.services.user.fill(page);
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.common.redirectToLogin();
-            };
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/logout"]'), function (element) {
+                element.onclick = function () {
+                    myApp.services.common.redirectToLogin();
+                };
+            });
         });
     },
 
@@ -165,23 +154,15 @@ myApp.controllers = {
     },
 
     tenantNewPage: function (page) {
-        form = $(page.querySelector('form'));
-        let action = form.attr('data-ajax').replace('{id}', myApp.user.currentFlatId());
-        form.attr('data-ajax', action);
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/save"]'), function (element) {
             element.onclick = function () {
-                myApp.services.common.save(page, myApp.services.common.updateFlat);
+                myApp.services.user.addTenant(page);
             };
         });
     },
 
     dashboardPage: function (page) {
-        let lastBill = myApp.flat.bill();
-        if (Object.keys(lastBill).length === 0) {
-            myApp.services.dashboard.noLastBill(page);
-        } else {
-            myApp.services.bill.fill(page, lastBill);
-        }
+        myApp.services.dashboard.lastBill(page);
     },
 
     userNoFlatPage: function (page) {
@@ -193,29 +174,31 @@ myApp.controllers = {
     },
 
     userAcceptPage: function (page) {
-        let flatInfo = myApp.flat.currentFlat();
-        let flat_number = flatInfo.flat_number ? '/' + flatInfo.flat_number : '';
-        let flat = ons.createElement(
-            '<div>' +
-            '<ons-list-item>Ulica i numer: ' + flatInfo.street + ' ' + flatInfo.building_number + flat_number + '</ons-list-item>' +
-            '<ons-list-item>Miasto: ' + flatInfo.city + '</ons-list-item>' +
-            '</div>'
-        );
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flatData = flatSnapshot.val();
+            let flat_number = flatData.flat_number ? '/' + flatData.flat_number : '';
+            let flat = ons.createElement(
+                '<div>' +
+                '<ons-list-item>Ulica i numer: ' + flatData.street + ' ' + flatData.building_number + flat_number + '</ons-list-item>' +
+                '<ons-list-item>Miasto: ' + flatData.city + '</ons-list-item>' +
+                '</div>'
+            );
 
-        page.querySelector('.flat_info').appendChild(flat);
+            page.querySelector('.flat_info').appendChild(flat);
 
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.user.accept();
-            };
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/accept"]'), function (element) {
+                element.onclick = function () {
+                    myApp.services.user.accept();
+                };
+            });
+
+            Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
+                element.onclick = function () {
+                    myApp.services.user.ignore();
+                };
+            });
+
         });
-
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/ignore"]'), function (element) {
-            element.onclick = function () {
-                myApp.services.user.ignore();
-            };
-        });
-
     },
 
     userAcceptRemovalPage: function (page) {

@@ -2,11 +2,68 @@
 // Bill Service //
 ////////////////////
 myApp.services.bill = {
-    list: function (page, bills) {
-        for (let id in bills) {
-            let bill = bills[id];
-            myApp.services.bill.item(page, bill);
+
+    create: function () {
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flat = flatSnapshot.val();
+            let now = new Date();
+            let bill = myApp.services.bill.count(now, flat, {});
+            let updates = {};
+            let billKey = firebase.database().ref().child('bills').push().key;
+            updates['/bills/' + billKey] = bill;
+            updates['/flats/' + myApp.flat.id() + '/bills/' + billKey] = {date: now.getFullYear() + '_' + now.getMonth()};
+            return firebase.database().ref().update(updates, function (error) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    myNavigator.pushPage('landlordSplitter.html');
+                }
+            });
+        })
+    },
+
+    count: function (now, flat, bill) {
+        let sum = 0;
+        let details = {};
+        let meters = {};
+        if (flat.config) {
+            $.each(flat.config, function (key, value) {
+                if (value.type === 'static') {
+                    sum += details[key] = parseFloat(value.value);
+                } else if (value.type === 'metric') {
+                    let billValue = bill.details[key] ? bill.details[key] : '0.00';
+                    sum += details[key] = (parseFloat(billValue) - flat.meters[key]) * parseFloat(value.value);
+                    meters[key] = parseFloat(billValue);
+                } else if (value.type === 'bill' && bill.details[key]) {
+                    sum += details[key] = parseFloat(bill.details[key]);
+                }
+            });
         }
+        sum += parseFloat(flat.mercenary);
+        return {
+            sum: sum,
+            details: details,
+            date: now.getFullYear() + '_' + now.getMonth(),
+            status: 'NEW',
+            meters: meters
+        };
+    },
+
+    list: function (page) {
+        myApp.bill.list().once('value').then(function (flatBills) {
+            if (flatBills.numChildren() === 0) {
+                myApp.services.bill.emptyList(page);
+            } else {
+                flatBills.forEach(function (flatBill) {
+                    let billId = flatBill.key;
+                    myApp.bill.get(billId).once('value').then(function (bill) {
+                        myApp.services.bill.item(page, billId, bill.val());
+                    });
+                });
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
     },
 
     emptyList: function (page) {
@@ -14,9 +71,10 @@ myApp.services.bill = {
         page.querySelector('.content').appendChild(info);
     },
 
-    item: function (page, bill) {
-        let date = myApp.services.common.parseMonth(bill.month) + ' ' + bill.year,
-            name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.payment_status);
+    item: function (page, id, bill) {
+        let billDate = bill.date.split('_');
+        let date = myApp.services.common.parseMonth(billDate[1]) + ' ' + billDate[0],
+            name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.status);
 
         let billItem = ons.createElement(
             '<div>' +
@@ -24,6 +82,7 @@ myApp.services.bill = {
             '</div>'
         );
 
+        bill['id'] = id;
 
         billItem.querySelector('.center').onclick = function () {
             myNavigator.pushPage('html/bill/bill_info.html',
@@ -35,167 +94,160 @@ myApp.services.bill = {
                 });
         };
 
-        page.querySelector('.content').insertBefore(billItem);
+        $(page).find('.content').prepend(billItem);
     },
 
     fill: function (page, info) {
-
-        let month = myApp.services.common.parseMonth(info.month);
+        let billDate = info.date.split('_');
+        let month = myApp.services.common.parseMonth(billDate[1]);
 
         if (page.getAttribute('id') !== 'dashboardPage') {
-            let date = month + ' ' + info.year;
+            let date = month + ' ' + billDate[0];
 
             page.querySelector('.bill_name').appendChild(document.createTextNode(date));
         }
 
-        let flat = myApp.user.currentFlat(),
-            payDay = flat.pay_day + ' ' + month + ' ' + info.year;
+        myApp.flat.current().once('value').then(function (flatSnapshot) {
+            let flat = flatSnapshot.val();
+            let payDay = flat.pay_day + ' ' + month + ' ' + billDate[0];
 
-        let sum = parseFloat(info.sum).toFixed(2);
+            let sum = parseFloat(info.sum).toFixed(2);
 
-        if (myApp.user.isTenant()) {
-            let countTenant = Object.keys(myApp.flat.tenants()).length;
-            sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
-        } else {
-            sum += ' zł';
-        }
-
-        let billMainInfo = ons.createElement(
-            '<div>' +
-            '<ons-list-item>' +
-            '<div class="left">Do kiedy płatny:</div>' +
-            '<div class="right" id="">' + payDay + '</div>' +
-            '</ons-list-item>' +
-            '<div>' +
-            '<ons-list-item>' +
-            '<div class="left">Do zapłaty:</div>' +
-            '<div class="right" id="">' + sum + '</div>' +
-            '</ons-list-item>' +
-            '</div>'
-        );
-        page.querySelector('form').appendChild(billMainInfo);
-
-        myApp.services.bill.fillConfig(page, info, flat.flat_config);
-
-        let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
-
-        saveBtn.onclick = function () {
-            myApp.services.bill.update(page)
-        };
-
-        let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
-
-        let form = page.querySelector('form');
-        form.appendChild(saveBtn);
-        form.appendChild(cancelBtn);
-
-        myApp.services.common.parseAction(form, info.id);
-        myApp.services.common.cancel(page);
-
-        if (myApp.user.isLandlord()) {
-            if (info.payment_status === 'NEW' || info.payment_status === 'UNPAID') {
-                let edit = ons.createElement(
-                    '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
-                );
-
-                page.querySelector('form').appendChild(edit);
-
-                myApp.services.common.edit(page);
-
-                let reload = ons.createElement(
-                    '<ons-button component="button/reload">Przeładuj rachunek</ons-button>'
-                );
-
-                reload.onclick = function () {
-                    ajax.send('post', '/api/bill/' + info.id + '/reload', {}, myApp.services.common.updateFlat);
-                };
-
-                page.querySelector('form').appendChild(reload);
+            if (myApp.user.isTenant()) {
+                let countTenant = Object.keys(myApp.flat.tenants()).length;
+                sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
+            } else {
+                sum += ' zł';
             }
 
-            if (info.payment_status === 'NEW' || info.payment_status === 'PARTIALLY PAID') {
+            let billMainInfo = ons.createElement(
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do kiedy płatny:</div>' +
+                '<div class="right" id="">' + payDay + '</div>' +
+                '</ons-list-item>' +
+                '<div>' +
+                '<ons-list-item>' +
+                '<div class="left">Do zapłaty:</div>' +
+                '<div class="right" id="">' + sum + '</div>' +
+                '</ons-list-item>' +
+                '</div>'
+            );
+            page.querySelector('form').appendChild(billMainInfo);
 
-                let markAsPaid = ons.createElement(
-                    '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
-                );
+            myApp.services.bill.fillConfig(page, info, flat.config);
 
-                markAsPaid.onclick = function () {
-                    myApp.services.bill.markAsPaid(info.id);
-                };
+            let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
 
-                page.querySelector('.content').appendChild(markAsPaid);
+            saveBtn.onclick = function () {
+                myApp.services.bill.update(page, flat, info.id)
+            };
 
-            }
+            let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
 
-            if (info.payment_status === 'UNPAID') {
-                let resendAlert = ons.createElement(
-                    '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
-                );
+            let form = page.querySelector('form');
+            form.appendChild(saveBtn);
+            form.appendChild(cancelBtn);
 
-                resendAlert.onclick = function () {
-                    myApp.services.bill.resendAlert(info.id);
-                };
+            myApp.services.common.cancel(page);
 
-                page.querySelector('.content').appendChild(resendAlert);
-            }
-        }
+            myApp.user.role().once('value').then(function (roleSnapshot) {
+                let role = roleSnapshot.val();
+                if (myApp.user.isLandlord(role)) {
+                    if (info.status === 'NEW' || info.status === 'UNPAID') {
+                        let edit = ons.createElement(
+                            '<ons-button component="button/edit">Edytuj rachunek</ons-button>'
+                        );
 
-        if (myApp.user.isTenant()) {
-            if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
-                let pay = ons.createElement(
-                    '<ons-button component="button/pay">Zapłać</ons-button>'
-                );
+                        page.querySelector('form').appendChild(edit);
 
-                pay.onclick = function () {
-                    myApp.services.bill.pay(info.id);
-                };
+                        myApp.services.common.edit(page);
+                    }
 
-                page.querySelector('.content').appendChild(pay);
-            }
-        }
+                    if (info.status === 'NEW' || info.status === 'PARTIALLY_PAID') {
+
+                        let markAsPaid = ons.createElement(
+                            '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
+                        );
+
+                        markAsPaid.onclick = function () {
+                            myApp.services.bill.markAsPaid(info, flat);
+                        };
+
+                        page.querySelector('.content').appendChild(markAsPaid);
+
+                    }
+
+                    if (info.status === 'UNPAID') {
+                        let resendAlert = ons.createElement(
+                            '<ons-button component="button/resend-alert">Przypomnij o płatności</ons-button>'
+                        );
+
+                        resendAlert.onclick = function () {
+                            myApp.services.bill.resendAlert(info.id);
+                        };
+
+                        page.querySelector('.content').appendChild(resendAlert);
+                    }
+                } else {
+                    if (info.status !== 'PAID' && !(info.tenants !== undefined && info.tenants[myApp.user.id()])) {
+                        let pay = ons.createElement(
+                            '<ons-button component="button/pay">Zapłać</ons-button>'
+                        );
+
+                        pay.onclick = function () {
+                            myApp.services.bill.pay(flat, info);
+                        };
+
+                        page.querySelector('.content').appendChild(pay);
+                    }
+                }
+            });
+        });
     },
 
     fillConfig: function (page, info, config) {
-        if (info.gas_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.gas.config_type, 'Gaz', 'gas');
+        if (config.gas) {
+            myApp.services.bill.fillConfigElement(page, info, config.gas.type, 'Gaz', 'gas');
         }
 
-        if (info.power_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.power.config_type, 'Prąd', 'power');
+        if (config.power !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.power.type, 'Prąd', 'power');
         }
 
-        if (info.water_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.water.config_type, 'Woda', 'water');
+        if (config.water !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.water.type, 'Woda', 'water');
         }
 
-        if (info.waste_water_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.waste_water.config_type, 'Ścieki', 'waste_water');
+        if (config.wastes !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.wastes.type, 'Ścieki', 'wastes');
         }
 
-        if (info.rent_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.rent.config_type, 'Czynsz', 'rent');
+        if (config.rent !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.rent.type, 'Czynsz', 'rent');
         }
 
-        if (info.tv_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.tv.config_type, 'Telewizja', 'tv');
+        if (config.tv !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.tv.type, 'Telewizja', 'tv');
         }
 
-        if (info.internet_price !== null) {
-            myApp.services.bill.fillConfigElement(page, info, config.internet.config_type, 'Internet', 'internet');
+        if (config.internet !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, config.internet.type, 'Internet', 'internet');
         }
     },
 
     fillConfigElement: function (page, info, config, name, index) {
         let configMessage = myApp.services.common.parseConfig(config);
+        let value = info.details[index] === undefined ? '0.00' : info.details[index];
         let edit = configMessage ?
-            myApp.services.bill.configEdit(name, index, info[index + '_price'], configMessage, config)
+            myApp.services.bill.configEdit(name, index, value, configMessage, config)
             : '';
 
-        bill = ons.createElement(
+        let bill = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">' + name + ':</div>' +
-            '<div class="right" id="">' + parseFloat(info[index + '_price']).toFixed(2) + '</div>' +
+            '<div class="right" id="">' + parseFloat(value).toFixed(2) + '</div>' +
             '</ons-list-item>' +
             edit +
             '</div>'
@@ -206,13 +258,14 @@ myApp.services.bill = {
 
     configEdit: function (name, index, value, configMessage, config) {
         let edit = '<div class="edit" style="display: none;">' +
-            '<ons-input name="name" modifier="underbar" id="' + index + '_price" placeholder="' + configMessage + '" value="';
+            '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + configMessage + '" value="';
 
-        if (config === 'metric') {
-            edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
-        } else {
-            edit += parseFloat(value).toFixed(2);
-        }
+        // if (config === 'metric') {
+        //     // edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
+        // } else {
+        edit += parseFloat(value).toFixed(2);
+        // }
+
 
         edit += '" float class="edit hidden">';
         edit += '</ons-input></div>';
@@ -220,19 +273,65 @@ myApp.services.bill = {
     },
 
     // Update bill
-    update: function (page) {
-        ajax.sendForm(page, myApp.services.common.updateFlat);
+    update: function (page, flat, id) {
+        let now = new Date();
+        let billForm = form.serialize(page);
+        myApp.bill.get(id).once('value').then(function (billSnapshot) {
+            let billDetails = $.extend({}, billSnapshot.val().details, billForm.details);
+            let billData = $.extend({}, billSnapshot.val(), billForm);
+            billData.details = billDetails;
+            let bill = myApp.services.bill.count(now, flat, billData);
+            billData.sum = bill.sum;
+            firebase.database().ref('bills/' + id).set(billData).then(function () {
+                let meters = $.extend({}, flat.meters, bill.meters);
+                firebase.database().ref('flats/' + myApp.flat.id() + '/meters/').set(meters).then(function () {
+                    myApp.user.splitter();
+                }).catch(
+                    //error
+                );
+            }).catch(
+                //error
+            );
+        });
     },
 
 
     // Pay bill
-    pay: function (id) {
-        ajax.send('post', '/api/bill/pay/' + id, {}, myApp.services.common.updateFlat)
+    pay: function (flat, bill) {
+        console.log()
+        let id = bill.id;
+        delete bill.id;
+        bill.status = 'PARTIALLY_PAID';
+        if(bill.tenants === undefined) {
+            bill['tenants'] = {};
+        }
+        bill['tenants'][myApp.user.id()] = true;
+        if (Object.keys(flat.tenants).length === 1 || (bill.tenants && Object.keys(flat.tenants).length === Object.keys(bill.tenants).length)) {
+            bill.status = 'PAID';
+        }
+        firebase.database().ref('bills/' + id + '/').set(bill).then(function () {
+            myApp.user.splitter();
+        }).catch(
+            //error
+        );
     },
 
     //Mark bill as paid
-    markAsPaid: function (id) {
-        ajax.send('post', '/api/bill/' + id + '/markAsPaid', {}, myApp.services.common.updateFlat);
+    markAsPaid: function (bill, flat) {
+       bill.status = 'PAID';
+        if(bill.tenants === undefined) {
+            bill['tenants'] = {};
+        }
+        $.each(flat.tenants, function (key, value) {
+           bill.tenants[key] = value;
+        });
+        let id = bill.id;
+        delete bill.id;
+        firebase.database().ref('bills/' + id + '/').set(bill).then(function () {
+            myApp.user.splitter();
+        }).catch(
+            //error
+        );
     },
 
     resendAlert: function (id) {

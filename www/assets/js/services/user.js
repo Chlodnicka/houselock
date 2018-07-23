@@ -3,6 +3,27 @@
 ////////////////////
 myApp.services.user = {
 
+    create: function (data) {
+        myApp.user.create(data).then(function () {
+            myApp.user.getInvitatonByEmail(data.email).once("value", function (invitationSnapshot) {
+                let invitationsData = invitationSnapshot.val();
+                if (invitationsData) {
+                    let id = Object.keys(invitationsData);
+                    if (invitationsData[id] && invitationsData[id].status === 'NEW') {
+                        let userId = myApp.user.id();
+                        myApp.flat.addTenant(userId, invitationsData[id].flat, id);
+                    } else {
+                        myNavigator.pushPage('html/user/set_role.html');
+                    }
+                } else {
+                    myNavigator.pushPage('html/user/set_role.html');
+                }
+            });
+        }).catch(function (error) {
+            console.log(error);
+        });
+    },
+
     userAlerts: function (page) {
         let alerts = myApp.user.alerts();
 
@@ -92,50 +113,20 @@ myApp.services.user = {
             .show(element);
     },
 
-    getInfo: function (response) {
-        sessionStorage.setItem('isLoggedIn', true);
-        localStorage.setItem('role', response.data[0]);
-        ajax.send('get', '/api/all', '{}', myApp.services.user.setData, myApp.services.common.redirectToLogin);
-    },
-
-    setData: function (response) {
-        localStorage.setItem('userData', JSON.stringify(response));
-        myApp.services.user.setAppForUser();
-    },
-
-    setAppForUser: function () {
-        if (myApp.user.isLandlord()) {
-            if (myApp.user.flats()) {
-                if (myApp.user.currentFlat()) {
-                    myNavigator.pushPage('landlordSplitter.html');
-                } else {
-                    myNavigator.pushPage('html/flat/flat_info.html');
-                }
-            } else {
-                myNavigator.pushPage('html/flat/flat_info.html');
-            }
-        } else if (myApp.user.isTenant()) {
-            let flats = myApp.user.flats();
-            let id = Object.keys(flats)[0];
-            if (id && myApp.user.status() === 'ACTIVE') {
-                myApp.services.common.setCurrentFlat(id);
-            } else if (id && myApp.user.status() === 'DELETED_BY_LANDLORD') {
-                myNavigator.pushPage('html/user/user_deleted.html');
-            } else if (myApp.user.hasInvitation()) {
-                localStorage.setItem('currentFlat', id);
-                ajax.send('get', '/api/flat/' + id, '{}', myApp.services.common.updateFlatInvitation);
-            } else {
-                myNavigator.pushPage('html/user/user_no_flat.html');
-            }
+    display: function (page, id) {
+        if (id) {
+            myApp.user.get(id).once('value').then(function (user) {
+                myApp.services.user.fill(page, user.val());
+            });
         } else {
-            myApp.services.common.clearAll();
-            myApp.services.common.redirectToLogin();
+            myApp.user.current().once('value').then(function (user) {
+                myApp.services.user.fill(page, user.val());
+            });
         }
     },
 
-    fill: function (page, data) {
+    fill: function (page, userData) {
         let card = page.querySelector('form'),
-            userData = data ? data : myApp.user.data(),
             phone = userData.phone ? userData.phone : '',
             account = userData.account_number ? userData.account_number : '',
             firstname = userData.firstname ? userData.firstname : '',
@@ -143,16 +134,19 @@ myApp.services.user = {
 
         let status = '';
         if (userData.status) {
-            status = '<ons-list-item>' + myApp.services.common.parseStatus(userData.status) + '</ons-list-item>'
+            status = '<ons-list-item>STATUS: ' + myApp.services.common.parseStatus(userData.status) + '</ons-list-item>'
         }
 
         let userInfo = ons.createElement(
             '<div>' +
             status +
-            '<ons-list-item class="fullname">Imię i nazwisko: ' + userData.fullname + '</ons-list-item>' +
+            '<ons-list-item class="firstname">Imię: ' + userData.firstname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
             '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + firstname + '" float class="edit hidden"> </ons-input>' +
-            '<ons-input id="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden""></ons-input>' +
+            '</div>' +
+            '<ons-list-item class="lastname">Nazwisko: ' + userData.lastname + '</ons-list-item>' +
+            '<div class="edit" style="display: none;">' +
+            '<ons-input id="lastname" name="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
             '<ons-list-item class="phone">Telefon: ' + phone + '</ons-list-item>' +
             '<div class="edit" style="display: none">' +
@@ -169,7 +163,7 @@ myApp.services.user = {
         ;
 
         userInfo.querySelector('[component="button/save"]').onclick = function () {
-            myApp.services.user.save(page)
+            myApp.services.user.update(page)
         };
 
 
@@ -178,28 +172,66 @@ myApp.services.user = {
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
 
-        if (myApp.user.isTenant() && userData.status !== 'DELETED_BY_SELF') {
-            let deleteButton = ons.createElement(
-                '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
+        myApp.user.current().once('value').then(function (userSnapshot) {
+            let user = userSnapshot.val();
+            if (myApp.user.isTenant(user.role) && user.status !== 'DELETED_BY_SELF') {
+                let deleteButton = ons.createElement(
+                    '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
+                );
+
+                deleteButton.onclick = function () {
+                    let userId = myApp.user.id();
+                    myApp.user.setDeleted(userId);
+                };
+
+                page.querySelector('.content').appendChild(deleteButton);
+            }
+        });
+
+    },
+
+    update: function (page) {
+        myApp.user.current().once('value').then(function (userSnapshot) {
+            let userData = $.extend({}, userSnapshot.val(), form.serialize(page))
+            firebase.database().ref('users/' + myApp.user.id()).set(userData).then(function () {
+                myApp.user.splitter();
+            }).catch(
+                //error
             );
-
-            deleteButton.onclick = function () {
-                ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate)
-            };
-
-            page.querySelector('.content').appendChild(deleteButton);
-        }
+        });
     },
 
-    save: function (page) {
-        ajax.sendForm(page, myApp.services.common.updateUser);
+    addTenant: function (page) {
+        let user = form.serialize(page);
+        myApp.user.getByEmail(user.email).on("value", function (userSnapshot) {
+            if (userSnapshot.val()) {
+                let usersData = userSnapshot.val();
+                let id = Object.keys(usersData);
+                if (usersData[id].flat || myApp.user.isLandlord(usersData[id].role)) {
+                    ons.notification.alert({message: "Nie możesz zaprosić do mieszkania użytkownika, który ma mieszkanie lub jest właścicielem mieszkania"});
+                } else {
+                    let flatId = myApp.services.flat.current();
+                    myApp.flat.addTenant(id, flatId);
+                }
+            } else {
+                myApp.user.invitation(user.email);
+            }
+        });
     },
 
-    list: function (page, users) {
-        for (let id in users) {
-            let user = users[id];
-            myApp.services.user.item(page, user);
-        }
+    list: function (page) {
+        myApp.flat.tenants().once('value').then(function (tenants) {
+            if (tenants.numChildren() === 0) {
+                myApp.services.user.emptyList(page);
+            } else {
+                tenants.forEach(function (tenant) {
+                    let userId = tenant.key;
+                    myApp.user.get(userId).once('value').then(function (user) {
+                        myApp.services.user.item(page, user.val(), userId);
+                    });
+                });
+            }
+        });
     },
 
     emptyList: function (page) {
@@ -207,7 +239,7 @@ myApp.services.user = {
         page.querySelector('.content').appendChild(info);
     },
 
-    item: function (page, user) {
+    item: function (page, user, id) {
 
         let name = user.lastname ? user.firstname + ' ' + user.lastname : user.email;
 
@@ -219,6 +251,7 @@ myApp.services.user = {
             '</div>'
         );
 
+        user['id'] = id;
 
         userItem.querySelector('.center').onclick = function () {
             myNavigator.pushPage('html/user/tenant_info.html',
@@ -234,23 +267,22 @@ myApp.services.user = {
     },
 
     accept: function () {
-        ajax.send('post', '/api/user/accept', {}, myApp.services.common.updateUser);
+        let updates = {};
+        let userId = myApp.user.id();
+        updates['/users/' + userId + '/status/'] = 'ACTIVE';
+
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error)
+            } else {
+                myApp.user.splitter();
+            }
+        });
     },
 
     ignore: function () {
-        ajax.send('post', '/api/user/ignore', {}, myApp.services.user.ignoreUpdate);
-    },
-
-    acceptRemoval: function () {
-        ajax.send('post', '/api/user/remove', {}, myApp.services.user.ignoreUpdate);
-    },
-
-    ignoreUpdate: function (response) {
-        let data = JSON.stringify(response);
-        localStorage.setItem('userData', data);
-        localStorage.removeItem('currentFlat');
-        localStorage.removeItem('flatData');
-        myNavigator.pushPage('html/user/user_no_flat.html');
+        let userId = myApp.user.id();
+        myApp.user.setDeleted(userId);
     },
 
     remove: function (page, info) {
@@ -270,10 +302,17 @@ myApp.services.user = {
                     ]
                 }).then(function (index) {
                     if (index === 0) {
-                        ajax.send('post', '/api/user/' + info.id + '/remove', {}, myApp.services.common.updateFlat);
+                        let userId = info.id;
+                        myApp.user.setDeleted(userId);
                     }
                 });
             };
         });
+    },
+
+    acceptRemoval: function () {
+        let userId = myApp.user.id();
+        myApp.user.setDeleted(userId);
     }
+
 };

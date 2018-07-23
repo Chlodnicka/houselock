@@ -4,71 +4,56 @@
 
 myApp.flat = {
 
-    currentFlat: function () {
+    id: function () {
+        return localStorage.getItem('currentFlat');
+    },
+
+    get: function (id) {
+        return firebase.database().ref('/flats/' + id);
+    },
+
+    current: function () {
         let id = localStorage.getItem('currentFlat');
-        return myApp.user.flats()[id];
-    },
-
-    getFlat: function (id) {
-        return myApp.user.flats()[id];
-    },
-
-    getAddress: function (id) {
-        let flat = this.getFlat(id);
-        let address = flat.street + ' ' + flat.building_number;
-        if (flat.flat_number) {
-            address += '/' + flat.flat_number;
+        if (id) {
+            return this.get(id);
         }
-        address += ' ' + flat.city;
-        return address;
     },
 
-    bills: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.bills) {
-            return info.bills;
+    config: function () {
+        let id = localStorage.getItem('currentFlat');
+        if (id) {
+            return firebase.database().ref('/flats/' + id + '/config');
         }
-        return {};
-    },
-
-    bill: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.last_bill) {
-            return info.last_bill;
-        }
-        return {};
     },
 
     tenants: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.tenants) {
-            return info.tenants;
+        let id = localStorage.getItem('currentFlat');
+        if (id) {
+            return firebase.database().ref('/flats/' + id + '/tenants');
         }
-        return {};
     },
 
-    meter: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.last_meter) {
-            return info.last_meter;
-        }
-        return {};
-    },
+    addTenant: function (userId, flatId, invitationId = null) {
+        let updates = {};
+        updates['/flats/' + flatId + '/tenants/' + userId] = true;
+        updates['/users/' + userId + '/flat/'] = flatId;
+        updates['/users/' + userId + '/role'] = 'TENANT';
+        updates['/users/' + userId + '/status'] = 'WAITING';
 
-    userBill: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.user_bill) {
-            return info.user_bill;
+        if (invitationId) {
+            updates['/invitations/' + invitationId + '/status'] = 'SEEN';
         }
-        return {};
-    },
-
-    userBills: function () {
-        let info = JSON.parse(localStorage.getItem('flatData')).data;
-        if (info.user_bills) {
-            return info.user_bills;
-        }
-        return {};
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error)
+            } else {
+                if (invitationId) {
+                    myApp.services.flat.setCurrent(flatId);
+                    myNavigator.pushPage('html/user/user_accept_invitation.html');
+                } else {
+                    myApp.user.splitter();
+                }
+            }
+        });
     }
-
 };
