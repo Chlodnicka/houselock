@@ -171,7 +171,7 @@ myApp.services.bill = {
                         );
 
                         markAsPaid.onclick = function () {
-                            myApp.services.bill.markAsPaid(info.id);
+                            myApp.services.bill.markAsPaid(info, flat);
                         };
 
                         page.querySelector('.content').appendChild(markAsPaid);
@@ -317,8 +317,21 @@ myApp.services.bill = {
     },
 
     //Mark bill as paid
-    markAsPaid: function (id) {
-        ajax.send('post', '/api/bill/' + id + '/markAsPaid', {}, myApp.services.common.updateFlat);
+    markAsPaid: function (bill, flat) {
+       bill.status = 'PAID';
+        if(bill.tenants === undefined) {
+            bill['tenants'] = {};
+        }
+        $.each(flat.tenants, function (key, value) {
+           bill.tenants[key] = value;
+        });
+        let id = bill.id;
+        delete bill.id;
+        firebase.database().ref('bills/' + id + '/').set(bill).then(function () {
+            myApp.user.splitter();
+        }).catch(
+            //error
+        );
     },
 
     resendAlert: function (id) {
