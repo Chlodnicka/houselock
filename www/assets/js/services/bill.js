@@ -164,7 +164,7 @@ myApp.services.bill = {
                         myApp.services.common.edit(page);
                     }
 
-                    if (info.status === 'NEW' || info.status === 'PARTIALLY PAID') {
+                    if (info.status === 'NEW' || info.status === 'PARTIALLY_PAID') {
 
                         let markAsPaid = ons.createElement(
                             '<ons-button component="button/mark-as-paid">Oznacz jako opłacony</ons-button>'
@@ -190,18 +190,17 @@ myApp.services.bill = {
                         page.querySelector('.content').appendChild(resendAlert);
                     }
                 } else {
-                    // if (myApp.flat.userBill() && myApp.flat.userBill().status !== 'PAID') {
-                    //todo:ogarnięcie statusów
-                    let pay = ons.createElement(
-                        '<ons-button component="button/pay">Zapłać</ons-button>'
-                    );
+                    if (info.status !== 'PAID' && !(info.tenants !== undefined && info.tenants[myApp.user.id()])) {
+                        let pay = ons.createElement(
+                            '<ons-button component="button/pay">Zapłać</ons-button>'
+                        );
 
-                    pay.onclick = function () {
-                        myApp.services.bill.pay(info.id);
-                    };
+                        pay.onclick = function () {
+                            myApp.services.bill.pay(flat, info);
+                        };
 
-                    page.querySelector('.content').appendChild(pay);
-                    // }
+                        page.querySelector('.content').appendChild(pay);
+                    }
                 }
             });
         });
@@ -298,8 +297,23 @@ myApp.services.bill = {
 
 
     // Pay bill
-    pay: function (id) {
-        ajax.send('post', '/api/bill/pay/' + id, {}, myApp.services.common.updateFlat)
+    pay: function (flat, bill) {
+        console.log()
+        let id = bill.id;
+        delete bill.id;
+        bill.status = 'PARTIALLY_PAID';
+        if(bill.tenants === undefined) {
+            bill['tenants'] = {};
+        }
+        bill['tenants'][myApp.user.id()] = true;
+        if (Object.keys(flat.tenants).length === 1 || (bill.tenants && Object.keys(flat.tenants).length === Object.keys(bill.tenants).length)) {
+            bill.status = 'PAID';
+        }
+        firebase.database().ref('bills/' + id + '/').set(bill).then(function () {
+            myApp.user.splitter();
+        }).catch(
+            //error
+        );
     },
 
     //Mark bill as paid
