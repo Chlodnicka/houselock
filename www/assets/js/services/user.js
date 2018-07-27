@@ -12,11 +12,7 @@ myApp.services.user = {
                     if (invitationsData[id] && invitationsData[id].status === 'NEW') {
                         let userId = myApp.user.id();
                         myApp.flat.addTenant(userId, invitationsData[id].flat, id);
-                    } else {
-                        myNavigator.pushPage('html/user/set_role.html');
                     }
-                } else {
-                    myNavigator.pushPage('html/user/set_role.html');
                 }
             });
         }).catch(function (error) {
@@ -203,7 +199,7 @@ myApp.services.user = {
 
     addTenant: function (page) {
         let user = form.serialize(page);
-        myApp.user.getByEmail(user.email).on("value", function (userSnapshot) {
+        myApp.user.getByEmail(user.email).once("value", function (userSnapshot) {
             if (userSnapshot.val()) {
                 let usersData = userSnapshot.val();
                 let id = Object.keys(usersData);
@@ -221,22 +217,41 @@ myApp.services.user = {
 
     list: function (page) {
         myApp.flat.tenants().once('value').then(function (tenants) {
-            if (tenants.numChildren() === 0) {
-                myApp.services.user.emptyList(page);
-            } else {
-                tenants.forEach(function (tenant) {
-                    let userId = tenant.key;
-                    myApp.user.get(userId).once('value').then(function (user) {
-                        myApp.services.user.item(page, user.val(), userId);
-                    });
-                });
-            }
+            myApp.flat.invitations().once('value').then(function (invitationsInfo) {
+                if (tenants.numChildren() === 0 && invitationsInfo.numChildren() === 0) {
+                    myApp.services.user.emptyList(page);
+                } else {
+                    if (tenants.numChildren() > 0) {
+                        tenants.forEach(function (tenant) {
+                            let userId = tenant.key;
+                            myApp.user.get(userId).once('value').then(function (user) {
+                                myApp.services.user.item(page, user.val(), userId);
+                            });
+                        });
+                    }
+
+                    if (invitationsInfo.numChildren() > 0) {
+                        invitationsInfo.forEach(function (invitation) {
+                            let invitationId = invitation.key;
+                            myApp.user.invitationInfo(invitationId).once('value').then(function (invitationInfo) {
+                                if (invitationInfo.val().status === 'NEW') {
+                                    myApp.services.user.item(page, invitationInfo.val());
+                                }
+                            });
+                        });
+                    }
+                }
+            });
         });
     },
 
     emptyList: function (page) {
         let info = ons.createElement('<div>Brak lokatorów. Dodaj ich do mieszkania.</div>');
-        page.querySelector('.content').appendChild(info);
+        let container = page.querySelector('.content');
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+        container.appendChild(info);
     },
 
     item: function (page, user, id) {
@@ -245,23 +260,31 @@ myApp.services.user = {
 
         let status = user.status ? myApp.services.common.parseStatus(user.status) : '';
 
+        let modifier = '';
+
+        if (id) {
+            modifier = ' modifier="chevron" tappable ';
+        }
+
         let userItem = ons.createElement(
             '<div>' +
-            '<ons-list-item modifier="chevron" tappable>' + name + ' (' + status + ')</ons-list-item>' +
+            '<ons-list-item' + modifier + '>' + name + ' (' + status + ')</ons-list-item>' +
             '</div>'
         );
 
-        user['id'] = id;
+        if (id) {
+            user['id'] = id;
 
-        userItem.querySelector('.center').onclick = function () {
-            myNavigator.pushPage('html/user/tenant_info.html',
-                {
-                    animation: 'lift',
-                    data: {
-                        element: user
-                    }
-                });
-        };
+            userItem.querySelector('.center').onclick = function () {
+                myNavigator.pushPage('html/user/tenant_info.html',
+                    {
+                        animation: 'lift',
+                        data: {
+                            element: user
+                        }
+                    });
+            };
+        }
 
         page.querySelector('.content').insertBefore(userItem);
     },

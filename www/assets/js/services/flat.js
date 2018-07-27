@@ -5,6 +5,12 @@ myApp.services.flat = {
 
     create: function (page) {
         let data = form.serialize(page);
+        data['meters'] = {
+            power: 0,
+            water: 0,
+            wastes: 0,
+            gas: 0
+        };
         let flatKey = firebase.database().ref().child('flats').push().key;
         let updates = {};
         updates['/flats/' + flatKey] = data;
@@ -32,7 +38,13 @@ myApp.services.flat = {
             let flat = snapshot.val();
             flat['id'] = id;
             myApp.services.flat.displayFlat(page, flat);
-            myApp.services.flat.displayActions(page, flat);
+            myApp.user.role().once('value').then(function (roleSnapshot) {
+                if (myApp.user.isLandlord(roleSnapshot.val())) {
+                    myApp.services.flat.displayActions(page, flat);
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         }).catch(function (error) {
             console.log(error);
         });
@@ -42,103 +54,107 @@ myApp.services.flat = {
 
         let mediaTemplate = '';
 
-        if (info.config) {
-            let gasChecked = info.config.gas ? ' checked ' : '';
-            let powerChecked = info.config.power ? ' checked ' : '';
-            let waterChecked = info.config.water ? ' checked ' : '';
-            let wastesChecked = info.config.wastes ? ' checked ' : '';
+
+        let gasChecked = info.config && info.config.gas ? ' checked ' : '';
+        let powerChecked = info.config && info.config.power ? ' checked ' : '';
+        let waterChecked = info.config && info.config.water ? ' checked ' : '';
+        let wastesChecked = info.config && info.config.wastes ? ' checked ' : '';
 
 
-            let gasPrice = gasChecked ? info.config.gas.value : '';
-            let powerPrice = powerChecked ? info.config.power.value : '';
-            let waterPrice = waterChecked ? info.config.water.value : '';
-            let wastesPrice = wastesChecked ? info.config.wastes.value : '';
+        let gasPrice = gasChecked ? info.config.gas.value : '';
+        let powerPrice = powerChecked ? info.config.power.value : '';
+        let waterPrice = waterChecked ? info.config.water.value : '';
+        let wastesPrice = wastesChecked ? info.config.wastes.value : '';
+
+        let gasInfo = info.config && info.config.gas ? info.config.gas : null;
+        let powerInfo = info.config && info.config.power ? info.config.power : null;
+        let waterInfo = info.config && info.config.water ? info.config.water : null;
+        let wastesInfo = info.config && info.config.wastes ? info.config.wastes : null;
 
 
-            mediaTemplate =
-                '<div class="edit hidden" style="display: none">' +
-                '<ons-list-header>Ustawienia mediów</ons-list-header>' +
+        mediaTemplate =
+            '<div class="edit hidden" style="display: none">' +
+            '<ons-list-header>Ustawienia mediów</ons-list-header>' +
 
-                '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.gas">' +
-                'Gaz: ' +
-                '</label>' +
-                '<ons-checkbox class="config-right" id="config.gas" ' + gasChecked + ' name="config.gas" modifier="underbar" float class="edit hidden" value="config.gas"></ons-checkbox>' +
-                '</div>' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label  class="config-left" for="config.gas.type">Sposób rozliczenia:</label>' +
-                '<ons-select  style="margin-top: -7px;" class="config-right" id="config.gas.type" name="config.gas.type">' +
-                myApp.services.common.selectOption(info.config.gas) +
-                '</ons-select>' +
-                '</div>' +
-                '<ons-input id="config.gas.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
-                '</div>' +
+            '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.gas">' +
+            'Gaz: ' +
+            '</label>' +
+            '<ons-checkbox class="config-right" id="config.gas" ' + gasChecked + ' name="config.gas" modifier="underbar" float class="edit hidden" value="config.gas"></ons-checkbox>' +
+            '</div>' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label  class="config-left" for="config.gas.type">Sposób rozliczenia:</label>' +
+            '<ons-select  style="margin-top: -7px;" class="config-right" id="config.gas.type" name="config.gas.type">' +
+            myApp.services.common.selectOption(gasInfo) +
+            '</ons-select>' +
+            '</div>' +
+            '<ons-input id="config.gas.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + gasPrice + '"></ons-input>' +
+            '</div>' +
 
-                '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.power">Prąd</label>' +
-                '<ons-checkbox class="config-right" id="config.power" ' + powerChecked + ' name="config.power" modifier="underbar" float class="edit hidden" value="config.power"></ons-checkbox>' +
-                '</div>' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-right" for="config.power.type">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-left" id="config.power.type" name="config.power.type">' +
-                myApp.services.common.selectOption(info.config.power) +
-                '</ons-select>' +
-                '</div>' +
-                '<ons-input id="config.power.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
-                '</div>' +
+            '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.power">Prąd</label>' +
+            '<ons-checkbox class="config-right" id="config.power" ' + powerChecked + ' name="config.power" modifier="underbar" float class="edit hidden" value="config.power"></ons-checkbox>' +
+            '</div>' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-right" for="config.power.type">Sposób rozliczenia:</label>' +
+            '<ons-select class="config-left" id="config.power.type" name="config.power.type">' +
+            myApp.services.common.selectOption(powerInfo) +
+            '</ons-select>' +
+            '</div>' +
+            '<ons-input id="config.power.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + powerPrice + '"></ons-input>' +
+            '</div>' +
 
-                '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.wastes">Śmieci</label>' +
-                '<ons-checkbox class="config-right" id="config.wastes" ' + wastesChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.wastes"></ons-checkbox>' +
-                '</div>' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.wastes.type">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-right" id="config.wastes.type" name="config.wastes.type">' +
-                myApp.services.common.selectOption(info.config.wastes) +
-                '</ons-select>' +
-                '</div>' +
-                '<ons-input id="config.wastes.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
-                '</div>' +
+            '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.wastes">Śmieci</label>' +
+            '<ons-checkbox class="config-right" id="config.wastes" ' + wastesChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.wastes"></ons-checkbox>' +
+            '</div>' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.wastes.type">Sposób rozliczenia:</label>' +
+            '<ons-select class="config-right" id="config.wastes.type" name="config.wastes.type">' +
+            myApp.services.common.selectOption(wastesInfo) +
+            '</ons-select>' +
+            '</div>' +
+            '<ons-input id="config.wastes.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + wastesPrice + '"></ons-input>' +
+            '</div>' +
 
-                '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.water">Woda</label>' +
-                '<ons-checkbox class="config-right" id="config.water" ' + waterChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.water"></ons-checkbox>' +
-                '</div>' +
-                '<div style="display:flex; margin: 20px 0;">' +
-                '<label class="config-left" for="config.water.type">Sposób rozliczenia:</label>' +
-                '<ons-select class="config-right" id="config.water.type" name="config.water.type">' +
-                myApp.services.common.selectOption(info.config.water) +
-                '</div>' +
-                '<ons-input id="config.water.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
-                '</div></div>' +
+            '<div class="edit hidden" style="display: none; margin-bottom: 30px;">' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.water">Woda</label>' +
+            '<ons-checkbox class="config-right" id="config.water" ' + waterChecked + ' name="config" modifier="underbar" float class="edit hidden" value="config.water"></ons-checkbox>' +
+            '</div>' +
+            '<div style="display:flex; margin: 20px 0;">' +
+            '<label class="config-left" for="config.water.type">Sposób rozliczenia:</label>' +
+            '<ons-select class="config-right" id="config.water.type" name="config.water.type">' +
+            myApp.services.common.selectOption(waterInfo) +
+            '</div>' +
+            '<ons-input id="config.water.value" modifier="underbar" placeholder="Kwota" float class="edit hidden" value="' + waterPrice + '"></ons-input>' +
+            '</div></div>' +
 
-                '<div class="config_info">' +
-                '<div id="gas_config">' +
-                '<ons-list-header>Gaz</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.gas) + '</ons-list-item>' +
-                '<ons-list-item>Kwota: ' + gasPrice + '</ons-list-item></br>' +
-                '</div>' +
-                '<div id="power_config">' +
-                '<ons-list-header>Prąd</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.power) + '</ons-list-item>' +
-                '<ons-list-item>Kwota: ' + powerPrice + '</ons-list-item>' +
-                '</div>' +
-                '<div id="wastes_config">' +
-                '<ons-list-header>Śmieci</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.wastes) + '</ons-list-item>' +
-                '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
-                '</div>' +
-                '<div id="water_config">' +
-                '<ons-list-header>Woda</ons-list-header>' +
-                '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(info.config.water) + '</ons-list-item>' +
-                '<ons-list-item>Kwota: ' + waterPrice + '</ons-list-item>' +
-                '</div>' +
-                '</div>';
-        }
+            '<div class="config_info">' +
+            '<div id="gas_config">' +
+            '<ons-list-header>Gaz</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(gasInfo) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + gasPrice + '</ons-list-item></br>' +
+            '</div>' +
+            '<div id="power_config">' +
+            '<ons-list-header>Prąd</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(powerInfo) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + powerPrice + '</ons-list-item>' +
+            '</div>' +
+            '<div id="wastes_config">' +
+            '<ons-list-header>Śmieci</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(wastesInfo) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + wastesPrice + '</ons-list-item>' +
+            '</div>' +
+            '<div id="water_config">' +
+            '<ons-list-header>Woda</ons-list-header>' +
+            '<ons-list-item>Sposób rozliczenia: ' + myApp.services.common.getTextFromOption(waterInfo) + '</ons-list-item>' +
+            '<ons-list-item>Kwota: ' + waterPrice + '</ons-list-item>' +
+            '</div>' +
+            '</div>';
 
 
         let name = info.name ? info.name : 'Brak nazwy';
@@ -244,6 +260,8 @@ myApp.services.flat = {
     },
 
     emptyList: function (page) {
+        let backButton = page.querySelector('.back-button');
+        $(backButton).remove();
         let info = ons.createElement('<div>Brak dodanych mieszkań - użyj przycisku by dodać mieszkanie.</div>');
         page.querySelector('.flat-list').appendChild(info);
     },
@@ -329,12 +347,12 @@ myApp.services.flat = {
             ]
         }).then(function (index) {
             if (index === 0) {
-                if(flat.tenants && Object.keys(flat.tenants).length > 0) {
+                if (flat.tenants && Object.keys(flat.tenants).length > 0) {
                     ons.notification.alert({message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokatorzy"});
                 } else {
                     let updates = {};
                     let userId = myApp.user.id();
-                    if(userId) {
+                    if (userId) {
                         updates['/users/' + userId + '/flats/' + flat.id] = null;
                         updates['/flats/' + flat.id] = null;
                     }
