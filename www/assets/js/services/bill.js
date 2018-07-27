@@ -2,24 +2,8 @@
 // Bill Service //
 ////////////////////
 myApp.services.bill = {
-
-    create: function () {
-        myApp.flat.current().once('value').then(function (flatSnapshot) {
-            let flat = flatSnapshot.val();
-            let now = new Date();
-            let bill = myApp.services.bill.count(now, flat, {});
-            let updates = {};
-            let billKey = firebase.database().ref().child('bills').push().key;
-            updates['/bills/' + billKey] = bill;
-            updates['/flats/' + myApp.flat.id() + '/bills/' + billKey] = {date: now.getFullYear() + '_' + now.getMonth()};
-            return firebase.database().ref().update(updates, function (error) {
-                if (error) {
-                    console.log(error)
-                } else {
-                    myNavigator.pushPage('landlordSplitter.html');
-                }
-            });
-        })
+    create: function (flat) {
+        console.log('create bill')
     },
 
     count: function (now, flat, bill) {
@@ -302,7 +286,7 @@ myApp.services.bill = {
         let id = bill.id;
         delete bill.id;
         bill.status = 'PARTIALLY_PAID';
-        if(bill.tenants === undefined) {
+        if (bill.tenants === undefined) {
             bill['tenants'] = {};
         }
         bill['tenants'][myApp.user.id()] = true;
@@ -318,12 +302,12 @@ myApp.services.bill = {
 
     //Mark bill as paid
     markAsPaid: function (bill, flat) {
-       bill.status = 'PAID';
-        if(bill.tenants === undefined) {
+        bill.status = 'PAID';
+        if (bill.tenants === undefined) {
             bill['tenants'] = {};
         }
         $.each(flat.tenants, function (key, value) {
-           bill.tenants[key] = value;
+            bill.tenants[key] = value;
         });
         let id = bill.id;
         delete bill.id;

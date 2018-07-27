@@ -4,3 +4,4 @@
 /typings
 jsconfig.json
 /www/functions/node_modules
+/www/appengine/lib

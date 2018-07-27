@@ -33,12 +33,19 @@ myApp.flat = {
         }
     },
 
+    invitations: function() {
+        let id = localStorage.getItem('currentFlat');
+        if(id) {
+            return firebase.database().ref('/flats/' + id + '/invitations')
+        }
+    },
+
     addTenant: function (userId, flatId, invitationId = null) {
         let updates = {};
         updates['/flats/' + flatId + '/tenants/' + userId] = true;
-        updates['/users/' + userId + '/flat/'] = flatId;
         updates['/users/' + userId + '/role'] = 'TENANT';
         updates['/users/' + userId + '/status'] = 'WAITING';
+        updates['/users/' + userId + '/flat/'] = flatId;
 
         if (invitationId) {
             updates['/invitations/' + invitationId + '/status'] = 'SEEN';

@@ -17,6 +17,10 @@ myApp.user = {
         return firebase.database().ref('/users/' + id);
     },
 
+    invitationInfo: function (id) {
+        return firebase.database().ref('/invitations/' + id);
+    },
+
     getByEmail: function (email) {
         return firebase.database().ref('/users/').orderByChild('email').equalTo(email).limitToFirst(1);
     },
@@ -76,30 +80,36 @@ myApp.user = {
             myApp.user.get(userId).once('value').then(function (userSnapshot) {
                 let removedUser = userSnapshot.val();
                 let flatId = removedUser.flat;
-                if (myApp.user.isLandlord(role.val())) {
-                    updates['/users/' + userId + '/status/'] = 'DELETED_BY_LANDLORD';
-                    if (removedUser.status === 'DELETED_BY_SELF') {
-                        updates['/users/' + userId + '/flat'] = null;
-                        updates['/flats/' + flatId + '/tenants/' + userId] = null;
+                myApp.user.getInvitatonByEmail(removedUser.email).once('value').then(function (invitation) {
+                    if(invitation.val()) {
+                        let invitationKey = Object.keys(invitation.val())[0];
+                        updates['/flats/' + flatId + '/invitations/' + invitationKey] = null;
                     }
-                } else {
-                    updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
-                    if (removedUser.status === 'DELETED_BY_LANDLORD' || removedUser.status === 'WAITING') {
-                        updates['/users/' + userId + '/flat'] = null;
-                        updates['/flats/' + flatId + '/tenants/' + userId] = null;
-                    }
-                }
-
-                return firebase.database().ref().update(updates, function (error) {
-                    if (error) {
-                        console.log(error)
+                    if (myApp.user.isLandlord(role.val())) {
+                        updates['/users/' + userId + '/status/'] = 'DELETED_BY_LANDLORD';
+                        if (removedUser.status === 'DELETED_BY_SELF') {
+                            updates['/users/' + userId + '/flat'] = null;
+                            updates['/flats/' + flatId + '/tenants/' + userId] = null;
+                        }
                     } else {
-                        if (myApp.user.isTenant(role.val())) {
-                            myNavigator.pushPage('html/user/user_no_flat.html');
-                        } else {
-                            myApp.user.splitter();
+                        updates['/users/' + userId + '/status/'] = 'DELETED_BY_SELF';
+                        if (removedUser.status === 'DELETED_BY_LANDLORD' || removedUser.status === 'WAITING') {
+                            updates['/users/' + userId + '/flat'] = null;
+                            updates['/flats/' + flatId + '/tenants/' + userId] = null;
                         }
                     }
+
+                    return firebase.database().ref().update(updates, function (error) {
+                        if (error) {
+                            console.log(error)
+                        } else {
+                            if (myApp.user.isTenant(role.val())) {
+                                myNavigator.pushPage('html/user/user_no_flat.html');
+                            } else {
+                                myApp.user.splitter();
+                            }
+                        }
+                    });
                 });
             });
         });
@@ -117,6 +127,7 @@ myApp.user = {
         let invitationKey = firebase.database().ref().child('invitations').push().key;
         let updates = {};
         updates['/invitations/' + invitationKey] = data;
+        updates['/flats/' + myApp.flat.id() + '/invitations/' + invitationKey] = true;
         return firebase.database().ref().update(updates, function (error) {
             if (error) {
                 console.log(error)
