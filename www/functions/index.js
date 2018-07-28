@@ -83,6 +83,10 @@ exports.hourly_job =
                             }
                         });
                     }
+
+                    if((bill  )) {
+                        //unpaid
+                    }
                 });
             });
         });
