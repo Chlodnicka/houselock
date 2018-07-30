@@ -40,7 +40,7 @@ myApp.user = {
                 if (myApp.user.isLandlord(role)) {
                     myNavigator.pushPage('html/flat/flat_list.html');
                 } else {
-                    myNavigator.pushPage('html/user/user_no_flat.html');
+                    myApp.services.common.authorizeSuccess();
                 }
             }
         });
