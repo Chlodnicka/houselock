@@ -15,6 +15,8 @@ myApp.services.flat = {
         let updates = {};
         updates['/flats/' + flatKey] = data;
         updates['/users/' + myApp.user.id() + '/flats/' + flatKey] = true;
+        updates['/flats/' + flatKey + '/owner/' + myApp.user.id()] = true;
+
         return firebase.database().ref().update(updates, function (error) {
             if (error) {
                 console.log(error)

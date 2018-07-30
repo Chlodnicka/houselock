@@ -75,12 +75,52 @@ exports.hourly_job =
                         };
                         let updates = {};
                         let billKey = admin.database().ref().child('bills').push().key;
+
+                        Object.keys(flat.tenants).forEach(function(key) {
+                            let alertKey = admin.database().ref().child('alerts').push().key;
+
+                            updates['/alerts/' + alertKey ] = {
+                                message: 'Wygenerowano nowy rachunek',
+                                reciver: key,
+                                date: Date.now()
+                            };
+                        });
+
+                        let alertKey = admin.database().ref().child('alerts').push().key;
+
+                        updates['/alerts/' + alertKey ] = {
+                            message: 'Wygenerowano nowy rachunek',
+                            reciver: Object.keys(flat.owner)[0],
+                            date: Date.now()
+                        };
+
                         updates['/bills/' + billKey] = bill;
                         updates['/flats/' + flatId + '/bills/' + billKey] = {date: now.getFullYear() + '_' + now.getMonth()};
                         return admin.database().ref().update(updates, function (error) {
                             if (error) {
                                 console.log(error)
                             }
+                        });
+                    }
+
+                    let today = new Date();
+                    if((bill && billDate >= date) && flat.pay_day < today.getDate()) {
+                        let update = {};
+                        update['/bills/' + billId + '/status'] = 'UNPAID';
+                        Object.keys(flat.tenants).forEach(function(key) {
+                            let alertKey = admin.database().ref().child('alerts').push().key;
+
+                            updates['/alerts/' + alertKey ] = {
+                                message: 'Masz opóźnienie w opłaceniu rachunku',
+                                reciver: key,
+                                date: Date.now()
+                            };
+                        });
+
+                        return admin.database().ref().update(update, function(error){
+                           if(error) {
+                               console.log(error);
+                           }
                         });
                     }
                 });

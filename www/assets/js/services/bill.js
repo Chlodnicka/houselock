@@ -1,6 +1,7 @@
 /////////////////////
 // Bill Service //
 ////////////////////
+
 myApp.services.bill = {
     create: function (flat) {
         console.log('create bill')
@@ -16,7 +17,7 @@ myApp.services.bill = {
                     sum += details[key] = parseFloat(value.value);
                 } else if (value.type === 'metric') {
                     let billValue = bill.details[key] ? bill.details[key] : '0.00';
-                    sum += details[key] = (parseFloat(billValue) - flat.meters[key]) * parseFloat(value.value);
+                    sum += details[key] = (parseFloat(billValue) - parseFloat(flat.meters[key])) * parseFloat(value.value);
                     meters[key] = parseFloat(billValue);
                 } else if (value.type === 'bill' && bill.details[key]) {
                     sum += details[key] = parseFloat(bill.details[key]);
@@ -58,7 +59,7 @@ myApp.services.bill = {
     item: function (page, id, bill) {
         let billDate = bill.date.split('_');
         let date = myApp.services.common.parseMonth(billDate[1]) + ' ' + billDate[0],
-            name = date + ' - ' + bill.sum + ' - ' + myApp.services.common.parsePaymentStatus(bill.status);
+            name = date + ' - ' + parseFloat(bill.sum).toFixed(2) + ' - ' + myApp.services.common.parsePaymentStatus(bill.status);
 
         let billItem = ons.createElement(
             '<div>' +
@@ -97,45 +98,45 @@ myApp.services.bill = {
 
             let sum = parseFloat(info.sum).toFixed(2);
 
-            if (myApp.user.isTenant()) {
-                let countTenant = Object.keys(myApp.flat.tenants()).length;
-                sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
-            } else {
-                sum += ' zł';
-            }
-
-            let billMainInfo = ons.createElement(
-                '<div>' +
-                '<ons-list-item>' +
-                '<div class="left">Do kiedy płatny:</div>' +
-                '<div class="right" id="">' + payDay + '</div>' +
-                '</ons-list-item>' +
-                '<div>' +
-                '<ons-list-item>' +
-                '<div class="left">Do zapłaty:</div>' +
-                '<div class="right" id="">' + sum + '</div>' +
-                '</ons-list-item>' +
-                '</div>'
-            );
-            page.querySelector('form').appendChild(billMainInfo);
-
-            myApp.services.bill.fillConfig(page, info, flat.config);
-
-            let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
-
-            saveBtn.onclick = function () {
-                myApp.services.bill.update(page, flat, info.id)
-            };
-
-            let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
-
-            let form = page.querySelector('form');
-            form.appendChild(saveBtn);
-            form.appendChild(cancelBtn);
-
-            myApp.services.common.cancel(page);
-
             myApp.user.role().once('value').then(function (roleSnapshot) {
+                if (myApp.user.isTenant(roleSnapshot.val())) {
+                    let countTenant = Object.keys(flat.tenants).length;
+                    sum = parseFloat(sum / countTenant).toFixed(2) + ' zł (Pełna wartość: ' + sum + ')';
+                } else {
+                    sum += ' zł';
+                }
+                let billMainInfo = ons.createElement(
+                    '<div>' +
+                    '<ons-list-item>' +
+                    '<div class="left">Do kiedy płatny:</div>' +
+                    '<div class="right" id="">' + payDay + '</div>' +
+                    '</ons-list-item>' +
+                    '<div>' +
+                    '<ons-list-item>' +
+                    '<div class="left">Do zapłaty:</div>' +
+                    '<div class="right" id="">' + sum + '</div>' +
+                    '</ons-list-item>' +
+                    '</div>'
+                );
+                page.querySelector('form').appendChild(billMainInfo);
+
+                myApp.services.bill.fillConfig(page, info, flat);
+
+                let saveBtn = ons.createElement('<ons-button class="btn btn-danger" style="display:none;" component="button/save">Zapisz</ons-button>');
+
+                saveBtn.onclick = function () {
+                    myApp.services.bill.update(page, flat, info.id)
+                };
+
+                let cancelBtn = ons.createElement('<ons-button class="btn btn-secondary cancel-btn" style="display:none;" component="button/cancel">Anuluj</ons-button>');
+
+                let form = page.querySelector('form');
+                form.appendChild(saveBtn);
+                form.appendChild(cancelBtn);
+
+                myApp.services.common.cancel(page);
+
+
                 let role = roleSnapshot.val();
                 if (myApp.user.isLandlord(role)) {
                     if (info.status === 'NEW' || info.status === 'UNPAID') {
@@ -186,52 +187,46 @@ myApp.services.bill = {
                         page.querySelector('.content').appendChild(pay);
                     }
                 }
+
             });
         });
     },
 
-    fillConfig: function (page, info, config) {
-        if (config.gas) {
-            myApp.services.bill.fillConfigElement(page, info, config.gas.type, 'Gaz', 'gas');
+    fillConfig: function (page, info, flat) {
+        if (flat.config.gas) {
+            myApp.services.bill.fillConfigElement(page, info, flat, 'Gaz', 'gas');
         }
 
-        if (config.power !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.power.type, 'Prąd', 'power');
+        if (flat.config.power !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, flat, 'Prąd', 'power');
         }
 
-        if (config.water !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.water.type, 'Woda', 'water');
+        if (flat.config.water !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, flat, 'Woda', 'water');
         }
 
-        if (config.wastes !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.wastes.type, 'Ścieki', 'wastes');
-        }
-
-        if (config.rent !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.rent.type, 'Czynsz', 'rent');
-        }
-
-        if (config.tv !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.tv.type, 'Telewizja', 'tv');
-        }
-
-        if (config.internet !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, config.internet.type, 'Internet', 'internet');
+        if (flat.config.wastes !== undefined) {
+            myApp.services.bill.fillConfigElement(page, info, flat, 'Ścieki', 'wastes');
         }
     },
 
-    fillConfigElement: function (page, info, config, name, index) {
-        let configMessage = myApp.services.common.parseConfig(config);
+    fillConfigElement: function (page, info, flat, name, index) {
+        let configMessage = myApp.services.common.parseConfig(flat.config[index].type);
         let value = info.details[index] === undefined ? '0.00' : info.details[index];
+        let meter = '';
+        if(flat.config[index].type === 'metric') {
+            meter = info.meters[index] === undefined ? '0.00' : parseFloat(info.meters[index]).toFixed(2);
+            meter = ' (stan licznika: ' + meter + ')';
+        }
         let edit = configMessage ?
-            myApp.services.bill.configEdit(name, index, value, configMessage, config)
+            myApp.services.bill.configEdit(name, index, value, configMessage, flat)
             : '';
 
         let bill = ons.createElement(
             '<div>' +
             '<ons-list-item>' +
             '<div class="left">' + name + ':</div>' +
-            '<div class="right" id="">' + parseFloat(value).toFixed(2) + '</div>' +
+            '<div class="right" id="">' + parseFloat(value).toFixed(2) + ' zł' + meter + '</div>' +
             '</ons-list-item>' +
             edit +
             '</div>'
@@ -240,15 +235,15 @@ myApp.services.bill = {
         page.querySelector('form').appendChild(bill);
     },
 
-    configEdit: function (name, index, value, configMessage, config) {
+    configEdit: function (name, index, value, configMessage, flat) {
         let edit = '<div class="edit" style="display: none;">' +
             '<ons-input name="name" modifier="underbar" id="' + index + '" placeholder="' + configMessage + '" value="';
 
-        // if (config === 'metric') {
-        //     // edit += parseFloat(myApp.flat.meter()[index + '_meter']).toFixed(2);
-        // } else {
-        edit += parseFloat(value).toFixed(2);
-        // }
+        if (flat.config[index].type === 'metric') {
+            edit += parseFloat(flat.meters[index]).toFixed(2);
+        } else {
+            edit += parseFloat(value).toFixed(2);
+        }
 
 
         edit += '" float class="edit hidden">';
@@ -265,8 +260,7 @@ myApp.services.bill = {
             let billData = $.extend({}, billSnapshot.val(), billForm);
             billData.details = billDetails;
             let bill = myApp.services.bill.count(now, flat, billData);
-            billData.sum = bill.sum;
-            firebase.database().ref('bills/' + id).set(billData).then(function () {
+            firebase.database().ref('bills/' + id).set(bill).then(function () {
                 let meters = $.extend({}, flat.meters, bill.meters);
                 firebase.database().ref('flats/' + myApp.flat.id() + '/meters/').set(meters).then(function () {
                     myApp.user.splitter();
