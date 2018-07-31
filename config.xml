@@ -16,7 +16,6 @@
     <plugin name="cordova-plugin-device" spec="~1.1.4"/>
     <plugin name="cordova-plugin-whitelist"/>
     <plugin name="cordova-plugin-dialogs"/>
-    <plugin name="cordova-plugin-firebase" spec="^1.0.0" />
 
     <access origin="http://*"/>
     <access origin="https://*"/>
