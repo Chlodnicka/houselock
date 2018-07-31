@@ -81,8 +81,10 @@ exports.hourly_job =
 
                             updates['/alerts/' + alertKey ] = {
                                 message: 'Wygenerowano nowy rachunek',
-                                reciver: key,
-                                date: Date.now()
+                                receiver: key,
+                                date: Date.now(),
+                                status: "NEW",
+                                flat: flatId
                             };
                         });
 
@@ -90,8 +92,10 @@ exports.hourly_job =
 
                         updates['/alerts/' + alertKey ] = {
                             message: 'Wygenerowano nowy rachunek',
-                            reciver: Object.keys(flat.owner)[0],
-                            date: Date.now()
+                            receiver: Object.keys(flat.owner)[0],
+                            date: Date.now(),
+                            status: "NEW",
+                            flat: flatId
                         };
 
                         updates['/bills/' + billKey] = bill;
@@ -108,13 +112,17 @@ exports.hourly_job =
                         let update = {};
                         update['/bills/' + billId + '/status'] = 'UNPAID';
                         Object.keys(flat.tenants).forEach(function(key) {
-                            let alertKey = admin.database().ref().child('alerts').push().key;
+                            if(bill.tenants[key] === undefined) {
+                                let alertKey = admin.database().ref().child('alerts').push().key;
 
-                            updates['/alerts/' + alertKey ] = {
-                                message: 'Masz opóźnienie w opłaceniu rachunku',
-                                reciver: key,
-                                date: Date.now()
-                            };
+                                update['/alerts/' + alertKey ] = {
+                                    message: 'Masz opóźnienie w opłaceniu rachunku',
+                                    receiver: key,
+                                    date: Date.now(),
+                                    status: "NEW",
+                                    flat: flatId
+                                };
+                            }
                         });
 
                         return admin.database().ref().update(update, function(error){

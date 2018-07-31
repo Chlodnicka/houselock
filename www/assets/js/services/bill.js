@@ -94,6 +94,7 @@ myApp.services.bill = {
 
         myApp.flat.current().once('value').then(function (flatSnapshot) {
             let flat = flatSnapshot.val();
+            let flatId = flatSnapshot.key;
             let payDay = flat.pay_day + ' ' + month + ' ' + billDate[0];
 
             let sum = parseFloat(info.sum).toFixed(2);
@@ -181,7 +182,7 @@ myApp.services.bill = {
                         );
 
                         pay.onclick = function () {
-                            myApp.services.bill.pay(flat, info);
+                            myApp.services.bill.pay(flat, info, flatId);
                         };
 
                         page.querySelector('.content').appendChild(pay);
@@ -214,7 +215,7 @@ myApp.services.bill = {
         let configMessage = myApp.services.common.parseConfig(flat.config[index].type);
         let value = info.details[index] === undefined ? '0.00' : info.details[index];
         let meter = '';
-        if(flat.config[index].type === 'metric') {
+        if (flat.config[index].type === 'metric') {
             meter = info.meters[index] === undefined ? '0.00' : parseFloat(info.meters[index]).toFixed(2);
             meter = ' (stan licznika: ' + meter + ')';
         }
@@ -275,23 +276,36 @@ myApp.services.bill = {
 
 
     // Pay bill
-    pay: function (flat, bill) {
-        console.log()
+    pay: function (flat, bill, flatId) {
         let id = bill.id;
         delete bill.id;
+        let updates = {};
         bill.status = 'PARTIALLY_PAID';
         if (bill.tenants === undefined) {
             bill['tenants'] = {};
         }
+
         bill['tenants'][myApp.user.id()] = true;
         if (Object.keys(flat.tenants).length === 1 || (bill.tenants && Object.keys(flat.tenants).length === Object.keys(bill.tenants).length)) {
             bill.status = 'PAID';
         }
-        firebase.database().ref('bills/' + id + '/').set(bill).then(function () {
-            myApp.user.splitter();
-        }).catch(
-            //error
-        );
+        let alertKey = firebase.database().ref().child('alerts').push().key;
+
+        updates['/alerts/' + alertKey] = {
+            message: 'Lokator opłacił rachunek',
+            receiver: Object.keys(flat.owner)[0],
+            date: Date.now(),
+            status: "NEW",
+            flat: flatId
+        };
+
+        updates['/bills/' + id] = bill;
+
+        return firebase.database().ref().update(updates, function (error) {
+            if (error) {
+                console.log(error);
+            }
+        });
     },
 
     //Mark bill as paid
