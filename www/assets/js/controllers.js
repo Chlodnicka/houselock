@@ -32,9 +32,9 @@ myApp.controllers = {
                 firebase.auth().signInWithEmailAndPassword(email, password).then(function () {
                     myApp.services.common.checkCredentials();
                 }).catch(function (error) {
-                        console.log(error);
-                        // myApp.services.common.authorizeFail()
-                    });
+                    console.log(error);
+                    // myApp.services.common.authorizeFail()
+                });
             };
         });
         Array.prototype.forEach.call(page.querySelectorAll('[component="button/register-new-owner"]'), function (element) {
@@ -84,8 +84,16 @@ myApp.controllers = {
     },
 
     alertsPage: function (page) {
-        let alerts = myApp.user.alerts();
-        myApp.services.user.fillAlerts(page, alerts);
+        myApp.user.alerts().once('value').then(snapshot => {
+            snapshot.forEach(function (child) {
+                let alerts = [];
+                if (child.val().status === 'NEW') {
+                    alerts[child.key] = child.val();
+                }
+
+                myApp.services.user.fillAlerts(page, alerts);
+            });
+        });
     },
 
     //Flat list page

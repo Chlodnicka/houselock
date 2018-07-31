@@ -15,8 +15,8 @@ myApp.bill = {
         return firebase.database().ref('/bills/' + id);
     },
 
-    list: function () {
-        let flatId = localStorage.getItem('currentFlat');
+    list: function (id = null) {
+        let flatId = id ? id : localStorage.getItem('currentFlat');
         if (flatId) {
             return firebase.database().ref('/flats/' + flatId + '/bills').orderByChild('date');
         }

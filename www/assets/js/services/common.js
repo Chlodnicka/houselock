@@ -2,6 +2,9 @@ myApp.services.common = {
 
     parseStatus: function (status) {
         switch (status) {
+            case 'NEW' :
+                return 'Zaproszony';
+                break;
             case 'WAITING':
                 return 'Zaproszenie oczekuje na akceptację lokatora';
                 break;
@@ -16,23 +19,12 @@ myApp.services.common = {
         }
     },
 
-    parseAlertMessage: function (message) {
-        switch (message) {
-            case 'bill_generated':
-                return 'Wygenerowano nowy rachunek. Uzupełnij informacje o płatnościach';
-                break;
-            case 'bill_may_be_paid':
-                return 'Rachunek może być opłacony';
-                break;
-            case 'bill_payment_reminder':
-                return 'Właściciel przypomina o płatności.';
-                break;
-            case 'bill_paid':
-                return 'Rachunek został opłacony';
-                break;
-            default:
-                return 'Błąd';
+    parseAddress: function (flat) {
+        let address = flat.city.trim() + ', ' + flat.street + ' ' + flat.building_number;
+        if(flat.flat_number) {
+            address += '/' + flat.flat_number;
         }
+        return address;
     },
 
     parseMonth: function (month) {
@@ -135,12 +127,13 @@ myApp.services.common = {
                             myNavigator.pushPage('landlordSplitter.html');
                         }
                     } else {
-                        myNavigator.pushPage('html/flat/flat_new.html');
+                        myNavigator.pushPage('html/flat/flat_list.html');
                     }
                 });
             } else if (myApp.user.isTenant(role)) {
                 myApp.user.current().once('value').then(function (userSnapshot) {
                     let user = userSnapshot.val();
+                    console.log(user.status);
                     if (user.flat) {
                         myApp.services.flat.setCurrent(user.flat);
                         if (user.status === 'DELETED_BY_LANDLORD') {
