@@ -11,11 +11,13 @@ myApp.services.flat = {
             wastes: 0,
             gas: 0
         };
+        let userId = myApp.user.id();
+        data['owner'] = {};
+        data['owner'][userId] = true;
         let flatKey = firebase.database().ref().child('flats').push().key;
         let updates = {};
         updates['/flats/' + flatKey] = data;
         updates['/users/' + myApp.user.id() + '/flats/' + flatKey] = true;
-        updates['/flats/' + flatKey + '/owner/' + myApp.user.id()] = true;
 
         return firebase.database().ref().update(updates, function (error) {
             if (error) {
