@@ -83,6 +83,8 @@ ons-input {
 
 
 @media only screen and (min-width: 991px){
+
+    /*POPUP*/
     ons-action-sheet .action-sheet-mask{
         background: rgba(0, 0, 0, .5);
     }
@@ -139,5 +141,28 @@ ons-input {
         border: 2px solid #d91a43;
         background: #d91a43;
         color: #ffffff;
+    }
+
+    /*BUTTONY*/
+
+    ons-speed-dial .fab-colors{
+        border: 1px solid #d91a43;
+        transition: all .5s;
+        cursor: pointer;
+    }
+
+    ons-speed-dial .fab-colors:hover{
+        background: #ffffff;
+    }
+
+    ons-speed-dial .fab-colors:hover ons-icon{
+        color: #d91a43;
+    }
+
+
+    /*DANE*/
+
+    #edit-flat{
+        
     }
 }
