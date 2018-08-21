@@ -261,7 +261,21 @@ ons-input {
         margin-left: auto;
         margin-right: auto;
     }
+    
+    #dashboardPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
 
+    #dashboardPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #dashboardPage ons-card .list-item__right{
+        background: transparent;
+    }
 
     /*END DASHBOARD*/
 
