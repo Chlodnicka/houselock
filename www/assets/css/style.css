@@ -89,6 +89,31 @@ ons-input {
         background: #dadadc;
     }
 
+    .tabbar{
+        height: 80px;
+    }
+
+    .tabbar__content{
+        bottom: 80px;
+    }
+
+    .tabbar__button{
+        height: 80px;
+        line-height: 1.2;
+    }
+
+    .tabbar__icon{
+        font-size: 40px;
+        height: auto;
+        line-height: 1.2
+    }
+
+    .tabbar__icon + .tabbar__label{
+        font-size: 18px;
+    }
+
+    /*START MIESZKANIE*/
+
     /*POPUP*/
     ons-action-sheet .action-sheet-mask{
         background: rgba(0, 0, 0, .5);
@@ -226,5 +251,18 @@ ons-input {
     #flat_info_save .edit ons-input + ons-input{
         margin-top: 15px;
     }
+
+    /*END MIESZKANIE*/
+
+    /*START DASHBOARD*/
+
+    #dashboardPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+
+    /*END DASHBOARD*/
 
 }
