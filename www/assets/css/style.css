@@ -181,7 +181,17 @@ ons-input {
         cursor: pointer;
     }
 
+    .fab-colors{
+        border: 1px solid #d91a43;
+        transition: all .5s;
+        cursor: pointer;
+    }
+
     ons-speed-dial .fab-colors:hover{
+        background: #ffffff;
+    }
+
+    .fab-colors:hover{
         background: #ffffff;
     }
 
@@ -189,6 +199,9 @@ ons-input {
         color: #d91a43;
     }
 
+    .fab-colors:hover ons-icon{
+        color: #d91a43;
+    }
 
     /*WYSWIETLANIE DANYCH*/
 
@@ -412,7 +425,12 @@ ons-input {
         background: transparent;
     }
 
+    #billListPage ons-card .list-item--chevron:before{
+        border-right-color: #d91a43;
+        border-bottom-color: #d91a43;
+    }
+
+
     /*END RACHUNKI*/
-    
 
 }
