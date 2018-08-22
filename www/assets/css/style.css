@@ -325,4 +325,63 @@ ons-input {
 
     /*END ALERTS*/
 
+
+    /*START RACHUNKI*/
+
+    #billPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #billPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        text-align: center;
+    }
+
+    #billPage ons-card ons-button.btn-danger{
+        float: left;
+        margin-top: 15px;
+    }
+
+    #billPage ons-card ons-button.btn-secondary{
+        float: right;
+        margin-top: 15px;
+    }
+
+    #billPage ons-card form:after{
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    #billPage ons-card .edit input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    #billPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    #billPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #billPage ons-card .list-item__right{
+        background: transparent;
+    }
+
+    /*END RACHUNKI*/
+
 }
