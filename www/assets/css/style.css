@@ -660,5 +660,57 @@ ons-input {
         border: none;
     }
 
+    #userPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #userPage ons-card ons-list{
+        background: transparent;
+    }
+
+    #userPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    #userPage ons-card .list-header{
+        background: #efeff4;
+        border-radius: 5px;
+        font-size: 24px;
+        margin-bottom: 30px;
+        padding: 15px;
+        text-transform: capitalize;
+    }
+
+    #userPage ons-card .list-item--longdivider{
+        padding: 0;
+        margin: 0 auto;
+        background: transparent!important;
+        max-width: 150px;
+        width: 100%;
+    }
+
+    #userPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #userPage ons-card .list-item--longdivider__center{
+        padding: 10px;
+        margin: 0 auto;
+        display: table;
+        background: #d91a43;
+        color: white;
+        max-width: 150px;
+        width: 100%;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+
     /*END USTAWIENIA*/
 }
