@@ -498,4 +498,50 @@ ons-input {
     }
 
     /*END LOKATORZY*/
+
+    /*START USTAWIENIA*/
+
+    #settingsPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #settingsPage .card__content{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #settingsPage .card__content ons-list-item{
+        width: 50%;
+        box-sizing: border-box;
+        padding: 0 15px;
+        border-radius: 8px;
+        background: transparent!important;
+        margin-bottom: 15px;
+    }
+
+    #settingsPage .card__content ons-list-item > div{
+        background: white!important;
+        box-sizing: border-box;
+        padding: 28px 16px;
+    }
+
+    #settingsPage .card__content ons-list-item > div:nth-child(1){
+        border-top: 1px solid #d91a43;
+        border-left: 1px solid #d91a43;
+        border-bottom: 1px solid #d91a43;
+        border-radius: 5px 0 0 5px;
+
+    }
+
+    #settingsPage .card__content ons-list-item > div:nth-child(2){
+        border-top: 1px solid #d91a43;
+        border-right: 1px solid #d91a43;
+        border-bottom: 1px solid #d91a43;
+        border-radius: 0 5px 5px 0;
+    }
+
+    /*END USTAWIENIA*/
 }
