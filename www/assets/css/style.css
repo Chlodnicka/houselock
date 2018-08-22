@@ -567,5 +567,75 @@ ons-input {
         border-radius: 0 5px 5px 0;
     }
 
+    #flatListPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #flatListPage .card__content{
+        display: flex!important;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #flatListPage .card__content > div{
+        width: 50%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    #flatListPage ons-list-item{
+        border: 1px solid #d91a43;
+        padding: 16px;
+        border-radius: 8px;
+        background: white!important;
+        margin-bottom: 15px;
+    }
+
+    #flatListPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #flatListPage ons-card .list-item--chevron:before{
+        border-right-color: #d91a43;
+        border-bottom-color: #d91a43;
+    }
+
+    #newFlatPage .page__content{
+        margin: 8px;
+    }
+
+    #newFlatPage ons-list-title{
+        width: 50%;
+        border: 1px solid #d91a43;
+        border-bottom: 0;
+        margin: 8px auto 0 auto;
+        bottom: auto;
+        background: #fff!important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.12);
+        border-radius: 8px 8px 0 0;
+        padding: 16px;
+        text-align: left;
+        word-wrap: break-word;
+        box-sizing: border-box;
+    }
+
+    #newFlatPage ons-list{
+        width: 50%;
+        border: 1px solid #d91a43;
+        border-top: 0;
+        margin: 0 auto 8px auto;
+        bottom: auto;
+        background: #fff!important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.12);
+        border-radius: 0 0 8px 8px;
+        padding: 16px;
+        text-align: left;
+        word-wrap: break-word;
+        box-sizing: border-box;
+    }
+    
+
     /*END USTAWIENIA*/
 }
