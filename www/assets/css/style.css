@@ -497,6 +497,30 @@ ons-input {
         background: transparent;
     }
 
+    #tenantNewPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #tenantNewPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #tenantNewPage ons-card ons-input input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        border: none;
+    }
+
     /*END LOKATORZY*/
 
     /*START USTAWIENIA*/
