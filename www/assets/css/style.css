@@ -711,6 +711,41 @@ ons-input {
         text-align: center;
     }
 
+    #userPage div.edit{
+        padding: 0 15px 15px;
+    }
+
+    #userPage ons-card .edit input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        border: none;
+    }
+
+    #userPage ons-card ons-button.button--large{
+        float: left;
+        margin-top: 15px;
+    }
+
+    #userPage ons-card ons-button.cancel-btn{
+        float: right;
+        margin-top: 15px;
+    }
+
+    #userPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        text-align: center;
+    }
+
+    #userPage ons-card form:after{
+        content: '';
+        display: table;
+        clear: both;
+    }
 
     /*END USTAWIENIA*/
 }
