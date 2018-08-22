@@ -433,4 +433,42 @@ ons-input {
 
     /*END RACHUNKI*/
 
+    /*START LOKATORZY*/
+
+    #usersPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #usersPage .card__content{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #usersPage .card__content > div{
+        width: 50%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    #usersPage ons-list-item{
+        border: 1px solid #d91a43;
+        padding: 16px;
+        border-radius: 8px;
+        background: white!important;
+        margin-bottom: 15px;
+    }
+
+    #usersPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #usersPage ons-card .list-item--chevron:before{
+        border-right-color: #d91a43;
+        border-bottom-color: #d91a43;
+    }
+
+    /*END LOKATORZY*/
 }
