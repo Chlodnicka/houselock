@@ -3,11 +3,12 @@
         <div class="center">Logowanie</div>
     </ons-toolbar>
     <div style="text-align: center; margin-top: 30px;">
+        <div id="validationEmailError" class="validationError" hidden>Niepoprawny adres email!</div>
         <form data-ajax="/api/login_check" method="post" id="login">
             <ons-input id="username" modifier="underbar" type="text" placeholder="Adres e-mail" float></ons-input>
 
             <ons-input id="password" modifier="underbar" type="password" placeholder="Hasło" float></ons-input>
-<br />
+            <br />
             <ons-button component="button/login">
                 Zaloguj się
             </ons-button>

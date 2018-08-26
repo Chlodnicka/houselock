@@ -1,8 +1,8 @@
 myApp.services.common = {
 
-    parseStatus: function (status) {
+    parseStatus: function(status) {
         switch (status) {
-            case 'NEW' :
+            case 'NEW':
                 return 'Zaproszony';
                 break;
             case 'WAITING':
@@ -19,15 +19,15 @@ myApp.services.common = {
         }
     },
 
-    parseAddress: function (flat) {
+    parseAddress: function(flat) {
         let address = flat.city.trim() + ', ' + flat.street + ' ' + flat.building_number;
-        if(flat.flat_number) {
+        if (flat.flat_number) {
             address += '/' + flat.flat_number;
         }
         return address;
     },
 
-    parseMonth: function (month) {
+    parseMonth: function(month) {
         switch (month) {
             case '0':
                 return 'styczeń';
@@ -70,7 +70,7 @@ myApp.services.common = {
         }
     },
 
-    parsePaymentStatus: function (status) {
+    parsePaymentStatus: function(status) {
         switch (status) {
             case 'NEW':
                 return 'nowy';
@@ -89,7 +89,7 @@ myApp.services.common = {
         }
     },
 
-    parseConfig: function (config) {
+    parseConfig: function(config) {
         if (config === 'metric') {
             return 'Uzupełnij stan licznika';
         } else if (config === 'bill') {
@@ -98,8 +98,8 @@ myApp.services.common = {
         return false;
     },
 
-    checkCredentials: function () {
-        firebase.auth().onAuthStateChanged(function (user) {
+    checkCredentials: function() {
+        firebase.auth().onAuthStateChanged(function(user) {
             if (user) {
                 myApp.services.common.authorizeSuccess()
             } else {
@@ -108,12 +108,12 @@ myApp.services.common = {
         });
     },
 
-    authorizeSuccess: function () {
+    authorizeSuccess: function() {
 
-        myApp.user.role().once('value').then(function (snapshot) {
+        myApp.user.role().once('value').then(function(snapshot) {
             let role = snapshot.val();
             if (myApp.user.isLandlord(role)) {
-                myApp.user.flats().once('value').then(function (snapshot) {
+                myApp.user.flats().once('value').then(function(snapshot) {
                     let flats = snapshot.val();
                     if (flats) {
                         if (Object.keys(flats).length > 1) {
@@ -131,7 +131,7 @@ myApp.services.common = {
                     }
                 });
             } else if (myApp.user.isTenant(role)) {
-                myApp.user.current().once('value').then(function (userSnapshot) {
+                myApp.user.current().once('value').then(function(userSnapshot) {
                     let user = userSnapshot.val();
                     console.log(user.status);
                     if (user.flat) {
@@ -156,22 +156,22 @@ myApp.services.common = {
         });
     },
 
-    authorizeFail: function (response) {
+    authorizeFail: function(response) {
         // ons.notification.alert({message: 'Nie udało się zalogować, spróbuj ponownie!'});
-        ons.notification.alert({message: response.responseJSON.message});
+        ons.notification.alert({ message: response.responseJSON.message });
     },
 
-    redirectToLogin: function () {
-        firebase.auth().signOut().then(function () {
+    redirectToLogin: function() {
+        firebase.auth().signOut().then(function() {
             myApp.services.common.clearAll();
             myNavigator.pushPage('html/auth/login.html');
-        }).catch(function (error) {
+        }).catch(function(error) {
             // An error happened.
         });
 
     },
 
-    selectOption: function (config) {
+    selectOption: function(config) {
         if (config) {
             if (config.type === 'bill') {
                 return '<option value="bill" selected>Na bazie rachunku</option>' +
@@ -192,7 +192,7 @@ myApp.services.common = {
             '<option value="static">Stała opłata</option>';
     },
 
-    getTextFromOption: function (config) {
+    getTextFromOption: function(config) {
         if (config) {
             if (config.type === 'bill') {
                 return 'Na bazie rachunku';
@@ -205,28 +205,28 @@ myApp.services.common = {
         return 'Brak'
     },
 
-    edit: function (page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function (element) {
-            element.onclick = function () {
+    edit: function(page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/edit"]'), function(element) {
+            element.onclick = function() {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
                 if (page.querySelector('div.flat_config_info')) {
                     page.querySelector('div.flat_config_info').style.display = 'none';
                 }
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
                     listitem.style.display = 'none';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
                     edititem.style.display = 'block';
                 });
             };
         });
     },
 
-    cancel: function (page) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function (element) {
-            element.onclick = function () {
+    cancel: function(page) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/cancel"]'), function(element) {
+            element.onclick = function() {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'none';
                 if (page.querySelector('[component="button/edit"]')) {
@@ -240,18 +240,23 @@ myApp.services.common = {
                     page.querySelector('div.config_info').style.display = 'block';
                 }
 
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
                     listitem.style.display = 'flex';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
                     edititem.style.display = 'none';
                 });
             };
         });
     },
 
-    clearAll: function () {
+    clearAll: function() {
         localStorage.clear();
         sessionStorage.clear();
-    }
+    },
+
+    validateEmail: function(input) {
+        var pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(input);
+    },
 };
