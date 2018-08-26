@@ -37,8 +37,7 @@ myApp.controllers = {
                         // myApp.services.common.authorizeFail()
                     });
                 } else {
-                    $("#validationEmailError").removeAttr("hidden");
-                    console.log("Incorrect email address!");
+                    ons.notification.alert({ message: 'Niepoprawny adres email, spróbuj ponownie!' });
                 }
             };
         });
