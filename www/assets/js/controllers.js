@@ -55,7 +55,9 @@ myApp.controllers = {
                 let password = $(page.querySelector('form')).find('#password').children('input').val();
                 let data = form.serialize(page);
                 delete data.password;
-                firebase.auth().createUserWithEmailAndPassword(email, password)
+                console.log(data);
+                if (myApp.services.common.validateUserRegistration(email, data.firstname, data.lastname))
+                    firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then(function(user) {
                         myApp.services.user.create(data);
                     })
