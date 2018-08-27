@@ -497,5 +497,255 @@ ons-input {
         background: transparent;
     }
 
+    #tenantNewPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #tenantNewPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    #tenantNewPage ons-card ons-input input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        border: none;
+    }
+
     /*END LOKATORZY*/
+
+    /*START USTAWIENIA*/
+
+    #settingsPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #settingsPage .card__content{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #settingsPage .card__content ons-list-item{
+        width: 50%;
+        box-sizing: border-box;
+        padding: 0 15px;
+        border-radius: 8px;
+        background: transparent!important;
+        margin-bottom: 15px;
+    }
+
+    #settingsPage .card__content ons-list-item > div{
+        background: white!important;
+        box-sizing: border-box;
+        padding: 28px 16px;
+    }
+
+    #settingsPage .card__content ons-list-item > div:nth-child(1){
+        border-top: 1px solid #d91a43;
+        border-left: 1px solid #d91a43;
+        border-bottom: 1px solid #d91a43;
+        border-radius: 5px 0 0 5px;
+
+    }
+
+    #settingsPage .card__content ons-list-item > div:nth-child(2){
+        border-top: 1px solid #d91a43;
+        border-right: 1px solid #d91a43;
+        border-bottom: 1px solid #d91a43;
+        border-radius: 0 5px 5px 0;
+    }
+
+    #flatListPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #flatListPage .card__content{
+        display: flex!important;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #flatListPage .card__content > div{
+        width: 50%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    #flatListPage ons-list-item{
+        border: 1px solid #d91a43;
+        padding: 16px;
+        border-radius: 8px;
+        background: white!important;
+        margin-bottom: 15px;
+    }
+
+    #flatListPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #flatListPage ons-card .list-item--chevron:before{
+        border-right-color: #d91a43;
+        border-bottom-color: #d91a43;
+    }
+
+    #newFlatPage .page__content{
+        margin: 8px;
+    }
+
+    #newFlatPage ons-list-title{
+        width: 50%;
+        border: 1px solid #d91a43;
+        border-bottom: 0;
+        margin: 8px auto 0 auto;
+        bottom: auto;
+        background: #fff!important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.12);
+        border-radius: 8px 8px 0 0;
+        padding: 16px;
+        text-align: left;
+        word-wrap: break-word;
+        box-sizing: border-box;
+    }
+
+    #newFlatPage ons-list{
+        width: 50%;
+        border: 1px solid #d91a43;
+        border-top: 0;
+        margin: 0 auto 8px auto;
+        bottom: auto;
+        background: #fff!important;
+        box-shadow: 0 1px 2px rgba(0,0,0,.12);
+        border-radius: 0 0 8px 8px;
+        padding: 16px;
+        text-align: left;
+        word-wrap: break-word;
+        box-sizing: border-box;
+    }
+
+    #newFlatPage ons-list .list-item__center, #newFlatPage ons-list ons-list-item{
+        padding: 0;
+    }
+
+    #newFlatPage .page__content ons-list-title{
+        font-size: 24px;
+        padding: 15px;
+        text-transform: capitalize;
+    }
+
+    #newFlatPage .page__content ons-list{
+        background: transparent;
+    }
+
+    #newFlatPage .page__content ons-input input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        border: none;
+    }
+
+    #userPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #userPage ons-card ons-list{
+        background: transparent;
+    }
+
+    #userPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    #userPage ons-card .list-header{
+        background: #efeff4;
+        border-radius: 5px;
+        font-size: 24px;
+        margin-bottom: 30px;
+        padding: 15px;
+        text-transform: capitalize;
+    }
+
+    #userPage ons-card .list-item--longdivider{
+        padding: 0;
+        margin: 0 auto;
+        background: transparent!important;
+        max-width: 150px;
+        width: 100%;
+    }
+
+    #userPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #userPage ons-card .list-item--longdivider__center{
+        padding: 10px;
+        margin: 0 auto;
+        display: table;
+        background: #d91a43;
+        color: white;
+        max-width: 150px;
+        width: 100%;
+        border-radius: 5px;
+        text-align: center;
+    }
+
+    #userPage div.edit{
+        padding: 0 15px 15px;
+    }
+
+    #userPage ons-card .edit input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
+        border: none;
+    }
+
+    #userPage ons-card ons-button.button--large{
+        float: left;
+        margin-top: 15px;
+    }
+
+    #userPage ons-card ons-button.cancel-btn{
+        float: right;
+        margin-top: 15px;
+    }
+
+    #userPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        text-align: center;
+    }
+
+    #userPage ons-card form:after{
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    /*END USTAWIENIA*/
 }
