@@ -80,3 +80,151 @@ ons-input {
 .config-left, .config-right {
     width: 50%;
 }
+
+
+@media only screen and (min-width: 991px){
+
+    /*DEFAULT*/
+    .page__background{
+        background: #dadadc;
+    }
+
+    /*POPUP*/
+    ons-action-sheet .action-sheet-mask{
+        background: rgba(0, 0, 0, .5);
+    }
+
+    ons-action-sheet .action-sheet{
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.5);
+        background: #fff;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 20px;
+    }
+
+    ons-action-sheet .action-sheet-title{
+        font-size: 24px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    ons-action-sheet .action-sheet .action-sheet-button{
+        display: table;
+        width: auto;
+        padding: 10px;
+        height: auto;
+        min-width: 150px;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 1.2;
+        border: 2px solid #fe3824;
+        transition: all .5s;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    ons-action-sheet .action-sheet .action-sheet-button:hover{
+        border: 2px solid #fe3824;
+        background: #fe3824;
+        color: #ffffff;
+    }
+
+    ons-action-sheet .action-sheet .action-sheet-button + .action-sheet-button{
+        margin: 0 0 0 5px;
+        font-weight: 400;
+        border: 2px solid #d91a43;
+        border-radius: 5px;
+    }
+
+    ons-action-sheet .action-sheet-button + .action-sheet-button:hover{
+        border: 2px solid #d91a43;
+        background: #d91a43;
+        color: #ffffff;
+    }
+
+    /*BUTTONY*/
+
+    ons-speed-dial .fab-colors{
+        border: 1px solid #d91a43;
+        transition: all .5s;
+        cursor: pointer;
+    }
+
+    ons-speed-dial .fab-colors:hover{
+        background: #ffffff;
+    }
+
+    ons-speed-dial .fab-colors:hover ons-icon{
+        color: #d91a43;
+    }
+
+
+    /*WYSWIETLANIE DANYCH*/
+
+    #flat_info_save > div{
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    #flat_info_save ons-card{
+        width: calc(50% - 16px);
+    }
+
+    #flat_info_save ons-card .list-header{
+        background: #efeff4;
+        border-radius: 5px 5px 0 0;
+        font-size: 24px;
+        margin-top: 30px;
+        padding: 15px;
+        text-transform: capitalize;
+    }
+
+    #flat_info_save ons-card .list-item{
+        background: #efeff4;
+        padding: 0 15px 5px 15px;
+    }
+
+    #flat_info_save ons-card .list-item:last-of-type{
+        border-radius: 0 0 5px 5px;
+    }
+
+    #flat_info_save ons-card .list-item .list-item__center{
+        background: transparent;
+    }
+
+    #flat_info_save div.edit{
+        background: #efeff4;
+        padding: 0 15px 15px;
+    }
+
+    #flat_info_save div.edit .checkbox__checkmark{
+        background: #ffffff;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    #flat_info_save div.edit .checkbox__checkmark:before{
+        border-color: #ffffff;
+    }
+
+    #flat_info_save .edit ons-input{
+        margin-top: 0;
+    }
+
+    #flat_info_save .edit ons-input input:not([type=checkbox]){
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+    }
+
+    #flat_info_save .edit ons-input + ons-input{
+        margin-top: 15px;
+    }
+
+}
