@@ -29,7 +29,7 @@ myApp.controllers = {
                 let form = page.querySelector('form');
                 let email = $(form).find('#username').children('input').val();
                 let password = $(form).find('#password').children('input').val();
-                if (myApp.services.common.validateEmail(email)) {
+                if (myApp.services.validation.validateEmail(email)) {
                     firebase.auth().signInWithEmailAndPassword(email, password).then(function() {
                         myApp.services.common.checkCredentials();
                     }).catch(function(error) {
@@ -56,7 +56,7 @@ myApp.controllers = {
                 let data = form.serialize(page);
                 delete data.password;
                 console.log(data);
-                if (myApp.services.common.validateUserRegistration(email, data.firstname, data.lastname))
+                if (myApp.services.validation.validateUserRegistration(email, data.firstname, data.lastname))
                     firebase.auth().createUserWithEmailAndPassword(email, password)
                     .then(function(user) {
                         myApp.services.user.create(data);
