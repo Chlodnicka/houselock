@@ -89,6 +89,31 @@ ons-input {
         background: #dadadc;
     }
 
+    .tabbar{
+        height: 80px;
+    }
+
+    .tabbar__content{
+        bottom: 80px;
+    }
+
+    .tabbar__button{
+        height: 80px;
+        line-height: 1.2;
+    }
+
+    .tabbar__icon{
+        font-size: 40px;
+        height: auto;
+        line-height: 1.2
+    }
+
+    .tabbar__icon + .tabbar__label{
+        font-size: 18px;
+    }
+
+    /*START MIESZKANIE*/
+
     /*POPUP*/
     ons-action-sheet .action-sheet-mask{
         background: rgba(0, 0, 0, .5);
@@ -174,6 +199,7 @@ ons-input {
 
     #flat_info_save ons-card{
         width: calc(50% - 16px);
+        border: 1px solid #d91a43;
     }
 
     #flat_info_save ons-card .list-header{
@@ -226,5 +252,77 @@ ons-input {
     #flat_info_save .edit ons-input + ons-input{
         margin-top: 15px;
     }
+
+    /*END MIESZKANIE*/
+
+    /*START DASHBOARD*/
+
+    #dashboardPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #dashboardPage ons-card ons-button{
+        max-width: 200px;
+        width: 100%;
+        text-align: center;
+    }
+
+    #dashboardPage ons-card ons-button.btn-danger{
+        float: left;
+        margin-top: 15px;
+    }
+
+    #dashboardPage ons-card ons-button.btn-secondary{
+        float: right;
+        margin-top: 15px;
+    }
+
+    #dashboardPage ons-card form:after{
+        content: '';
+        display: table;
+        clear: both;
+    }
+
+    #dashboardPage ons-card .edit input{
+        background: #ffffff;
+        border-radius: 5px;
+        padding: 5px;
+        -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.1);
+        border: none;
+    }
+
+    #dashboardPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    #dashboardPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #dashboardPage ons-card .list-item__right{
+        background: transparent;
+    }
+
+    /*END DASHBOARD*/
+
+
+    /*START ALERTS*/
+
+    #alertsPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    /*END ALERTS*/
 
 }

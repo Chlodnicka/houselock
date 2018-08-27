@@ -112,7 +112,6 @@ myApp.services.bill = {
                     '<div class="left">Do kiedy płatny:</div>' +
                     '<div class="right" id="">' + payDay + '</div>' +
                     '</ons-list-item>' +
-                    '<div>' +
                     '<ons-list-item>' +
                     '<div class="left">Do zapłaty:</div>' +
                     '<div class="right" id="">' + sum + '</div>' +
