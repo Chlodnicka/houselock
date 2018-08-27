@@ -433,4 +433,69 @@ ons-input {
 
     /*END RACHUNKI*/
 
+    /*START LOKATORZY*/
+
+    #usersPage ons-card{
+        padding: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    #usersPage .card__content{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    #usersPage .card__content > div{
+        width: 50%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    #usersPage ons-list-item{
+        border: 1px solid #d91a43;
+        padding: 16px;
+        border-radius: 8px;
+        background: white!important;
+        margin-bottom: 15px;
+    }
+
+    #usersPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    #usersPage ons-card .list-item--chevron:before{
+        border-right-color: #d91a43;
+        border-bottom-color: #d91a43;
+    }
+
+    #tenantPage ons-card{
+        width: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        border: 1px solid #d91a43;
+    }
+
+    #tenantPage ons-card .list-item{
+        background: #efeff4;
+        padding: 5px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+
+    #tenantPage ons-card .list-header{
+        background: #efeff4;
+        border-radius: 5px;
+        font-size: 24px;
+        margin-bottom: 30px;
+        padding: 15px;
+        text-transform: capitalize;
+    }
+
+    #tenantPage ons-card .list-item__center{
+        background: transparent;
+    }
+
+    /*END LOKATORZY*/
 }
