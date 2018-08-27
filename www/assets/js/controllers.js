@@ -56,14 +56,15 @@ myApp.controllers = {
                 let data = form.serialize(page);
                 delete data.password;
                 console.log(data);
-                if (myApp.services.validation.validateUserRegistration(email, data.firstname, data.lastname))
+                if (myApp.services.validation.validateUserRegistration(email, data.firstname, data.lastname)) {
                     firebase.auth().createUserWithEmailAndPassword(email, password)
-                    .then(function(user) {
-                        myApp.services.user.create(data);
-                    })
-                    .catch(function(error) {
-                        myApp.services.common.authorizeFail()
-                    });
+                        .then(function(user) {
+                            myApp.services.user.create(data);
+                        })
+                        .catch(function(error) {
+                            myApp.services.common.authorizeFail()
+                        });
+                }
             };
         });
     },
