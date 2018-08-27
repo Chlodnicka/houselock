@@ -11,22 +11,24 @@ myApp.services.flat = {
             wastes: 0,
             gas: 0
         };
-        let userId = myApp.user.id();
-        data['owner'] = {};
-        data['owner'][userId] = true;
-        let flatKey = firebase.database().ref().child('flats').push().key;
-        let updates = {};
-        updates['/flats/' + flatKey] = data;
-        updates['/users/' + myApp.user.id() + '/flats/' + flatKey] = true;
+        if (myApp.services.validation.validateFlat(data)) {
+            let userId = myApp.user.id();
+            data['owner'] = {};
+            data['owner'][userId] = true;
+            let flatKey = firebase.database().ref().child('flats').push().key;
+            let updates = {};
+            updates['/flats/' + flatKey] = data;
+            updates['/users/' + myApp.user.id() + '/flats/' + flatKey] = true;
 
-        return firebase.database().ref().update(updates, function(error) {
-            if (error) {
-                console.log(error)
-            } else {
-                myApp.services.flat.setCurrent(flatKey);
-                myNavigator.pushPage('landlordSplitter.html');
-            }
-        });
+            return firebase.database().ref().update(updates, function(error) {
+                if (error) {
+                    console.log(error)
+                } else {
+                    myApp.services.flat.setCurrent(flatKey);
+                    myNavigator.pushPage('landlordSplitter.html');
+                }
+            });
+        }
     },
 
     setCurrent: function(id) {
