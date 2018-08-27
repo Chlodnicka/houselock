@@ -23,6 +23,40 @@ myApp.services.validation = {
             ons.notification.alert({ message: 'Niepoprawne nazwisko, spróbuj ponownie!' });
             return false;
         }
+        return true;
+    },
+
+    validateFlat: function(flatData) {
+        var mercenaryPattern = /\d{1,9}/;
+        var buildingNumberPattern = /\d{1,4}/
+        var cityPattern = /^[a-zA-Z\u0080-\u024F]+(?:([\ \-\']|(\.\ ))[a-zA-Z\u0080-\u024F]+)*$/;
+        var flatNumberPattern = /\d{0,3}/;
+        var payDayPattern = /^[1-9]|[1,2][0-9]$/;
+        if (flatData.street.length == 0) {
+            ons.notification.alert({ message: 'Nazwa mieszkania nie może być pusta!' });
+            return false;
+        }
+        if (!mercenaryPattern.test(flatData.mercenary)) {
+            ons.notification.alert({ message: 'Kwota za wynajem jest niepoprawna!' });
+            return false;
+        }
+        if (!buildingNumberPattern.test(flatData.building_number)) {
+            ons.notification.alert({ message: 'Numer budynku jest niepoprawny!' });
+            return false;
+        }
+        if (!cityPattern.test(flatData.city)) {
+            ons.notification.alert({ message: 'Nazwa miasta jest niepoprawnaa!' });
+            return false;
+        }
+        if (!flatNumberPattern.test(flatData.flat_number)) {
+            ons.notification.alert({ message: 'Numer mieszkania jest niepoprawny!' });
+            return false;
+        }
+        if (!payDayPattern.test(flatData.pay_day)) {
+            ons.notification.alert({ message: 'Dzien płatności jets niepoprawny!' });
+            return false;
+        }
+        return true;
     },
 
 }

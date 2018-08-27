@@ -3,7 +3,7 @@
 /////////////////
 myApp.services.flat = {
 
-    create: function (page) {
+    create: function(page) {
         let data = form.serialize(page);
         data['meters'] = {
             power: 0,
@@ -19,7 +19,7 @@ myApp.services.flat = {
         updates['/flats/' + flatKey] = data;
         updates['/users/' + myApp.user.id() + '/flats/' + flatKey] = true;
 
-        return firebase.database().ref().update(updates, function (error) {
+        return firebase.database().ref().update(updates, function(error) {
             if (error) {
                 console.log(error)
             } else {
@@ -29,32 +29,32 @@ myApp.services.flat = {
         });
     },
 
-    setCurrent: function (id) {
+    setCurrent: function(id) {
         localStorage.setItem('currentFlat', id);
     },
 
-    current: function () {
+    current: function() {
         return localStorage.getItem('currentFlat');
     },
 
-    display: function (page, id) {
-        return firebase.database().ref('/flats/' + id).once('value').then(function (snapshot) {
+    display: function(page, id) {
+        return firebase.database().ref('/flats/' + id).once('value').then(function(snapshot) {
             let flat = snapshot.val();
             flat['id'] = id;
             myApp.services.flat.displayFlat(page, flat);
-            myApp.user.role().once('value').then(function (roleSnapshot) {
+            myApp.user.role().once('value').then(function(roleSnapshot) {
                 if (myApp.user.isLandlord(roleSnapshot.val())) {
                     myApp.services.flat.displayActions(page, flat);
                 }
-            }).catch(function (error) {
+            }).catch(function(error) {
                 console.log(error);
             });
-        }).catch(function (error) {
+        }).catch(function(error) {
             console.log(error);
         });
     },
 
-    displayFlat: function (page, info) {
+    displayFlat: function(page, info) {
 
         let mediaTemplate = '';
 
@@ -198,14 +198,14 @@ myApp.services.flat = {
         );
         page.querySelector('.content').appendChild(flat);
 
-        page.querySelector('[component="button/save"]').onclick = function () {
+        page.querySelector('[component="button/save"]').onclick = function() {
             myApp.services.flat.update(page)
         };
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
     },
 
-    displayActions: function (page, info) {
+    displayActions: function(page, info) {
 
         let actions = ons.createElement(
             '<ons-speed-dial position="bottom right" direction="up">' +
@@ -223,54 +223,54 @@ myApp.services.flat = {
 
         page.querySelector('.content').appendChild(actions);
 
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-edit"]'), function (element) {
-            element.onclick = function () {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-edit"]'), function(element) {
+            element.onclick = function() {
                 element.style.display = 'none';
                 page.querySelector('[component="button/save"]').style.display = 'block';
                 page.querySelector('[component="button/cancel"]').style.display = 'block';
                 page.querySelector('div.config_info').style.display = 'none';
-                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function (listitem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form ons-list-item'), function(listitem) {
                     listitem.style.display = ' none';
                 });
-                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function (edititem) {
+                Array.prototype.forEach.call(page.querySelectorAll('form .edit'), function(edititem) {
                     edititem.style.display = 'block';
                 });
             };
         });
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-remove"]'), function (element) {
-            element.onclick = function () {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/flat-remove"]'), function(element) {
+            element.onclick = function() {
                 myApp.services.flat.remove(info);
             };
         });
     },
 
-    list: function (page) {
-        myApp.user.flats().once('value').then(function (userFlats) {
+    list: function(page) {
+        myApp.user.flats().once('value').then(function(userFlats) {
             myApp.services.flat.addAction(page);
             if (userFlats.numChildren() === 0) {
                 myApp.services.flat.emptyList(page);
             } else {
-                userFlats.forEach(function (userFlat) {
+                userFlats.forEach(function(userFlat) {
                     let flatId = userFlat.key;
-                    myApp.flat.get(flatId).once('value').then(function (flat) {
+                    myApp.flat.get(flatId).once('value').then(function(flat) {
                         myApp.services.flat.item(page, flatId, flat.val());
                     });
                     page.querySelector('.flat-list').style.display = 'block';
                 });
             }
-        }).catch(function (error) {
+        }).catch(function(error) {
             console.log(error);
         });
     },
 
-    emptyList: function (page) {
+    emptyList: function(page) {
         let backButton = page.querySelector('.back-button');
         $(backButton).remove();
         let info = ons.createElement('<div>Brak dodanych mieszkań - użyj przycisku by dodać mieszkanie.</div>');
         page.querySelector('.flat-list').appendChild(info);
     },
 
-    item: function (page, id, flat) {
+    item: function(page, id, flat) {
         let name = flat.name ? flat.name : flat.street + ' ' + flat.building_number + ', ' + flat.city;
         let flatItem = ons.createElement(
             '<div>' +
@@ -279,7 +279,7 @@ myApp.services.flat = {
         );
 
 
-        flatItem.querySelector('.center').onclick = function () {
+        flatItem.querySelector('.center').onclick = function() {
             myApp.services.flat.setCurrent(id);
             myNavigator.pushPage('landlordSplitter.html');
         };
@@ -287,28 +287,30 @@ myApp.services.flat = {
         page.querySelector('.flat-list').appendChild(flatItem);
     },
 
-    addAction: function (page) {
+    addAction: function(page) {
         let createFlat = ons.createElement(
             '<ons-fab class="fab-colors" position="bottom right" component="button/new-flat">' +
             '<ons-icon icon="md-plus"></ons-icon>' +
             '</ons-fab>'
         );
 
-        createFlat.onclick = function () {
+        createFlat.onclick = function() {
             document.querySelector('#myNavigator').pushPage('html/flat/flat_new.html');
         };
 
         page.querySelector('.content').appendChild(createFlat);
     },
 
-    update: function (page) {
-        myApp.flat.current().once('value').then(function (flatSnapshot) {
+    update: function(page) {
+        myApp.flat.current().once('value').then(function(flatSnapshot) {
             let flatData = $.extend({}, flatSnapshot.val(), form.serialize(page));
-            firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function () {
-                myApp.user.splitter();
-            }).catch(
-                //error
-            );
+            if (myApp.services.validation.validateFlat(flatData)) {
+                firebase.database().ref('flats/' + myApp.services.flat.current()).set(flatData).then(function() {
+                    myApp.user.splitter();
+                }).catch(
+                    //error
+                );
+            }
         });
     },
 
@@ -316,43 +318,43 @@ myApp.services.flat = {
     Dotąd jest ok
      */
 
-    emptyFlatLandlord: function (page) {
+    emptyFlatLandlord: function(page) {
         let info = ons.createElement('<div>Wybierz lub dodaj mieszkanie.</div>');
         page.querySelector('.flat-list').appendChild(info);
         myApp.services.flat.list(page);
     },
 
-    onCreatedSuccess: function (response) {
+    onCreatedSuccess: function(response) {
         let data = JSON.stringify(response);
         localStorage.setItem('userData', data);
         let highest = response.data.user_flats[Object.keys(response.data.user_flats).sort().pop()].id;
         myApp.services.common.setCurrentFlat(highest);
     },
 
-    onCreateFail: function () {
-        ons.notification.alert({message: 'Nie udało się dodać mieszkania!'});
+    onCreateFail: function() {
+        ons.notification.alert({ message: 'Nie udało się dodać mieszkania!' });
     },
 
-    updatedFailed: function () {
+    updatedFailed: function() {
 
     },
 
-    remove: function (flat) {
+    remove: function(flat) {
         ons.openActionSheet({
             title: 'Ta akcja jest nieodwracalna!',
             cancelable: true,
             buttons: [{
-                label: 'Usuń mieszkanie',
-                modifier: 'destructive'
-            },
+                    label: 'Usuń mieszkanie',
+                    modifier: 'destructive'
+                },
                 {
                     label: 'Anuluj',
                 }
             ]
-        }).then(function (index) {
+        }).then(function(index) {
             if (index === 0) {
                 if (flat.tenants && Object.keys(flat.tenants).length > 0) {
-                    ons.notification.alert({message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokatorzy"});
+                    ons.notification.alert({ message: "Nie możesz usunąć mieszkania jeśli są do niego przypisani lokatorzy" });
                 } else {
                     let updates = {};
                     let userId = myApp.user.id();
@@ -360,7 +362,7 @@ myApp.services.flat = {
                         updates['/users/' + userId + '/flats/' + flat.id] = null;
                         updates['/flats/' + flat.id] = null;
                     }
-                    return firebase.database().ref().update(updates, function (error) {
+                    return firebase.database().ref().update(updates, function(error) {
                         if (error) {
                             console.log(error)
                         } else {
