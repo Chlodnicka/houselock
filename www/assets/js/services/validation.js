@@ -45,7 +45,7 @@ myApp.services.validation = {
             return false;
         }
         if (!cityPattern.test(flatData.city)) {
-            ons.notification.alert({ message: 'Nazwa miasta jest niepoprawnaa!' });
+            ons.notification.alert({ message: 'Nazwa miasta jest niepoprawna!' });
             return false;
         }
         if (!flatNumberPattern.test(flatData.flat_number)) {
@@ -53,10 +53,36 @@ myApp.services.validation = {
             return false;
         }
         if (!payDayPattern.test(flatData.pay_day)) {
-            ons.notification.alert({ message: 'Dzien płatności jets niepoprawny!' });
+            ons.notification.alert({ message: 'Dzien płatności jest niepoprawny!' });
             return false;
         }
         return true;
     },
+
+    validateUserData: function(userData) {
+        var namePattern = /^(?!\s*$).+/;
+        var lastnamePattern = /^(?!\s*$).+/;
+        var phonePattern = /^\+[0-9]{6,14}/
+        var accountPattern = /^\d{1,30}$/;
+        console.log(userData);
+        if (!namePattern.test(userData.firstname)) {
+            ons.notification.alert({ message: 'Imię jest niepoprawne!' });
+            return false;
+        }
+        if (!lastnamePattern.test(userData.lastname)) {
+            ons.notification.alert({ message: 'Nazwisko jest niepoprawne!' });
+            return false;
+        }
+        if (!phonePattern.test(userData.phone)) {
+            ons.notification.alert({ message: 'Numer telefonu jest niepoprawny!' });
+            return false;
+        }
+        if (!accountPattern.test(userData.account_number)) {
+            ons.notification.alert({ message: 'Numer konta bankowego jest niepoprawny!' });
+            return false;
+        }
+        return true;
+
+    }
 
 }

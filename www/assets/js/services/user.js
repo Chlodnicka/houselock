@@ -3,9 +3,9 @@
 ////////////////////
 myApp.services.user = {
 
-    create: function (data) {
-        myApp.user.create(data).then(function () {
-            myApp.user.getInvitatonByEmail(data.email).once("value", function (invitationSnapshot) {
+    create: function(data) {
+        myApp.user.create(data).then(function() {
+            myApp.user.getInvitatonByEmail(data.email).once("value", function(invitationSnapshot) {
                 let invitationsData = invitationSnapshot.val();
                 if (invitationsData) {
                     let id = Object.keys(invitationsData);
@@ -15,14 +15,14 @@ myApp.services.user = {
                     }
                 }
             });
-        }).catch(function (error) {
+        }).catch(function(error) {
             console.log(error);
         });
     },
 
-    userAlerts: function (page) {
+    userAlerts: function(page) {
         myApp.user.alerts().once('value').then(snapshot => {
-            snapshot.forEach(function (child) {
+            snapshot.forEach(function(child) {
                 let alerts = [];
                 if (child.val().status === 'NEW') {
                     alerts.push(child.val());
@@ -43,7 +43,7 @@ myApp.services.user = {
 
                 }
 
-                alertButton.onclick = function () {
+                alertButton.onclick = function() {
                     myNavigator.pushPage('html/alerts.html')
                 };
 
@@ -54,20 +54,20 @@ myApp.services.user = {
         });
     },
 
-    fillAlerts: function (page, alerts) {
+    fillAlerts: function(page, alerts) {
         for (let id in alerts) {
             let message = alerts[id].message;
             let date = new Date(alerts[id].date);
 
-            let options = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'};
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
-            myApp.flat.get(alerts[id].flat).once('value').then(function (flatSnapshot) {
+            myApp.flat.get(alerts[id].flat).once('value').then(function(flatSnapshot) {
                 let address = myApp.services.common.parseAddress(flatSnapshot.val());
                 let alert = ons.createElement(
                     '<ons-card data-id="' + id + '" >' +
                     '<div style="display: flex; margin-bottom: 10px;">' +
-                        '<div style="font-size: 10px; width: 50%;">Mieszkanie: ' + address + '</div>' +
-                        '<div style="font-size: 10px; width: 50%; text-align: right;">' + date.toLocaleDateString('pl-PL', options) + '</div>' +
+                    '<div style="font-size: 10px; width: 50%;">Mieszkanie: ' + address + '</div>' +
+                    '<div style="font-size: 10px; width: 50%; text-align: right;">' + date.toLocaleDateString('pl-PL', options) + '</div>' +
                     '</div>' +
                     '<div style="display: flex; margin-bottom: 10px;">' +
                     message +
@@ -75,7 +75,7 @@ myApp.services.user = {
                     '</ons-card>'
                 );
 
-                alert.onclick = function () {
+                alert.onclick = function() {
                     myApp.services.user.alertSeen(page, $(this));
                 };
 
@@ -84,15 +84,15 @@ myApp.services.user = {
         }
     },
 
-    alertSeen: function (page, element) {
+    alertSeen: function(page, element) {
         let siblings = element.siblings();
         let id = element.attr('data-id');
         element.remove();
         let update = {};
         update['/alerts/' + id + '/status'] = 'SEEN';
 
-        return firebase.database().ref().update(update, function(error){
-            if(error) {
+        return firebase.database().ref().update(update, function(error) {
+            if (error) {
                 console.log(error);
             } else {
                 if (siblings.length === 0) {
@@ -122,25 +122,25 @@ myApp.services.user = {
         });
     },
 
-    showAlerts: function (element) {
+    showAlerts: function(element) {
         document
             .getElementById('alert_popover')
             .show(element);
     },
 
-    display: function (page, id) {
+    display: function(page, id) {
         if (id) {
-            myApp.user.get(id).once('value').then(function (user) {
+            myApp.user.get(id).once('value').then(function(user) {
                 myApp.services.user.fill(page, user.val());
             });
         } else {
-            myApp.user.current().once('value').then(function (user) {
+            myApp.user.current().once('value').then(function(user) {
                 myApp.services.user.fill(page, user.val());
             });
         }
     },
 
-    fill: function (page, userData) {
+    fill: function(page, userData) {
         let card = page.querySelector('form'),
             phone = userData.phone ? userData.phone : '',
             account = userData.account_number ? userData.account_number : '',
@@ -174,11 +174,10 @@ myApp.services.user = {
             '<ons-button style="display:none;" modifier="large" component="button/save">Zapisz</ons-button>' +
             '<ons-button class="cancel-btn" style="display:none;" modifier="large" component="button/cancel">Anuluj</ons-button>' +
             '</div>'
-            )
-        ;
+        );
 
-        userInfo.querySelector('[component="button/save"]').onclick = function () {
-            myApp.services.user.update(page)
+        userInfo.querySelector('[component="button/save"]').onclick = function() {
+            myApp.services.user.update(page);
         };
 
 
@@ -187,14 +186,14 @@ myApp.services.user = {
         myApp.services.common.edit(page);
         myApp.services.common.cancel(page);
 
-        myApp.user.current().once('value').then(function (userSnapshot) {
+        myApp.user.current().once('value').then(function(userSnapshot) {
             let user = userSnapshot.val();
             if (myApp.user.isTenant(user.role) && user.status !== 'DELETED_BY_SELF') {
                 let deleteButton = ons.createElement(
                     '<ons-button component="button/remove-self">Odepnij się od mieszkania</ons-button>'
                 );
 
-                deleteButton.onclick = function () {
+                deleteButton.onclick = function() {
                     let userId = myApp.user.id();
                     myApp.user.setDeleted(userId);
                 };
@@ -205,25 +204,27 @@ myApp.services.user = {
 
     },
 
-    update: function (page) {
-        myApp.user.current().once('value').then(function (userSnapshot) {
+    update: function(page) {
+        myApp.user.current().once('value').then(function(userSnapshot) {
             let userData = $.extend({}, userSnapshot.val(), form.serialize(page))
-            firebase.database().ref('users/' + myApp.user.id()).set(userData).then(function () {
-                myApp.user.splitter();
-            }).catch(
-                //error
-            );
+            if (myApp.services.validation.validateUserData(userData)) {
+                firebase.database().ref('users/' + myApp.user.id()).set(userData).then(function() {
+                    myApp.user.splitter();
+                }).catch(
+                    //error
+                );
+            }
         });
     },
 
-    addTenant: function (page) {
+    addTenant: function(page) {
         let user = form.serialize(page);
-        myApp.user.getByEmail(user.email).once("value", function (userSnapshot) {
+        myApp.user.getByEmail(user.email).once("value", function(userSnapshot) {
             if (userSnapshot.val()) {
                 let usersData = userSnapshot.val();
                 let id = Object.keys(usersData);
                 if (usersData[id].flat || myApp.user.isLandlord(usersData[id].role)) {
-                    ons.notification.alert({message: "Nie możesz zaprosić do mieszkania użytkownika, który ma mieszkanie lub jest właścicielem mieszkania"});
+                    ons.notification.alert({ message: "Nie możesz zaprosić do mieszkania użytkownika, który ma mieszkanie lub jest właścicielem mieszkania" });
                 } else {
                     let flatId = myApp.services.flat.current();
                     myApp.flat.addTenant(id, flatId);
@@ -234,25 +235,25 @@ myApp.services.user = {
         });
     },
 
-    list: function (page) {
-        myApp.flat.tenants().once('value').then(function (tenants) {
-            myApp.flat.invitations().once('value').then(function (invitationsInfo) {
+    list: function(page) {
+        myApp.flat.tenants().once('value').then(function(tenants) {
+            myApp.flat.invitations().once('value').then(function(invitationsInfo) {
                 if (tenants.numChildren() === 0 && invitationsInfo.numChildren() === 0) {
                     myApp.services.user.emptyList(page);
                 } else {
                     if (tenants.numChildren() > 0) {
-                        tenants.forEach(function (tenant) {
+                        tenants.forEach(function(tenant) {
                             let userId = tenant.key;
-                            myApp.user.get(userId).once('value').then(function (user) {
+                            myApp.user.get(userId).once('value').then(function(user) {
                                 myApp.services.user.item(page, user.val(), userId);
                             });
                         });
                     }
 
                     if (invitationsInfo.numChildren() > 0) {
-                        invitationsInfo.forEach(function (invitation) {
+                        invitationsInfo.forEach(function(invitation) {
                             let invitationId = invitation.key;
-                            myApp.user.invitationInfo(invitationId).once('value').then(function (invitationInfo) {
+                            myApp.user.invitationInfo(invitationId).once('value').then(function(invitationInfo) {
                                 if (invitationInfo.val().status === 'NEW') {
                                     myApp.services.user.item(page, invitationInfo.val());
                                 }
@@ -264,7 +265,7 @@ myApp.services.user = {
         });
     },
 
-    emptyList: function (page) {
+    emptyList: function(page) {
         let info = ons.createElement('<div>Brak lokatorów. Dodaj ich do mieszkania.</div>');
         let container = page.querySelector('.content');
         while (container.firstChild) {
@@ -273,7 +274,7 @@ myApp.services.user = {
         container.appendChild(info);
     },
 
-    item: function (page, user, id) {
+    item: function(page, user, id) {
 
         let name = user.lastname ? user.firstname + ' ' + user.lastname : user.email;
 
@@ -294,26 +295,25 @@ myApp.services.user = {
         if (id) {
             user['id'] = id;
 
-            userItem.querySelector('.center').onclick = function () {
-                myNavigator.pushPage('html/user/tenant_info.html',
-                    {
-                        animation: 'lift',
-                        data: {
-                            element: user
-                        }
-                    });
+            userItem.querySelector('.center').onclick = function() {
+                myNavigator.pushPage('html/user/tenant_info.html', {
+                    animation: 'lift',
+                    data: {
+                        element: user
+                    }
+                });
             };
         }
 
         page.querySelector('.content').insertBefore(userItem);
     },
 
-    accept: function () {
+    accept: function() {
         let updates = {};
         let userId = myApp.user.id();
         updates['/users/' + userId + '/status/'] = 'ACTIVE';
 
-        return firebase.database().ref().update(updates, function (error) {
+        return firebase.database().ref().update(updates, function(error) {
             if (error) {
                 console.log(error)
             } else {
@@ -322,19 +322,18 @@ myApp.services.user = {
         });
     },
 
-    ignore: function () {
+    ignore: function() {
         let userId = myApp.user.id();
         myApp.user.setDeleted(userId);
     },
 
-    remove: function (page, info) {
-        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function (element) {
-            element.onclick = function () {
+    remove: function(page, info) {
+        Array.prototype.forEach.call(page.querySelectorAll('[component="button/remove-tenant"]'), function(element) {
+            element.onclick = function() {
                 ons.openActionSheet({
                     title: 'Ta akcja jest nieodwracalna!',
                     cancelable: true,
-                    buttons: [
-                        {
+                    buttons: [{
                             label: 'Usuń lokatora',
                             modifier: 'destructive'
                         },
@@ -342,7 +341,7 @@ myApp.services.user = {
                             label: 'Anuluj'
                         }
                     ]
-                }).then(function (index) {
+                }).then(function(index) {
                     if (index === 0) {
                         let userId = info.id;
                         myApp.user.setDeleted(userId);
@@ -352,7 +351,7 @@ myApp.services.user = {
         });
     },
 
-    acceptRemoval: function () {
+    acceptRemoval: function() {
         let userId = myApp.user.id();
         myApp.user.setDeleted(userId);
     }
