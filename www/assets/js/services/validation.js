@@ -32,6 +32,7 @@ myApp.services.validation = {
         var cityPattern = /^[a-zA-Z\u0080-\u024F]+(?:([\ \-\']|(\.\ ))[a-zA-Z\u0080-\u024F]+)*$/;
         var flatNumberPattern = /\d{0,3}/;
         var payDayPattern = /^[1-9]|[1,2][0-9]$/;
+        var amountPattern = /^\d*\.?\d{2}$/;
         if (flatData.street.length == 0) {
             ons.notification.alert({ message: 'Nazwa mieszkania nie może być pusta!' });
             return false;
@@ -56,6 +57,11 @@ myApp.services.validation = {
             ons.notification.alert({ message: 'Dzien płatności jest niepoprawny!' });
             return false;
         }
+        console.log(flatData.meters.gas);
+        /**if (!amountPattern.test(flatData.ga)) {
+            ons.notification.alert({ message: 'Dzien płatności jest niepoprawny!' });
+            return false;
+        }*/
         return true;
     },
 
@@ -64,7 +70,6 @@ myApp.services.validation = {
         var lastnamePattern = /^(?!\s*$).+/;
         var phonePattern = /^\+[0-9]{6,14}/
         var accountPattern = /^\d{1,30}$/;
-        console.log(userData);
         if (!namePattern.test(userData.firstname)) {
             ons.notification.alert({ message: 'Imię jest niepoprawne!' });
             return false;
