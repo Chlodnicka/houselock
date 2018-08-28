@@ -32,6 +32,7 @@ myApp.services.validation = {
         var cityPattern = /^[a-zA-Z\u0080-\u024F]+(?:([\ \-\']|(\.\ ))[a-zA-Z\u0080-\u024F]+)*$/;
         var flatNumberPattern = /\d{0,3}/;
         var payDayPattern = /^[1-9]|[1,2][0-9]$/;
+        var amountPattern = /^\d*\.?\d{2}$/;
         if (flatData.street.length == 0) {
             ons.notification.alert({ message: 'Nazwa mieszkania nie może być pusta!' });
             return false;
@@ -45,7 +46,7 @@ myApp.services.validation = {
             return false;
         }
         if (!cityPattern.test(flatData.city)) {
-            ons.notification.alert({ message: 'Nazwa miasta jest niepoprawnaa!' });
+            ons.notification.alert({ message: 'Nazwa miasta jest niepoprawna!' });
             return false;
         }
         if (!flatNumberPattern.test(flatData.flat_number)) {
@@ -53,10 +54,40 @@ myApp.services.validation = {
             return false;
         }
         if (!payDayPattern.test(flatData.pay_day)) {
-            ons.notification.alert({ message: 'Dzien płatności jets niepoprawny!' });
+            ons.notification.alert({ message: 'Dzien płatności jest niepoprawny!' });
+            return false;
+        }
+        console.log(flatData.meters.gas);
+        /**if (!amountPattern.test(flatData.ga)) {
+            ons.notification.alert({ message: 'Dzien płatności jest niepoprawny!' });
+            return false;
+        }*/
+        return true;
+    },
+
+    validateUserData: function(userData) {
+        var namePattern = /^(?!\s*$).+/;
+        var lastnamePattern = /^(?!\s*$).+/;
+        var phonePattern = /^\+[0-9]{6,14}/
+        var accountPattern = /^\d{1,30}$/;
+        if (!namePattern.test(userData.firstname)) {
+            ons.notification.alert({ message: 'Imię jest niepoprawne!' });
+            return false;
+        }
+        if (!lastnamePattern.test(userData.lastname)) {
+            ons.notification.alert({ message: 'Nazwisko jest niepoprawne!' });
+            return false;
+        }
+        if (!phonePattern.test(userData.phone)) {
+            ons.notification.alert({ message: 'Numer telefonu jest niepoprawny!' });
+            return false;
+        }
+        if (!accountPattern.test(userData.account_number)) {
+            ons.notification.alert({ message: 'Numer konta bankowego jest niepoprawny!' });
             return false;
         }
         return true;
-    },
+
+    }
 
 }
