@@ -206,8 +206,9 @@ myApp.services.bill = {
         }
 
         if (flat.config.wastes !== undefined) {
-            myApp.services.bill.fillConfigElement(page, info, flat, 'Ścieki', 'wastes');
+            myApp.services.bill.fillConfigElement(page, info, flat, 'Śmieci', 'wastes');
         }
+
     },
 
     fillConfigElement: function (page, info, flat, name, index) {
@@ -303,6 +304,8 @@ myApp.services.bill = {
         return firebase.database().ref().update(updates, function (error) {
             if (error) {
                 console.log(error);
+            } else {
+                myApp.user.splitter();
             }
         });
     },

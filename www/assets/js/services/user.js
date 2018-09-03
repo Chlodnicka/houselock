@@ -22,35 +22,32 @@ myApp.services.user = {
 
     userAlerts: function(page) {
         myApp.user.alerts().once('value').then(snapshot => {
+            let alerts = [];
             snapshot.forEach(function(child) {
-                let alerts = [];
                 if (child.val().status === 'NEW') {
                     alerts.push(child.val());
                 }
+            });
+            let alertButton = ons.createElement(
+                '<ons-button id="alert-button" component="button/show-alerts" style="background: transparent;color: black;" disabled>' +
+                '<ons-icon icon="md-notifications-none"></ons-icon>' +
+                '</ons-button>'
+            );
 
-                let alertButton = ons.createElement(
-                    '<ons-button id="alert-button" component="button/show-alerts" style="background: transparent;color: black;" disabled>' +
-                    '<ons-icon icon="md-notifications-none"></ons-icon>' +
+            if (Object.keys(alerts).length > 0) {
+                alertButton = ons.createElement(
+                    '<ons-button id="alert-button" component="button/show-alerts"  style="background: transparent;color: black;">' +
+                    '<ons-icon icon="md-notifications-active"></ons-icon>' +
                     '</ons-button>'
                 );
 
-                if (Object.keys(alerts).length > 0) {
-                    alertButton = ons.createElement(
-                        '<ons-button id="alert-button" component="button/show-alerts"  style="background: transparent;color: black;">' +
-                        '<ons-icon icon="md-notifications-active"></ons-icon>' +
-                        '</ons-button>'
-                    );
+            }
 
-                }
+            alertButton.onclick = function() {
+                myNavigator.pushPage('html/alerts.html')
+            };
 
-                alertButton.onclick = function() {
-                    myNavigator.pushPage('html/alerts.html')
-                };
-
-                page.querySelector('.alert-container').appendChild(alertButton);
-
-
-            });
+            page.querySelector('.alert-container').appendChild(alertButton);
         });
     },
 
@@ -155,11 +152,11 @@ myApp.services.user = {
         let userInfo = ons.createElement(
             '<div>' +
             status +
-            '<ons-list-item class="firstname">Imię: ' + userData.firstname + '</ons-list-item>' +
+            '<ons-list-item class="firstname">Imię: ' + firstname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
             '<ons-input id="firstname" name="firstname" modifier="underbar" placeholder="Imię" value="' + firstname + '" float class="edit hidden"> </ons-input>' +
             '</div>' +
-            '<ons-list-item class="lastname">Nazwisko: ' + userData.lastname + '</ons-list-item>' +
+            '<ons-list-item class="lastname">Nazwisko: ' + lastname + '</ons-list-item>' +
             '<div class="edit" style="display: none;">' +
             '<ons-input id="lastname" name="lastname" modifier="underbar" placeholder="Nazwisko" value="' + lastname + '" float class="edit hidden"> </ons-input>' +
             '</div>' +

@@ -68,7 +68,7 @@ myApp.services.validation = {
     validateUserData: function(userData) {
         var namePattern = /^(?!\s*$).+/;
         var lastnamePattern = /^(?!\s*$).+/;
-        var phonePattern = /^\+[0-9]{6,14}/
+        var phonePattern = /^[0-9]{6,14}/
         var accountPattern = /^\d{1,30}$/;
         if (!namePattern.test(userData.firstname)) {
             ons.notification.alert({ message: 'Imię jest niepoprawne!' });
