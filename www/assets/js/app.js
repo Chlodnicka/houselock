@@ -14,6 +14,7 @@ document.addEventListener('init', function (event) {
     if (myApp.controllers.hasOwnProperty(page.id)) {
         myApp.controllers[page.id](page);
     }
-
 });
+
+
 
