@@ -23,9 +23,9 @@
             messagingSenderId: "374903412059"
         };
 
-        document.addEventListener("deviceready", function (event) {
-            firebase.initializeApp(config);
-        }, false);
+
+        firebase.initializeApp(config);
+       
 
     </script>
     <script src="core/js/onsenui.min.js"></script>
@@ -48,23 +48,23 @@
 
 <body>
 
-    <div id="loading">
-        <ons-progress-circular class="loading-circular" indeterminate></ons-progress-circular>
-    </div>
+<div id="loading">
+    <ons-progress-circular class="loading-circular" indeterminate></ons-progress-circular>
+</div>
 
-    <ons-navigator id="myNavigator" page="loader.html">
-    </ons-navigator>
+<ons-navigator id="myNavigator" page="loader.html">
+</ons-navigator>
 
-    <ons-template id="loader.html">
-        <ons-page id="loaderPage">
-            <div class="center">
-                <ons-icon icon="ion-load-c" spin="true" size="144px"></ons-icon>
-                <br><br> ładuję dane...
-            </div>
-        </ons-page>
-    </ons-template>
+<ons-template id="loader.html">
+    <ons-page id="loaderPage">
+        <div class="center">
+            <ons-icon icon="ion-load-c" spin="true" size="144px"></ons-icon>
+            <br><br> ładuję dane...
+        </div>
+    </ons-page>
+</ons-template>
 
-    <template id="landlordSplitter.html">
+<template id="landlordSplitter.html">
     <ons-page>
         <ons-splitter id="landlordSplitter">
             <ons-splitter-content page="landlordTabbar.html">
@@ -74,7 +74,7 @@
 </template>
 
 
-    <template id="tenantSplitter.html">
+<template id="tenantSplitter.html">
     <ons-page>
         <ons-splitter id="tenantSplitter">
             <ons-splitter-content page="tenantTabbar.html">
@@ -83,7 +83,7 @@
     </ons-page>
 </template>
 
-    <template id="landlordTabbar.html">
+<template id="landlordTabbar.html">
     <ons-page id="landlordTabbarPage">
         <ons-toolbar>
             <div class="center">Houselock</div>
@@ -112,7 +112,7 @@
 </template>
 
 
-    <template id="tenantTabbar.html">
+<template id="tenantTabbar.html">
     <ons-page id="tenantTabbarPage">
         <ons-toolbar>
             <div class="center">Houselock</div>
