@@ -44,14 +44,13 @@ myApp.controllers = {
         });
 
         $('#fb-login').on('click', function () {
-            let provider = new firebase.auth.FacebookAuthProvider();
+            var provider = new firebase.auth.GoogleAuthProvider();
 
             firebase.auth().signInWithRedirect(provider).then(function () {
                 return firebase.auth().getRedirectResult();
             }).then(function (result) {
                 if (result.user) {
                     let user = result.user;
-                    console.log(user);
                     let data = {
                         email: user.email
                     };
