@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets"
-        xmlns:gap="http://phonegap.com/ns/1.0"
-        id="com.houselock"
+        xmlns:cdv="http://cordova.apache.org/ns/1.0"
+        id="com.github.houselock"
         version="1.0.0">
 
     <name>Houselock</name>
@@ -24,7 +24,7 @@
     <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
 
     <universal-links>
-        <host name="https://houselock.page.link/y6N7" scheme="https" />
+        <host name="houselock.page.link/y6N7" scheme="https" />
         <host name="houselock-1.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>
