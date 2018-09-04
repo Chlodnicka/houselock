@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "374903412059",
+    "firebase_url": "https://houselock-1.firebaseio.com",
+    "project_id": "houselock-1",
+    "storage_bucket": "houselock-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:374903412059:android:e818d2d2fbe91e9e",
+        "android_client_info": {
+          "package_name": "com.houselock"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "374903412059-3nihi2hnfhqp99hog04m0ildu9jp35ub.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2I2nlw4C7SVEquI40vreqKub_e2x_5iw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
