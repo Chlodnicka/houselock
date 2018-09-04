@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap="http://phonegap.com/ns/1.0"
-        id="Houselock"
+        id="houselock-1"
         version="1.0.0">
 
     <name>Houselock</name>
@@ -23,7 +23,6 @@
     <plugin name="cordova-plugin-inappbrowser"/>
     <plugin name="cordova-plugin-buildinfo" spec="^2.0.1" />
     <plugin name="cordova-universal-links-plugin" spec="^1.2.1" />
-    <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <universal-links>
         <host name="houselock.page.link" scheme="https" />
