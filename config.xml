@@ -19,11 +19,14 @@
     <plugin name="cordova-plugin-device" spec="~1.1.4"/>
     <plugin name="cordova-plugin-whitelist"/>
     <plugin name="cordova-plugin-dialogs"/>
+
     <plugin name="cordova-plugin-inappbrowser"/>
     <plugin name="cordova-plugin-buildinfo" spec="^2.0.1" />
     <plugin name="cordova-universal-links-plugin" spec="^1.2.1" />
     <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
+    <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
     <universal-links>
+        <host name="houselock.page.link" scheme="https" />
         <host name="houselock-1.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>

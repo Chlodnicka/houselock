@@ -43,26 +43,24 @@ myApp.controllers = {
             };
         });
 
-       $('#fb-login').on('click', function () {
+        $('#fb-login').on('click', function () {
             let provider = new firebase.auth.FacebookAuthProvider();
 
-           firebase.auth().signInWithRedirect(provider);
-
-           firebase.auth().getRedirectResult().then(function (result) {
-                // The signed-in user info.
-               if (result.user) {
-                   let user = result.user;
-                   console.log(user);
-                   let data = {
-                       email: user.email
-                   };
-                   myApp.user.getByEmail(user.email).once("value", function(userSnapshot) {
-                       if (!userSnapshot.val()) {
-                           myApp.services.user.create(data);
-                       }
-                   });
-               }
-
+            firebase.auth().signInWithRedirect(provider).then(function () {
+                return firebase.auth().getRedirectResult();
+            }).then(function (result) {
+                if (result.user) {
+                    let user = result.user;
+                    console.log(user);
+                    let data = {
+                        email: user.email
+                    };
+                    myApp.user.getByEmail(user.email).once("value", function (userSnapshot) {
+                        if (!userSnapshot.val()) {
+                            myApp.services.user.create(data);
+                        }
+                    });
+                }
             }).catch(function (error) {
                 ons.notification.alert({message: error.message});
             });
