@@ -10,7 +10,6 @@
         Maja Chłodnicka, Filip Tańcula, Kamil Pietrucha
     </author>
     <platform name="android"/>
-    <content src="html/index.html" />
     <icon src="icon.png"/>
     <platform name="android">
         <allow-intent href="market:*" />
