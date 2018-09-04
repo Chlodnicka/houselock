@@ -45,7 +45,9 @@ myApp.controllers = {
 
         $('#fb-login').on('click', function () {
             var provider = new firebase.auth.GoogleAuthProvider();
-
+            provider.addScope('profile');
+            provider.addScope('email');
+            provider.addScope('https://www.googleapis.com/auth/plus.me');
             firebase.auth().signInWithRedirect(provider).then(function () {
                 return firebase.auth().getRedirectResult();
             }).then(function (result) {

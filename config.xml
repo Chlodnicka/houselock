@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:gap="http://phonegap.com/ns/1.0"
-        id="houselock-1"
+        id="com.houselock"
         version="1.0.0">
 
     <name>Houselock</name>
@@ -20,18 +20,22 @@
     <plugin name="cordova-plugin-whitelist"/>
     <plugin name="cordova-plugin-dialogs"/>
 
-    <plugin name="cordova-plugin-inappbrowser"/>
     <plugin name="cordova-plugin-buildinfo" spec="^2.0.1" />
-    <plugin name="cordova-universal-links-plugin" spec="^1.2.1" />
-    <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
+    <plugin name="cordova-plugin-inappbrowser" spec="^3.0.0" />
+
     <universal-links>
-        <host name="houselock.page.link" scheme="https" />
+        <host name="https://houselock.page.link/y6N7" scheme="https" />
         <host name="houselock-1.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback" />
         </host>
     </universal-links>
+
+    <plugin name="cordova-plugin-browsertab" spec="^0.2.0" />
+    <plugin name="cordova-universal-links-plugin" spec="https://github.com/walteram/cordova-universal-links-plugin" />
+    <engine name="android" spec="^7.0.0" />
     <preference name="AndroidLaunchMode" value="singleTask" />
 
+    <content src="index.html" />
 
     <access origin="http://*"/>
     <access origin="https://*"/>
@@ -39,7 +43,5 @@
 
     <allow-navigation href="*"/>
     <allow-intent href="*"/>
-
-    <preference name="CordovaWebViewEngine" value="CDVUIWebViewEngine" />
 
 </widget>
