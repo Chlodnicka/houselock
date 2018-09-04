@@ -46,19 +46,22 @@ myApp.controllers = {
        $('#fb-login').on('click', function () {
             let provider = new firebase.auth.FacebookAuthProvider();
 
-            firebase.auth().signInWithPopup(provider).then(function (result) {
-                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                let token = result.credential.accessToken;
+           firebase.auth().signInWithRedirect(provider);
+
+           firebase.auth().getRedirectResult().then(function (result) {
                 // The signed-in user info.
-                let user = result.user;
-                let data = {
-                    email: user.email
-                };
-                myApp.user.getByEmail(user.email).once("value", function(userSnapshot) {
-                    if (!userSnapshot.val()) {
-                        myApp.services.user.create(data);
-                    }
-                });
+               if (result.user) {
+                   let user = result.user;
+                   console.log(user);
+                   let data = {
+                       email: user.email
+                   };
+                   myApp.user.getByEmail(user.email).once("value", function(userSnapshot) {
+                       if (!userSnapshot.val()) {
+                           myApp.services.user.create(data);
+                       }
+                   });
+               }
 
             }).catch(function (error) {
                 ons.notification.alert({message: error.message});
